@@ -18,7 +18,7 @@ const PingComponent = () => {
         const response = await axiosInstance.get("/ping");
 
         // Almacenar la respuesta en el estado
-        setServerResponse(response.data.message || "¡Ping exitoso!");
+        setServerResponse(response.data.message);
         setErrorMessage(null); // Limpiar cualquier mensaje de error previo
       } catch (error) {
         // Manejo de errores de la petición
@@ -41,7 +41,7 @@ const PingComponent = () => {
   return (
     <div>
       {serverResponse ? (
-        <p>Respuesta del servidor: {serverResponse}</p>
+        <p>Respuesta del servidor al endpoint ping: {serverResponse}</p>
       ) : errorMessage ? (
         <p style={{ color: "red" }}>{errorMessage}</p>
       ) : (
