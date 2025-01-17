@@ -8,5 +8,6 @@ bug-busters/
 │   ├── db/                   # Base de datos (modelos ORM, conexiones)
 │   ├── tests/                # Pruebas unitarias
 │   └── static/               # Archivos estáticos (si es necesario)
-
+├── requeriments.txt          # Dependencias del proyecto
+└── .env                      # Archivo para variables de entorno
 
