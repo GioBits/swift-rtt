@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Alert from '@mui/material/Alert';
 
 const PingComponent = () => {
   const [serverResponse, setServerResponse] = useState(null);
@@ -39,15 +40,9 @@ const PingComponent = () => {
   }, []); // Dependencia vacía, solo se ejecuta una vez cuando el componente se monta
 
   return (
-    <div>
-      {serverResponse ? (
-        <p>Respuesta del servidor al endpoint ping: {serverResponse}</p>
-      ) : errorMessage ? (
-        <p style={{ color: "red" }}>{errorMessage}</p>
-      ) : (
-        <p>Cargando...</p>
-      )}
-    </div>
+    <Alert severity={serverResponse ? "success" : errorMessage ? "error" : "info"} style={{top: "20px", right: "20px", position: "fixed"}}>
+      {serverResponse ? `Respuesta del servidor al endpoint ping: ${serverResponse}` : errorMessage ? errorMessage : "Cargando..."}
+    </Alert>
   );
 };
 
