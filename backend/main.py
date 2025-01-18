@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -12,6 +12,14 @@ load_dotenv()
 
 # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+
+# Endpoing "/ping", debe retornar "pong"
+@app.get("/ping")
+def ping():
+    try:
+        return {"message" : "pong"}
+    except:
+        raise HTTPException(status_code=500, detail= "Internal Server Error")
 
 # Clase Item
 class Item(BaseModel):
