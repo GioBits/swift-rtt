@@ -13,14 +13,6 @@ load_dotenv()
 # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
-# Endpoing "/ping", debe retornar "pong"
-@app.get("/ping")
-def ping():
-    try:
-        return {"message" : "pong"}
-    except:
-        raise HTTPException(status_code=500, detail= "Internal Server Error")
-
 # Clase Item
 class Item(BaseModel):
     name: str
@@ -40,6 +32,14 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message":"Hola a todos, sean bienvenidos"}
+
+# Endpoint "/ping", debe retornar "pong"
+@app.get("/ping")
+def ping():
+    try:
+        return {"message" : "pong"}
+    except:
+        raise HTTPException(status_code=500, detail= "Internal Server Error")
 
 # Ruta GET
 @app.get("/{item_id}")
