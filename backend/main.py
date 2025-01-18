@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -32,6 +32,14 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message":"Hola a todos, sean bienvenidos"}
+
+# Endpoint "/ping", debe retornar "pong"
+@app.get("/ping")
+def ping():
+    try:
+        return {"message" : "pong"}
+    except:
+        raise HTTPException(status_code=500, detail= "Internal Server Error")
 
 # Ruta GET
 @app.get("/{item_id}")
