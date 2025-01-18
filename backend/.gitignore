@@ -1,0 +1,3 @@
+# Ignorar .venv, .env y .gitignore
+.venv
+.env
