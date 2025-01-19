@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from db.database import init_db
 from dotenv import load_dotenv
 import os
 
@@ -27,6 +28,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+# Inicialización manual
+def initialize():
+    init_db()
+
+# Inicializar la base de datos antes de iniciar la aplicación
+initialize()
 
 # Ruta Raiz
 @app.get("/")
