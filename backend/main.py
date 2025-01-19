@@ -25,11 +25,11 @@ app.add_middleware(
 )
 
 # Inicialización manual
-# def initialize():
-#     init_db()
+def initialize():
+    init_db()
 
-# #Inicializar la base de datos antes de iniciar la aplicación
-# initialize()
+#Inicializar la base de datos antes de iniciar la aplicación
+initialize()
 
 # Ruta Raiz
 @app.get("/")

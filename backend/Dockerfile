@@ -22,7 +22,7 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 # Set environment variables for host and port
-ENV API_ENV=docker
+ENV ENVIRONMENT = docker
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["sh", "-c", "gunicorn --bind ${API_HOST}:${API_PORT} -k uvicorn.workers.UvicornWorker main:app"]
