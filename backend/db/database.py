@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 
 # Cargar las variables del archivo .env
-load_dotenv()
+load_dotenv(dotenv_path='../.env')
 
 # Obtener las variables de entorno
 DB_NAME = os.getenv("DB_NAME")
