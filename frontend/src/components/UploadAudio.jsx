@@ -27,4 +27,18 @@ const UploadAudio = () => {
       setUploading(false); // Terminamos la carga
     }, 2000); // Simulamos 2 segundos de carga
   };
+
+  // Elementos visuales del componente para manejar la selección y carga de archivos de audio:
+  return (
+    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
+      <h3>Cargar archivo de audio</h3>
+      <input
+        type="file"
+        accept="audio/*" // Permitimos solo archivos de audio
+        onChange={handleFileChange} // Llamamos a la función cuando se selecciona el archivo
+        style={{ marginBottom: '10px' }}
+      />
+      {uploading && <p>Cargando archivo...</p>} {/* Mensaje de carga */}
+    </div>
+  );
 };
