@@ -17,4 +17,14 @@ const UploadAudio = () => {
       handleUpload(selectedFile); // Subimos el archivo automáticamente
     }
   };
+
+  // Función para simular la carga del archivo:
+  const handleUpload = (file) => {
+    setUploading(true); // Se muestra el mensaje de "cargando..."
+
+    // Simulamos una carga con un setTimeout:
+    setTimeout(() => {
+      setUploading(false); // Terminamos la carga
+    }, 2000); // Simulamos 2 segundos de carga
+  };
 };
