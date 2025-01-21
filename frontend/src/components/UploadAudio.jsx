@@ -42,3 +42,5 @@ const UploadAudio = () => {
     </div>
   );
 };
+
+export default UploadAudio; // Exportamos el componente para usarlo en otros archivos
