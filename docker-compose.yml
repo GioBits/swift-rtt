@@ -13,7 +13,7 @@ services:
       - db
     networks:
       - app-network
-    restart: no
+    restart: "no"
 
   frontend:
     build:
