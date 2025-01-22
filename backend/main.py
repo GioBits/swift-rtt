@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     #RUN MIGRATIONS
     try:
-        run_migrations(db_url=DATABASE_URL)
+        run_migrations()
         print("✅ Migraciones automáticas aplicadas")
     except Exception as e:
         print(f"❌ Error en migraciones: {str(e)}")
