@@ -1,5 +1,6 @@
 import "./App.css";
 import PingComponent from "./components/PingComponent";
+import UploadAudio from "./components/UploadAudio";
 
 function App() {
 
