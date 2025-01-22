@@ -1,17 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from db.database import init_db
+from db.database import init_db, DATABASE_URL
+from utils.migrations import run_migrations
 from dotenv import load_dotenv
+from contextlib import asynccontextmanager
 import os
 import uvicorn 
-
-# Instancia de la aplicacion 
-app = FastAPI()
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
 
+# Instancia de la aplicacion 
+app = FastAPI()
 # # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
@@ -23,13 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-# Inicialización manual
-def initialize():
-    init_db()
-
-#Inicializar la base de datos antes de iniciar la aplicación
-initialize()
 
 # Ruta Raiz
 @app.get("/")
@@ -46,38 +40,22 @@ def ping():
 
 # Configuración del host y puerto
 if __name__ == "__main__":
-    environment = os.getenv("ENVIRONMENT", "development")
+    environment = os.getenv("API_ENV", "development")
     host = os.getenv("API_HOST", "127.0.0.1")
     port = int(os.getenv("API_PORT", 8000))
     print(f"Starting server at http://{host}:{port}")
     print(f"Documentation available at http://{host}:{port}/docs")
+
+    #RUN MIGRATIONS
+    try:
+        run_migrations()
+        print("✅ Migraciones automáticas aplicadas")
+    except Exception as e:
+        print(f"❌ Error en migraciones: {str(e)}")
+        raise
+
     
     if environment == "development":
         uvicorn.run(app, host=host, port=port)
     else:
         print("Running in production mode")
-
-# # Clase Item
-# class Item(BaseModel):
-#     name: str
-#     description: str = None
-
-# # Ruta GET
-# @app.get("/{item_id}")
-# async def read_item(item_id: int, q: str = None):
-#     return {"item_id": item_id, "q": {f"Este es el par {item_id*2}"}}
-
-# # Ruta POST
-# @app.post("/items/")
-# async def create_item(item: Item):  # Pydantic model for data validation
-#     return {"item": item}
-
-# # Ruta PUT
-# @app.put("/items/{item_id}")
-# async def update_item(item_id: int, item: Item):
-#     return {"item_id": item_id, "updated_item": item}
-
-# # Ruta DELETE
-# @app.delete("/items/{item_id}")
-# async def delete_item(item_id: int):
-#     return {"message": f"Item {item_id} deleted"}
