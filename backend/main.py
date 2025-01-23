@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from db.database import init_db, DATABASE_URL
@@ -37,6 +37,12 @@ def ping():
         return {"message" : "pong"}
     except:
         raise HTTPException(status_code=500, detail= "Internal Server Error")
+
+# Endpoint "/upload", recibe archivo de audio
+@app.post("/upload")
+async def UploadAudio(uploadedAudio : UploadFile):
+    content = await uploadedAudio.read()
+    #procesar archivo
 
 # Configuración del host y puerto
 if __name__ == "__main__":
