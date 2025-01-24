@@ -38,12 +38,6 @@ def ping():
     except:
         raise HTTPException(status_code=500, detail= "Internal Server Error")
 
-# Endpoint "/upload", recibe archivo de audio
-@app.post("/upload")
-async def UploadAudio(uploadedAudio : UploadFile):
-    content = await uploadedAudio.read()
-    #procesar archivo
-
 # Configuración del host y puerto
 if __name__ == "__main__":
     environment = os.getenv("API_ENV", "development")
