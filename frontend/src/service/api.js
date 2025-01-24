@@ -40,3 +40,34 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+// Métodos
+
+const apiService = {
+  get: async (url, params = {}) => {
+    return apiClient.get(url, { params });
+  },
+
+  post: async (url, data, config = {}) => {
+    return apiClient.post(url, data, config);
+  },
+
+  put: async (url, data, config = {}) => {
+    return apiClient.put(url, data, config);
+  },
+
+  delete: async (url, config = {}) => {
+    return apiClient.delete(url, config);
+  },
+
+  ping: async () => {
+    try {
+      const response = await apiClient.get('/ping');
+      return response.message; // Se asume que la API devuelve { message: "pong" }
+    } catch (error) {
+      throw error.response?.data?.message || 'Error al conectar con el servidor';
+    }
+  }
+};
+
+export { apiService };
