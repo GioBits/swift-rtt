@@ -1,12 +1,9 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from db.database import init_db, DATABASE_URL
-from utils.migrations import run_migrations
-from dotenv import load_dotenv
-from contextlib import asynccontextmanager
 import os
 import uvicorn 
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from utils.migrations import run_migrations
+from dotenv import load_dotenv
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
