@@ -12,7 +12,14 @@ const apiClient = axios.create({
 // Interceptor para manejar las solicitudes antes de enviarlas
 apiClient.interceptors.request.use(
   (config) => {
-    // Acá se puede agregar token de autenticación del usuario en caso de ser necesario
+    // Obtener el token desde localStorage o sessionStorage
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      // Si hay un token, agrégalo al encabezado Authorization
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {
