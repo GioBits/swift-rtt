@@ -13,4 +13,14 @@ export default defineConfig({
     host: process.env.VITE_HOST || 'localhost',
     port: parseInt(process.env.VITE_PORT) || 3000
   },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom', // Para pruebas en un entorno de navegador
+    include: ['**/__tests__/**/*.test.js'], // Incluir solo los archivos de prueba
+  },
 })
