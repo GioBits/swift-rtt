@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from fastapi import UploadFile
-from service.audioService import save_audio
+from fastapi import HTTPException, UploadFile
+from api.service.audioService import save_audio
 from models.audio import AudioRecord
 
 def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
@@ -18,21 +18,18 @@ def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
     try:
         # Leer los datos binarios del archivo
         file_data = file.file.read()
-        
+        # Verificar que los datos sean binarios
+        if not isinstance(file_data, bytes):
+            raise ValueError("El archivo no se leyó correctamente como binario")
+
+        print(f"contenido: {file.content_type}")
         # Validaciones específicas del controlador
         MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
         if len(file_data) > MAX_FILE_SIZE:
             raise ValueError("El archivo es demasiado grande")
         
         # Llamar a la capa de servicio para guardar el audio
-        audio_record = save_audio(
-            chat_id=chat_id,
-            file=file_data,
-            filename=file.filename,
-            content_type=file.content_type,
-            db=db
-        )
+        audio_record = save_audio(chat_id, file_data, file.filename, file.content_type, db)
         return audio_record
-
     except Exception as e:
-        raise e  # Opcional: puedes manejar o registrar errores específicos aquí.
+        raise HTTPException(status_code=500, detail=str(e))
