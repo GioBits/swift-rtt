@@ -20,7 +20,7 @@ def upload_audio_to_db(file_path: str, chat_id: str):
 
         # Extraer el nombre del archivo y el tipo MIME
         filename = file_path.split("/")[-1]
-        content_type = "audio/wav"  # Ajusta según el tipo del archivo
+        content_type = "audio/mp3"  # Ajusta según el tipo del archivo
 
         # Llamar a la función para guardar el archivo
         result = save_audio(chat_id, file_content, filename, content_type, db)
@@ -36,4 +36,4 @@ def upload_audio_to_db(file_path: str, chat_id: str):
         db.close()
 
 # Llamar a la función con el archivo deseado
-upload_audio_to_db("/home/kelsier/Escritorio/Ing_Software/bug-busters/backend/tests/files/gkdb.wav", "12345")
+upload_audio_to_db("/home/kelsier/Escritorio/Ing_Software/bug-busters/backend/tests/files/homer.mp3", "12345")
