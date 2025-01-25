@@ -8,9 +8,10 @@ router = APIRouter()
 async def UploadAudio(uploadedAudio : UploadFile = File(...)):
     content = uploadedAudio
     contentBytes = await uploadedAudio.read()
+    size = len(contentBytes)
 
     # Validación del archivo
-    if not validation(content):
+    if not validation(content, size):
         raise HTTPException(status_code=500, detail= "Internal Server Error")
     
     filename = content.filename
@@ -23,7 +24,7 @@ async def UploadAudio(uploadedAudio : UploadFile = File(...)):
 
 
 # Verificar si filename, content_type y file_size son válidos para el programa
-async def validation(audio_data : UploadFile):
+def validation(audio_data : UploadFile, size):
     filename = audio_data.filename
 
     ## Usando una variable booleana para indicar si es válido o inválido
@@ -37,13 +38,10 @@ async def validation(audio_data : UploadFile):
     if not any(filename.endswith(extension) for extension in valid_Formats):
         raise HTTPException(status_code = 400, detail="Invalid file format")
 
-    # Verifica que el archivo no sea demasiado pesado (max 200MB)
-    max_size = 10 * 1024 * 1024 # 200MB en Bytes
-    if len(audio_data) > max_size:
-        raise HTTPException(status_code = 400, detail="File size exceeds 200MB")
-
-    #reinicia apuntador del audio al comienzo luego de pruebas
-    audio_data.file.seek(0)
+    # Verifica que el archivo no sea demasiado pesado (max 10MB)
+    max_size = 10 * 1024 * 1024 # 10MB en Bytes
+    if size > max_size:
+        raise HTTPException(status_code = 400, detail="File size exceeds 10MB")
     
     return True
     
