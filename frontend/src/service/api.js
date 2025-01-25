@@ -70,7 +70,7 @@ const apiService = {
   ping: async () => {
     try {
       const response = await apiClient.get('/ping');
-      return response.message; // Se asume que la API devuelve { message: "pong" }
+      return response.message;
     } catch (error) {
       throw error.response?.data?.message || 'Error al conectar con el servidor';
     }
