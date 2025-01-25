@@ -33,12 +33,12 @@ async def validation(audio_data : UploadFile):
 
     # Verifica que el archivo sea de un formato aceptado por el sistema
     # se usa .wav y .mp3 como pruebas
-    valid_Formats = {".wav", ".mp3"}
+    valid_Formats = {".mp3"}
     if not any(filename.endswith(extension) for extension in valid_Formats):
         raise HTTPException(status_code = 400, detail="Invalid file format")
 
     # Verifica que el archivo no sea demasiado pesado (max 200MB)
-    max_size = 200 * 1024 * 1024 # 200MB en Bytes
+    max_size = 10 * 1024 * 1024 # 200MB en Bytes
     if len(audio_data) > max_size:
         raise HTTPException(status_code = 400, detail="File size exceeds 200MB")
 
