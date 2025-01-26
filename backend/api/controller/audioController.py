@@ -31,7 +31,7 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
             raise HTTPException(status_code = 422, detail="File name too long")
 
         # Verifica que el archivo sea de un formato aceptado por el sistema
-        valid_formats = {"audio/mpeg", "audio/mp3"}
+        valid_formats = {"audio/mpeg", "audio/mp3", "audio/wav"}
         if file.content_type not in valid_formats:
             raise HTTPException(status_code = 422, detail="Invalid file format")
 
@@ -50,6 +50,7 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
         )
 
         return {
+            "id": audio_record.id,
             "filename": audio_record.filename, 
             "format": audio_record.content_type, 
             "size": len(audio_record.audio_data)

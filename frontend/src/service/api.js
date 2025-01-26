@@ -3,9 +3,9 @@ import axios from 'axios';
 // Instancia de Axios con configuración predeterminada
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:5000',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
   timeout: 10000,  // Tiempo de espera de 10 segundos
 });
 
@@ -35,7 +35,7 @@ apiClient.interceptors.response.use(
       console.error('Error de respuesta:', error.response);
       return Promise.reject({
         status: error.response.status,
-        message: error.response.data?.message || 'Error desconocido',
+        message: error.response.data.detail || 'Error desconocido',
       });
     } else if (error.request) {
       console.error('Error de red:', error.message);
