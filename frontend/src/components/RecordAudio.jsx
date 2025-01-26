@@ -1,5 +1,9 @@
 import React, { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
+import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { fetchFile } from '@ffmpeg/util'
+
+const ffmpeg = new FFmpeg();
 
 const RecordAudio = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -20,13 +24,25 @@ const RecordAudio = () => {
           audioChunksRef.current.push(e.data);
         };
 
-        mediaRecorder.onstop = function() {
+        mediaRecorder.onstop = async function() {
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
           const url = URL.createObjectURL(audioBlob);
           setAudioUrl(url);
 
+          // Convert WAV to MP3 using ffmpeg.js
+          if (!ffmpeg.isLoaded()) {
+            await ffmpeg.load();
+          }
+          ffmpeg.FS('writeFile', 'recording.wav', await fetchFile(audioBlob));
+          await ffmpeg.run('-i', 'recording.wav', 'recording.mp3');
+          const mp3Data = ffmpeg.FS('readFile', 'recording.mp3');
+
+          const mp3Blob = new Blob([mp3Data.buffer], { type: 'audio/mp3' });
+          const mp3Url = URL.createObjectURL(mp3Blob);
+          setAudioUrl(mp3Url);
+
           const formData = new FormData();
-          formData.append('audio', audioBlob, 'recording.wav');
+          formData.append('audio', mp3Blob, 'recording.mp3');
 
           fetch('/upload', {
             method: 'POST',
