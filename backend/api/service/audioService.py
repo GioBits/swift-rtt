@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from db.database import AudioRecord
 from datetime import datetime
+from db.database import SessionLocal
 
 def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str, db: Session) -> AudioRecord:
     """
@@ -16,6 +17,11 @@ def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str,
     Returns:
         AudioRecord: Registro del audio almacenado en la base de datos.
     """
+
+    # Crear una sesión de base de datos
+    if not db:
+        db = SessionLocal();
+
     audio_record = AudioRecord(
         chat_id=chat_id,
         filename=filename,

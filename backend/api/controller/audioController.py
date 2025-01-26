@@ -3,7 +3,7 @@ from fastapi import HTTPException, UploadFile
 from api.service.audioService import save_audio
 from models.audio import AudioRecord
 
-def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
+async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
     """
     Función controladora para manejar la carga de un archivo de audio.
 
@@ -17,19 +17,45 @@ def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
     """
     try:
         # Leer los datos binarios del archivo
-        file_data = file.file.read()
+        file_data = await file.read()
+
         # Verificar que los datos sean binarios
         if not isinstance(file_data, bytes):
-            raise ValueError("El archivo no se leyó correctamente como binario")
+            raise ValueError("El archivo no se leyo correctamente como binario")
 
-        print(f"contenido: {file.content_type}")
-        # Validaciones específicas del controlador
-        MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
-        if len(file_data) > MAX_FILE_SIZE:
-            raise ValueError("El archivo es demasiado grande")
+        filename = file.filename
+
+        ## Usando una variable booleana para indicar si es válido o inválido
+        # Verifica el nombre no sea más de 255 caracteres de largo
+        if len(file.filename) > 255:
+            raise HTTPException(status_code = 422, detail="File name too long")
+
+        # Verifica que el archivo sea de un formato aceptado por el sistema
+        valid_formats = {"audio/mpeg", "audio/mp3"}
+        if file.content_type not in valid_formats:
+            raise HTTPException(status_code = 422, detail="Invalid file format")
+
+        # Verifica que el archivo no sea demasiado pesado (max 10MB)
+        max_size = 10 * 1024 * 1024 # 10MB en Bytes
+        if len(file_data) > max_size:
+            raise HTTPException(status_code = 422, detail="File size exceeds 10MB")
         
         # Llamar a la capa de servicio para guardar el audio
-        audio_record = save_audio(chat_id, file_data, file.filename, file.content_type, db)
-        return audio_record
+        audio_record = save_audio(
+            chat_id, 
+            file_data, 
+            file.filename, 
+            file.content_type, 
+            db
+        )
+
+        return {
+            "filename": audio_record.filename, 
+            "format": audio_record.content_type, 
+            "size": len(audio_record.audio_data)
+        }
+    
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

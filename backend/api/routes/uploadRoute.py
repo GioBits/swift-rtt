@@ -1,25 +1,25 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
+from api.controller.audioController import process_audio
 
 router = APIRouter()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio")
 async def UploadAudio(uploadedAudio : UploadFile = File(...)):
-    content = uploadedAudio
-    contentBytes = await uploadedAudio.read()
-    size = len(contentBytes)
+    """
+    Handles the upload of an audio file.
+    Args:
+        uploadedAudio (UploadFile): The audio file to be uploaded.
+    Returns:
+        JSONResponse: The response after processing the audio file.
+    """
 
-    # Validación del archivo
-    if not validation(content, size):
-        raise HTTPException(status_code=500, detail= "Internal Server Error")
-    
-    filename = content.filename
-    format = filename[-4:]
-    size = len(contentBytes)
-    # UploadController(contentBytes)
-    # contentBytes: Audio en bytes para procesado
-    return JSONResponse(content={"filename": filename, "format": format, "size": size})
+    #mock chat_id
+    chat_id = "12345"
+
+    response = await process_audio(chat_id, uploadedAudio, db=None)
+    return JSONResponse(content=response)
 
 
 
