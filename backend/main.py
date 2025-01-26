@@ -1,15 +1,25 @@
-import os
-import uvicorn 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from db.database import init_db, DATABASE_URL
 from utils.migrations import run_migrations
 from dotenv import load_dotenv
+from contextlib import asynccontextmanager
+import os
+import uvicorn 
+
+# Importar las rutas
+from api.routes.uploadRoute import router as uploadAudioRouter
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
 
 # Instancia de la aplicacion 
 app = FastAPI()
+
+# Importación de rutas
+app.include_router(uploadAudioRouter, prefix=("/api"))
+
 # # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
