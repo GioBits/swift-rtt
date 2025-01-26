@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.audio import AudioRecord
+from db.database import AudioRecord
 from datetime import datetime
 
 def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str, db: Session) -> AudioRecord:
