@@ -7,13 +7,13 @@ function App() {
 
   return (
     <>
-      <h1>BugBuster Project</h1>
+      <h1>Real Time Translation</h1>
       <div className="UploadAudio">
-        {/* Se agrega el campo para subir archivos de audio */}
-        <UploadAudio /> {/* Mostramos el componente para cargar archivos */}
+        <UploadAudio />
+        <RecordAudio />
       </div>
       <PingComponent />
-      <RecordAudio />
+      
     </>
   );
 }

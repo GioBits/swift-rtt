@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 const RecordAudio = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
@@ -55,17 +56,22 @@ const RecordAudio = () => {
   };
 
   return (
-    <div>
-      {isRecording ? (
-        <Button variant='contained' onClick={stopRecording}>Detener Grabación</Button>
-      ) : (
-        <Button variant='contained' onClick={startRecording}>Iniciar Grabación</Button>
-      )}
-      {audioUrl && (
-        <div style={{ marginTop: 20 }}>
-          <audio controls src={audioUrl}></audio>
-        </div>
-      )}
+    
+    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
+      <h3>Grabar un audio</h3>
+      <div>
+        {isRecording ? (
+          <Button variant='contained' onClick={stopRecording}>Detener Grabación</Button>
+        ) : (
+          <Button variant='contained' onClick={startRecording}>Iniciar Grabación</Button>
+        )}
+        {audioUrl && (
+          <div style={{ marginTop: 20 }}>
+            <audio controls src={audioUrl}></audio>
+          </div>
+        )}
+      </div>
+      {uploading && <p>Cargando archivo...</p>} {/* Mensaje de carga */}
     </div>
   );
 };

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import Button from '@mui/material/Button';
+
 
 // Componente UploadAudio para manejar la selección y carga de archivos de audio:
 const UploadAudio = () => {
@@ -9,6 +11,9 @@ const UploadAudio = () => {
   // Estado para mostrar si el archivo se está cargando:
   const [uploading, setUploading] = useState(false);
 
+  // Referencia al input de archivo
+  const fileInputRef = useRef(null);
+
   // Función que se activa cuando se selecciona un archivo:
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -16,6 +21,11 @@ const UploadAudio = () => {
     if (selectedFile) {
       handleUpload(selectedFile); // Subimos el archivo automáticamente
     }
+  };
+
+  // Función para manejar el clic del botón
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
   };
 
   // Función para simular la carga del archivo:
@@ -34,10 +44,14 @@ const UploadAudio = () => {
       <h3>Cargar archivo de audio</h3>
       <input
         type="file"
-        accept="audio/*" // Permitimos solo archivos de audio
+        accept="audio/mp3" // Permitimos solo archivos de audio
         onChange={handleFileChange} // Llamamos a la función cuando se selecciona el archivo
-        style={{ marginBottom: '10px' }}
+        style={{ display: 'none' }} // Ocultamos el input
+        ref={fileInputRef}
       />
+      <Button variant='contained' onClick={handleButtonClick} style={{ marginBottom: '10px' }}>
+        Seleccionar Archivo de Audio
+      </Button>
       {uploading && <p>Cargando archivo...</p>} {/* Mensaje de carga */}
     </div>
   );
