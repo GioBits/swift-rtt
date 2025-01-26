@@ -8,7 +8,8 @@ from contextlib import asynccontextmanager
 import os
 import uvicorn 
 
-from api.routes.uploadRoute import router as uploadAudio
+# Importar las rutas
+from api.routes.uploadRoute import router as uploadAudioRouter
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
@@ -17,7 +18,7 @@ load_dotenv(dotenv_path='../.env')
 app = FastAPI()
 
 # Importación de rutas
-app.include_router(uploadAudio, prefix=("/api"))
+app.include_router(uploadAudioRouter, prefix=("/api"))
 
 # # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
