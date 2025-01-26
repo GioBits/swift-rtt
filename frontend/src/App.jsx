@@ -1,5 +1,6 @@
 import "./App.css";
 import PingComponent from "./components/PingComponent";
+import RecordAudio from "./components/RecordAudio";
 import UploadAudio from "./components/UploadAudio";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <UploadAudio /> {/* Mostramos el componente para cargar archivos */}
       </div>
       <PingComponent />
+      <RecordAudio />
     </>
   );
 }
