@@ -9,6 +9,9 @@ dotenv.config({ path: resolve(__dirname, '../.env') })
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['@ffmpeg/ffmpeg']
+  },
   server: {
     host: process.env.VITE_HOST || 'localhost',
     port: parseInt(process.env.VITE_PORT) || 3000
