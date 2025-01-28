@@ -54,22 +54,6 @@ const RecordAudio = () => {
           setAudioUrl(url);
           await uploadAudio(audioBlob);
 
-          // Convert WAV to MP3 using ffmpeg.js
-          ///await ffmpeg.load();
-
-          // Limpiar el sistema de archivos virtual de ffmpeg
-          // ffmpeg.FS('unlink', 'recording.wav');
-          // ffmpeg.FS('unlink', 'recording.mp3');
-
-          // ffmpeg.FS('writeFile', 'recording.wav', await fetchFile(audioBlob));
-          // await ffmpeg.run('-i', 'recording.wav', 'recording.mp3');
-          // const mp3Data = ffmpeg.FS('readFile', 'recording.mp3');
-
-          // const mp3Blob = new Blob([mp3Data.buffer], { type: 'audio/mp3' });
-          // const mp3Url = URL.createObjectURL(mp3Blob);
-          // setAudioUrl(mp3Url);
-          // await uploadAudio(mp3Blob);
-
           audioChunksRef.current = [];
         };
 

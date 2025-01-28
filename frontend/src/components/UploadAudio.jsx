@@ -52,6 +52,7 @@ const UploadAudio = () => {
         onChange={handleFileChange}
         style={{ display: 'none' }}
         ref={fileInputRef}
+        id="upload-audio"
       />
       <Button variant='contained' onClick={handleButtonClick} style={{ marginBottom: '10px' }}>
         Seleccionar Archivo de Audio
