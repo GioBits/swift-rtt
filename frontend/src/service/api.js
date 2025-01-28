@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setError } from './redux/errorSlice';  // Importamos la acción de error
+import { setError } from '../store/slices/errorSlice';  // Importamos la acción de error
 
 
 // Instancia de Axios con configuración predeterminada
@@ -57,8 +57,6 @@ export default apiClient;
 
 
 // Servicio API que usa Axios para hacer solicitudes
-// Los interceptores ya estan diseñados para manejarerrores de forma centralizada.
-// No es necesario duplicar esta lógica en los métodos del servicio
 const apiService = {
   get: (url, params = {}) => apiClient.get(url, { params }),
 
