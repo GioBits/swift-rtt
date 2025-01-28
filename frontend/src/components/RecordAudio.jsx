@@ -1,29 +1,27 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux'; // Importar useDispatch y useSelector
 import { apiService } from '../service/api';
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile } from '@ffmpeg/util'
-
-const ffmpeg = new FFmpeg();
+import { setError, setSuccess, clearError } from '../store/slices/errorSlice'; // Importar las acciones de Redux
 
 const RecordAudio = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+
+  const dispatch = useDispatch(); // Hook para usar dispatch de Redux
+  const { message, type } = useSelector(state => state.error); // Obtener el estado de error desde Redux
+
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
-  const maxRecordingTime = 10000; // 30 seconds
+  const maxRecordingTime = 10000; // 10 seconds
   const minRecordingTime = 3000; // 3 seconds
 
   const startRecording = () => {
-
     // Limpiar el estado antes de iniciar una nueva grabación
     setAudioUrl(null);
-    setErrorMessage(null);
-    setSuccessMessage(null);
+    dispatch(clearError()); // Limpiar los mensajes anteriores
     audioChunksRef.current = [];
     startTimeRef.current = Date.now();
 
@@ -34,17 +32,16 @@ const RecordAudio = () => {
         mediaRecorder.start();
         setIsRecording(true);
 
-        mediaRecorder.ondataavailable = function(e) {
+        mediaRecorder.ondataavailable = (e) => {
           audioChunksRef.current.push(e.data);
         };
 
-        mediaRecorder.onstop = async function() {
-
+        mediaRecorder.onstop = async () => {
           const endTime = Date.now();
           const duration = endTime - startTimeRef.current;
 
           if (duration < minRecordingTime) {
-            setErrorMessage('La grabación debe durar al menos 3 segundos.');
+            dispatch(setError({ message: 'La grabación debe durar al menos 3 segundos.' }));
             setIsRecording(false);
             return;
           }
@@ -57,17 +54,15 @@ const RecordAudio = () => {
           audioChunksRef.current = [];
         };
 
-        // Detener la grabación automáticamente después de 10 segundos
         setTimeout(() => {
           if (mediaRecorder.state === 'recording') {
             mediaRecorder.stop();
           }
         }, maxRecordingTime);
-
       })
       .catch(error => {
-        setErrorMessage('Error al acceder al micrófono: ' + error.message);
-        console.error('Error al acceder al microfono:', error);
+        dispatch(setError({ message: 'Error al acceder al micrófono: ' + error.message }));
+        console.error('Error al acceder al micrófono:', error);
       });
   };
 
@@ -86,10 +81,10 @@ const RecordAudio = () => {
       formData.append('uploadedAudio', audioBlob, 'recording.wav');
 
       const response = await apiService.post('/api/audio', formData);
-      setSuccessMessage('Archivo de audio guardado en el servidor.');
+      dispatch(setSuccess({ message: 'Archivo de audio guardado en el servidor.' }));
       console.log('Archivo de audio guardado en el servidor:', response);
     } catch (error) {
-      setErrorMessage('Error al guardar el archivo de audio: ' + error.message);
+      dispatch(setError({ message: 'Error al guardar el archivo de audio: ' + error.message }));
       console.error('Error al guardar el archivo de audio:', error);
     } finally {
       setUploading(false);
@@ -97,7 +92,6 @@ const RecordAudio = () => {
   };
 
   return (
-    
     <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
       <h3>Grabar un audio</h3>
       <div>
@@ -111,18 +105,19 @@ const RecordAudio = () => {
             <audio controls src={audioUrl}></audio>
           </div>
         )}
-        {errorMessage && (
+        {uploading && <p>Cargando archivo...</p>}
+        {/* Mostrar mensajes de error y éxito desde Redux */}
+        {type === 'error' && message && (
           <div style={{ color: 'red', marginTop: 20 }}>
-            {errorMessage}
+            {message}
           </div>
         )}
-        {successMessage && (
+        {type === 'success' && message && (
           <div style={{ color: 'green', marginTop: 20 }}>
-            {successMessage}
+            {message}
           </div>
         )}
       </div>
-      {uploading && <p>Cargando archivo...</p>} {/* Mensaje de carga */}
     </div>
   );
 };
