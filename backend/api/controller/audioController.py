@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
 from api.service.audioService import save_audio
 from models.audio import AudioRecord
+from pybase64 import b64encode
 
 async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
     """
@@ -49,13 +50,17 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
             db
         )
 
+        # Encode binary data to base64
+        base64_encoded = b64encode(audio_record.audio_data).decode('utf-8')
+
         return {
             "id": audio_record.id,
             "filename": audio_record.filename, 
             "format": audio_record.content_type, 
-            "size": len(audio_record.audio_data)
+            "size": len(audio_record.audio_data),
+            "file": base64_encoded
         }
-    
+
     except HTTPException as e:
         raise e
     except Exception as e:
