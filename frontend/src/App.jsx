@@ -3,8 +3,8 @@ import PingComponent from "./components/PingComponent";
 import RecordAudio from "./components/RecordAudio";
 import UploadAudio from "./components/UploadAudio";
 
-function App() {
 
+function App() {
   return (
     <>
       <h1>Real Time Translation</h1>
@@ -13,7 +13,6 @@ function App() {
         <RecordAudio />
       </div>
       <PingComponent />
-      
     </>
   );
 }

@@ -37,7 +37,6 @@ const PingComponent = () => {
     };
 
     fetchPing();
-    clearError();
   }, [dispatch]);
 
   if (!visible || !message || origin !== "PingComponent") {
