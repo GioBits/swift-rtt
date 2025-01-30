@@ -20,7 +20,7 @@ def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str,
 
     # Crear una sesión de base de datos
     if not db:
-        db = SessionLocal();
+        db = SessionLocal()
 
     audio_record = AudioRecord(
         chat_id=chat_id,
