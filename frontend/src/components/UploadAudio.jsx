@@ -21,7 +21,7 @@ const UploadAudio = () => {
   const uploadFile = async (file) => {
     setUploading(true);
     try {
-      await handleFileUpload(file, '/api/audio', dispatch);
+      await handleFileUpload(file, '/api/audio', dispatch, "UploadAudio");
     } catch {
       // El error ya fue manejado por Redux
     } finally {
