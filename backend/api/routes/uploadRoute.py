@@ -1,6 +1,9 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, File, HTTPException, UploadFile, Depends
 from fastapi.responses import JSONResponse
-from api.controller.audioController import process_audio
+from api.controller.audioController import process_audio, retrieve_audio
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from models.audio import AudioRecord
 
 router = APIRouter()
 
@@ -21,27 +24,11 @@ async def UploadAudio(uploadedAudio : UploadFile = File(...)):
     response = await process_audio(chat_id, uploadedAudio, db=None)
     return JSONResponse(content=response)
 
-
-
-# Verificar si filename, content_type y file_size son válidos para el programa
-def validation(audio_data : UploadFile, size):
-    filename = audio_data.filename
-
-    ## Usando una variable booleana para indicar si es válido o inválido
-    # Verifica el nombre no sea más de 255 caracteres de largo
-    if len(filename) > 255:
-        raise HTTPException(status_code = 400, detail="File name too long")
-
-    # Verifica que el archivo sea de un formato aceptado por el sistema
-    # se usa .wav y .mp3 como pruebas
-    valid_Formats = {".mp3"}
-    if not any(filename.endswith(extension) for extension in valid_Formats):
-        raise HTTPException(status_code = 400, detail="Invalid file format")
-
-    # Verifica que el archivo no sea demasiado pesado (max 10MB)
-    max_size = 10 * 1024 * 1024 # 10MB en Bytes
-    if size > max_size:
-        raise HTTPException(status_code = 400, detail="File size exceeds 10MB")
-    
-    return True
-    
+# Endpoint "/api/audios", recupera una lista de archivos de la base de datos
+@router.get("/api/audios", response_model = list[AudioRecord])
+async def Retrieve_AudiosFile_List(db : Session):
+    try:
+        response = await retrieve_audio(db=None)
+        return JSONResponse(content=response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database Error")

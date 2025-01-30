@@ -60,3 +60,15 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+async def retrieve_audio(db : Session) -> AudioRecord:
+
+    # Crear una sesión de base de datos
+    if not db:
+        db = SessionLocal()
+
+    try:
+        result = await db.execute()
+        return result.scalars().all()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database Error")
