@@ -1,14 +1,17 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
-from api.service.audioService import save_audio
-from models.audio import AudioRecord
+from backend.api.service.audioService import save_audio
+from backend.models.audio import AudioRecord
 
-async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
+async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
     """
     Función controladora para manejar la carga de un archivo de audio.
 
     Args:
         chat_id (str): El ID del chat asociado al audio.
+        user_id (str): El nombre del usuario.
+        transcription (str): El audio transcrito.
+        language (str): El idioma del audio.
         file (UploadFile): Archivo de audio enviado por el cliente.
         db (Session): Sesión de la base de datos.
 
@@ -39,21 +42,33 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
         max_size = 10 * 1024 * 1024 # 10MB en Bytes
         if len(file_data) > max_size:
             raise HTTPException(status_code = 422, detail="File size exceeds 10MB")
+                # Verifica el nombre no sea más de 255 caracteres de largo
         
+        # Verifica el idioma no sea más de 50 caracteres de largo
+        if len(language) > 50:
+            raise HTTPException(status_code = 422, detail="Language name is too long")
+        
+
         # Llamar a la capa de servicio para guardar el audio
         audio_record = save_audio(
             chat_id, 
+            user_id,
             file_data, 
             file.filename, 
-            file.content_type, 
+            file.content_type,
+            transcription,
+            language, 
             db
         )
 
         return {
             "id": audio_record.id,
+            "user_id": audio_record.user_id,
             "filename": audio_record.filename, 
             "format": audio_record.content_type, 
-            "size": len(audio_record.audio_data)
+            "size": len(audio_record.audio_data),
+            "transcription": audio_record.transcription,
+            "language": audio_record.language
         }
     
     except HTTPException as e:

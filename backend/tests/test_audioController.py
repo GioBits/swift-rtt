@@ -1,10 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from fastapi import UploadFile
 from backend.api.controller.audioController import process_audio
 from backend.models.audio import AudioRecord
-from starlette.datastructures import UploadFile
-from io import BytesIO
 from backend.utils.upload import create_upload_file
 
 @pytest.fixture
