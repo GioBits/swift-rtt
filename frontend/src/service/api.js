@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { setError } from '../store/slices/errorSlice';  // Importamos la acción de error
 
 
 // Instancia de Axios con configuración predeterminada
@@ -33,21 +31,17 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response.data,  // Extrae directamente la data de la respuesta
   (error) => {
-    const dispatch = useDispatch();
 
     if (error.response) {
       // Aquí tratamos los errores de respuesta de la API
       console.error('Error de respuesta:', error.response);
-      dispatch(setError({ message: error.response.data.detail || 'Error desconocido' }));
       return Promise.reject(error.response);
     } else if (error.request) {
       // Si no hubo respuesta de la API
       console.error('Error de red:', error.message);
-      dispatch(setError({ message: 'No se pudo conectar con el servidor' }));
       return Promise.reject({ message: 'No se pudo conectar con el servidor' });
     } else {
       // Error desconocido
-      dispatch(setError({ message: 'Ocurrió un error inesperado' }));
       return Promise.reject({ message: 'Ocurrió un error inesperado' });
     }
   }
