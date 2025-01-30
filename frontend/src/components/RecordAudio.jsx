@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { useDispatch, useSelector } from 'react-redux'; // Importar useDispatch y useSelector
-import { apiService } from '../service/api';
-import { setError, setSuccess, clearError } from '../store/slices/errorSlice'; // Importar las acciones de Redux
+import { handleFileUpload } from '../utils/uploadUtils';
+import { setError, clearError } from '../store/slices/errorSlice'; // Importar las acciones de Redux
+import { getMessage } from '../utils/localeHelper';
 
 const RecordAudio = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -10,13 +11,17 @@ const RecordAudio = () => {
   const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch(); // Hook para usar dispatch de Redux
-  const { message, type } = useSelector(state => state.error); // Obtener el estado de error desde Redux
+  const { message, type, origin } = useSelector(state => state.error); // Obtener el estado de error desde Redux
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
   const maxRecordingTime = 10000; // 10 seconds
   const minRecordingTime = 3000; // 3 seconds
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const startRecording = () => {
     // Limpiar el estado antes de iniciar una nueva grabación
@@ -41,7 +46,10 @@ const RecordAudio = () => {
           const duration = endTime - startTimeRef.current;
 
           if (duration < minRecordingTime) {
-            dispatch(setError({ message: 'La grabación debe durar al menos 3 segundos.' }));
+            dispatch(setError({
+              message: getMessage("RecordAudio", "min_duration_error"),
+              origin: "RecordAudio",
+            }));
             setIsRecording(false);
             return;
           }
@@ -61,8 +69,10 @@ const RecordAudio = () => {
         }, maxRecordingTime);
       })
       .catch(error => {
-        dispatch(setError({ message: 'Error al acceder al micrófono: ' + error.message }));
-        console.error('Error al acceder al micrófono:', error);
+        dispatch(setError({
+          message: getMessage("RecordAudio", "mic_access_error", { error: error.message }),
+          origin: "RecordAudio"
+        }));
       });
   };
 
@@ -77,15 +87,10 @@ const RecordAudio = () => {
   const uploadAudio = async (audioBlob) => {
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('uploadedAudio', audioBlob, 'recording.wav');
-
-      const response = await apiService.post('/api/audio', formData);
-      dispatch(setSuccess({ message: 'Archivo de audio guardado en el servidor.' }));
-      console.log('Archivo de audio guardado en el servidor:', response);
-    } catch (error) {
-      dispatch(setError({ message: 'Error al guardar el archivo de audio: ' + error.message }));
-      console.error('Error al guardar el archivo de audio:', error);
+      // Convierte el audioBlob en un archivo para subirlo
+      const audioFile = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+  
+      await handleFileUpload(audioFile, '/api/audio', dispatch, "RecordAudio");
     } finally {
       setUploading(false);
     }
@@ -107,15 +112,13 @@ const RecordAudio = () => {
         )}
         {uploading && <p>Cargando archivo...</p>}
         {/* Mostrar mensajes de error y éxito desde Redux */}
-        {type === 'error' && message && (
+        {type === 'error' && message && origin === "RecordAudio" && (
           <div style={{ color: 'red', marginTop: 20 }}>
             {message}
           </div>
         )}
-        {type === 'success' && message && (
-          <div style={{ color: 'green', marginTop: 20 }}>
-            {message}
-          </div>
+        {type === "success" && message && origin === "RecordAudio" && (
+          <div style={{ color: "green", marginTop: 20 }}>{message}</div>
         )}
       </div>
     </div>
