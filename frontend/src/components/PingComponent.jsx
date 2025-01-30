@@ -3,36 +3,44 @@ import Alert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { setError, setSuccess, clearError } from '../store/slices/errorSlice';
 import { apiService } from '../service/api';
+import { getMessage } from '../utils/localeHelper';
 
 const PingComponent = () => {
   const dispatch = useDispatch();
-  const { message, type } = useSelector((state) => state.error); // Obtén el mensaje y tipo del estado global
+  const { message, type, origin } = useSelector((state) => state.error);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const fetchPing = async () => {
       try {
         const response = await apiService.ping();
-        dispatch(setSuccess({ message: `Respuesta del servidor al endpoint ping: ${response.message}` }));
+        dispatch(setSuccess({
+          message: getMessage("PingComponent", "server_response", { message: response.message }),
+          origin: "PingComponent"
+        }));
 
-        // Configurar el temporizador para ocultar la alerta 3 segundos después
         setTimeout(() => {
           setVisible(false);
-          dispatch(clearError()); // Limpia el mensaje global
+          dispatch(clearError());
         }, 3000);
       } catch (error) {
-        dispatch(setError({ message: error }));
+        dispatch(setError({
+          message: getMessage("PingComponent", "error", { error: error.message }),
+          origin: "PingComponent"
+        }));
+
         setTimeout(() => {
           setVisible(false);
-          dispatch(clearError()); // Limpia el mensaje global tras 3 segundos
+          dispatch(clearError());
         }, 3000);
       }
     };
 
     fetchPing();
+    clearError();
   }, [dispatch]);
 
-  if (!visible || !message) {
+  if (!visible || !message || origin !== "PingComponent") {
     return null;
   }
 
