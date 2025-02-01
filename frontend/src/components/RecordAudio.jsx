@@ -4,11 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { handleFileUpload } from '../utils/uploadUtils';
 import { clearError } from '../store/slices/errorSlice';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
+import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { convertWavToMp3 } from '../utils/audioUtils';
+
 
 const RecordAudio = () => {
   const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
   const { message, type, origin } = useSelector(state => state.error);
+
+  const ffmpeg = new FFmpeg();
 
   useEffect(() => {
     dispatch(clearError());
@@ -17,8 +22,9 @@ const RecordAudio = () => {
   const uploadAudio = async (audioBlob) => {
     setUploading(true);
     try {
-      const audioFile = new File([audioBlob], "recording.wav", { type: "audio/wav" });
-      await handleFileUpload(audioFile, '/api/audio', dispatch, "RecordAudio");
+      await ffmpeg.load();
+      const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
+      await handleFileUpload(mp3File, '/api/audio', dispatch, "RecordAudio");
     } finally {
       setUploading(false);
     }
