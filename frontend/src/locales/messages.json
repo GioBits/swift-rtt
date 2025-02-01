@@ -1,0 +1,16 @@
+{
+  "PingComponent": {
+    "server_response": "Respuesta del servidor al realizar ping: {message}",
+    "error": "Error en el servidor: {error}"
+  },
+  "RecordAudio": {
+    "min_duration_error": "La grabación debe durar al menos 3 segundos.",
+    "mic_error": "Error al acceder al micrófono: {error}",
+    "upload_success": "Archivo de audio guardado en el servidor.",
+    "upload_error": "Error al guardar el archivo de audio: {error}"
+  },
+  "UploadAudio": {
+    "success": "Archivo de audio guardado en el servidor.",
+    "error": "Error al subir el archivo: {error}"
+  }
+}

@@ -1,29 +1,32 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { apiService } from '../service/api';
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile } from '@ffmpeg/util'
-
-const ffmpeg = new FFmpeg();
+import { useDispatch, useSelector } from 'react-redux'; // Importar useDispatch y useSelector
+import { handleFileUpload } from '../utils/uploadUtils';
+import { setError, clearError } from '../store/slices/errorSlice'; // Importar las acciones de Redux
+import { getMessage } from '../utils/localeHelper';
 
 const RecordAudio = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+
+  const dispatch = useDispatch(); // Hook para usar dispatch de Redux
+  const { message, type, origin } = useSelector(state => state.error); // Obtener el estado de error desde Redux
+
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
-  const maxRecordingTime = 10000; // 30 seconds
+  const maxRecordingTime = 10000; // 10 seconds
   const minRecordingTime = 3000; // 3 seconds
 
-  const startRecording = () => {
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
+  const startRecording = () => {
     // Limpiar el estado antes de iniciar una nueva grabación
     setAudioUrl(null);
-    setErrorMessage(null);
-    setSuccessMessage(null);
+    dispatch(clearError()); // Limpiar los mensajes anteriores
     audioChunksRef.current = [];
     startTimeRef.current = Date.now();
 
@@ -34,17 +37,19 @@ const RecordAudio = () => {
         mediaRecorder.start();
         setIsRecording(true);
 
-        mediaRecorder.ondataavailable = function(e) {
+        mediaRecorder.ondataavailable = (e) => {
           audioChunksRef.current.push(e.data);
         };
 
-        mediaRecorder.onstop = async function() {
-
+        mediaRecorder.onstop = async () => {
           const endTime = Date.now();
           const duration = endTime - startTimeRef.current;
 
           if (duration < minRecordingTime) {
-            setErrorMessage('La grabación debe durar al menos 3 segundos.');
+            dispatch(setError({
+              message: getMessage("RecordAudio", "min_duration_error"),
+              origin: "RecordAudio",
+            }));
             setIsRecording(false);
             return;
           }
@@ -57,17 +62,17 @@ const RecordAudio = () => {
           audioChunksRef.current = [];
         };
 
-        // Detener la grabación automáticamente después de 10 segundos
         setTimeout(() => {
           if (mediaRecorder.state === 'recording') {
             mediaRecorder.stop();
           }
         }, maxRecordingTime);
-
       })
       .catch(error => {
-        setErrorMessage('Error al acceder al micrófono: ' + error.message);
-        console.error('Error al acceder al microfono:', error);
+        dispatch(setError({
+          message: getMessage("RecordAudio", "mic_access_error", { error: error.message }),
+          origin: "RecordAudio"
+        }));
       });
   };
 
@@ -82,22 +87,16 @@ const RecordAudio = () => {
   const uploadAudio = async (audioBlob) => {
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('uploadedAudio', audioBlob, 'recording.wav');
-
-      const response = await apiService.post('/api/audio', formData);
-      setSuccessMessage('Archivo de audio guardado en el servidor.');
-      console.log('Archivo de audio guardado en el servidor:', response);
-    } catch (error) {
-      setErrorMessage('Error al guardar el archivo de audio: ' + error.message);
-      console.error('Error al guardar el archivo de audio:', error);
+      // Convierte el audioBlob en un archivo para subirlo
+      const audioFile = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+  
+      await handleFileUpload(audioFile, '/api/audio', dispatch, "RecordAudio");
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    
     <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
       <h3>Grabar un audio</h3>
       <div>
@@ -111,18 +110,17 @@ const RecordAudio = () => {
             <audio controls src={audioUrl}></audio>
           </div>
         )}
-        {errorMessage && (
+        {uploading && <p>Cargando archivo...</p>}
+        {/* Mostrar mensajes de error y éxito desde Redux */}
+        {type === 'error' && message && origin === "RecordAudio" && (
           <div style={{ color: 'red', marginTop: 20 }}>
-            {errorMessage}
+            {message}
           </div>
         )}
-        {successMessage && (
-          <div style={{ color: 'green', marginTop: 20 }}>
-            {successMessage}
-          </div>
+        {type === "success" && message && origin === "RecordAudio" && (
+          <div style={{ color: "green", marginTop: 20 }}>{message}</div>
         )}
       </div>
-      {uploading && <p>Cargando archivo...</p>} {/* Mensaje de carga */}
     </div>
   );
 };

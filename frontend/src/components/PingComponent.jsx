@@ -1,38 +1,51 @@
 import { useEffect, useState } from "react";
 import Alert from '@mui/material/Alert';
+import { useDispatch, useSelector } from 'react-redux';
+import { setError, setSuccess, clearError } from '../store/slices/errorSlice';
 import { apiService } from '../service/api';
+import { getMessage } from '../utils/localeHelper';
 
 const PingComponent = () => {
-  const [serverResponse, setServerResponse] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
+  const { message, type, origin } = useSelector((state) => state.error);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const fetchPing = async () => {
       try {
         const response = await apiService.ping();
-        setServerResponse(response);
-        setErrorMessage(null);
+        dispatch(setSuccess({
+          message: getMessage("PingComponent", "server_response", { message: response.message }),
+          origin: "PingComponent"
+        }));
 
-        // Configurar el temporizador para ocultar el componente 3 segundos después de recibir una respuesta
         setTimeout(() => {
           setVisible(false);
+          dispatch(clearError());
         }, 3000);
       } catch (error) {
-        setErrorMessage(error.message);
+        dispatch(setError({
+          message: getMessage("PingComponent", "error", { error: error.message }),
+          origin: "PingComponent"
+        }));
+
+        setTimeout(() => {
+          setVisible(false);
+          dispatch(clearError());
+        }, 3000);
       }
     };
 
     fetchPing();
-  }, []);
+  }, [dispatch]);
 
-  if (!visible) {
+  if (!visible || !message || origin !== "PingComponent") {
     return null;
   }
 
   return (
-    <Alert severity={serverResponse ? "success" : errorMessage ? "error" : "info"} style={{ top: "20px", right: "20px", position: "fixed" }}>
-      {serverResponse ? `Respuesta del servidor al endpoint ping: ${serverResponse}` : errorMessage ? errorMessage : "Cargando..."}
+    <Alert severity={type} style={{ top: "20px", right: "20px", position: "fixed" }}>
+      {message}
     </Alert>
   );
 };
