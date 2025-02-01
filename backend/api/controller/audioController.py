@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
-from api.service.audioService import save_audio
+from api.service.audioService import save_audio, retrieve_audio_files
 from models.audio import AudioRecord
 from pybase64 import b64encode
 
@@ -68,3 +68,10 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+async def retrieve_audio_controller():
+    try:
+        result = retrieve_audio_files()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
