@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
-from api.service.audioService import save_audio
+from api.service.audioService import save_audio, retrieve_audio_files
 from models.audio import AudioRecord
 
 async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
@@ -61,14 +61,9 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-async def retrieve_audio(db : Session) -> AudioRecord:
-
-    # Crear una sesión de base de datos
-    if not db:
-        db = SessionLocal()
-
+async def retrieve_audio_controller():
     try:
-        result = await db.execute()
-        return result.scalars().all()
+        result = retrieve_audio_files()
+        return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database Error")
+        raise HTTPException(status_code=500, detail=e)
