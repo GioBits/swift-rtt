@@ -15,3 +15,6 @@ uvicorn==0.34.0
 gunicorn==23.0.0
 alembic==1.14.1
 alembic-autogen-check==1.1.1
+openai-whisper==20231117  # o la última versión
+python-magic==0.4.27      # Para validar tipos de archivo
+ffmpeg-python==0.2.0      # Para manejar conversiones de audio
