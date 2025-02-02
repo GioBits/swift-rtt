@@ -4,7 +4,7 @@ import { getMessage } from '../utils/localeHelper';
 
 export const useAudioRecorder = (dispatch, uploadAudio, {
   minRecordingTime = 3000,
-  maxRecordingTime = 10000
+  maxRecordingTime = 30000
 } = {}) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);

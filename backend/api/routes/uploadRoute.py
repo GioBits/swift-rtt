@@ -22,7 +22,7 @@ async def UploadAudio(uploadedAudio : UploadFile = File(...)):
     #mock chat_id, userd_id, translation and language
     chat_id = "12345"
     user_id = "12345"
-    transcription = "Prueba, aqui deberia estar el uso de la libreria speech to text"
+    transcription = "Procesando audio"
     language = "Español"
 
     response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)

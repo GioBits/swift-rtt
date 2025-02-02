@@ -2,6 +2,7 @@ import "./App.css";
 import PingComponent from "./components/PingComponent";
 import RecordAudio from "./components/RecordAudio";
 import UploadAudio from "./components/UploadAudio";
+import TranscribeAudio from "./components/TranscribeAudio";
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <div className="UploadAudio">
         <UploadAudio />
         <RecordAudio />
+        {/* <TranscribeAudio /> */}
       </div>
       <PingComponent />
     </>
