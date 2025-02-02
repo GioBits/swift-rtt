@@ -12,7 +12,7 @@ function App() {
       <div className="UploadAudio">
         <UploadAudio />
         <RecordAudio />
-        <TranscribeAudio />
+        {/* <TranscribeAudio /> */}
       </div>
       <PingComponent />
     </>

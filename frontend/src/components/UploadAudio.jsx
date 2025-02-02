@@ -1,13 +1,19 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { useDispatch } from 'react-redux';
 import { handleFileUpload } from '../utils/uploadUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError } from '../store/slices/errorSlice';
 
 const UploadAudio = () => {
   const [uploading, setUploading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const { message, type, origin } = useSelector(state => state.error);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -61,6 +67,14 @@ const UploadAudio = () => {
         </div>
       )}
       {uploading && <p>Cargando archivo...</p>}
+        {type === 'error' && message && origin === "UploadAudio" && (
+          <div style={{ color: 'red', marginTop: 20 }}>
+            {message}
+          </div>
+        )}
+        {type === "success" && message && origin === "UploadAudio" && (
+          <div style={{ color: "green", marginTop: 20 }}>{message}</div>
+        )}
     </div>
   );
 };

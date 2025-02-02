@@ -14,8 +14,9 @@ export const handleFileUpload = async (file, endpoint, dispatch, origin) => {
   formData.append('uploadedAudio', file, file.name);
 
   try {
-    await apiService.post(endpoint, formData);
-    dispatch(setSuccess({ message: getMessage("UploadAudio", "success"), origin: origin }));
+    const response = await apiService.post(endpoint, formData);
+    print(response.transcription);
+    dispatch(setSuccess({ message: response.transcription, origin: origin }));
   } catch (error) {
     dispatch(setError({ message: getMessage("UploadAudio", "error", { error: error.message }), origin: origin }));
     throw error; // Re-lanza el error en caso de necesitar manejarlo
