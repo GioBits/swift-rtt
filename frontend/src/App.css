@@ -4,3 +4,12 @@
   padding: 2rem;
   text-align: center;
 }
+
+
+.upload-input {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-width: 600px;
+  margin: 20px auto;
+}

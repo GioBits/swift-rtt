@@ -1,50 +1,48 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { apiService } from '../service/api';
+import { handleFileUpload } from '../utils/uploadUtils';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearError } from '../store/slices/errorSlice';
+import { b64toBlob } from '../utils/audioUtils';
 
 const UploadAudio = () => {
-  const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [audioUrl, setAudioUrl] = useState(null); // Estado para la URL del audio
+  const [audioUrl, setAudioUrl] = useState(null);
+  const { message, type, origin } = useSelector(state => state.error);
   const fileInputRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const handleFileChange = (event) => {
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
+  
+
+  const handleFileChange = async (event) => {
+    setAudioUrl(null);
     const selectedFile = event.target.files[0];
-    setFile(selectedFile);
     if (selectedFile) {
-      const url = URL.createObjectURL(selectedFile);
-      setAudioUrl(url); // Actualizar el estado con la URL del archivo seleccionado
-      handleUpload(selectedFile);
+      const fileUploadedBase64 = await uploadFile(selectedFile);
+      const blob = b64toBlob(fileUploadedBase64, 'audio/mp3');
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
     }
   };
 
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleUpload = async (file) => {
+  const uploadFile = async (file) => {
     setUploading(true);
-    setSuccessMessage(null);
-    setErrorMessage(null);
     try {
-      const formData = new FormData();
-      formData.append('uploadedAudio', file, file.name);
-
-      const response = await apiService.post('/api/audio', formData);
-      setSuccessMessage('Archivo de audio guardado en el servidor.');
-      console.log('Archivo de audio guardado en el servidor:', response);
-    } catch (error) {
-      setErrorMessage('Error al guardar el archivo de audio: ' + error.message);
-      console.error('Error al guardar el archivo de audio:', error);
+      const fileBase64 = await handleFileUpload(file, '/api/audio', dispatch, "UploadAudio");
+      return fileBase64;
+    } catch {
+      // El error ya fue manejado por Redux
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
+    <div className='upload-input'>
       <h3>Cargar archivo de audio</h3>
       <input
         type="file"
@@ -52,8 +50,13 @@ const UploadAudio = () => {
         onChange={handleFileChange}
         style={{ display: 'none' }}
         ref={fileInputRef}
+        id="upload-audio"
       />
-      <Button variant='contained' onClick={handleButtonClick} style={{ marginBottom: '10px' }}>
+      <Button
+        variant="contained"
+        onClick={() => fileInputRef.current.click()}
+        style={{ marginBottom: '10px' }}
+      >
         Seleccionar Archivo de Audio
       </Button>
       {audioUrl && (
@@ -62,16 +65,14 @@ const UploadAudio = () => {
         </div>
       )}
       {uploading && <p>Cargando archivo...</p>}
-      {errorMessage && (
-        <div style={{ color: 'red', marginTop: 20 }}>
-          {errorMessage}
-        </div>
-      )}
-      {successMessage && (
-        <div style={{ color: 'green', marginTop: 20 }}>
-          {successMessage}
-        </div>
-      )}
+        {type === 'error' && message && origin === "UploadAudio" && (
+          <div style={{ color: 'red', marginTop: 20 }}>
+            {message}
+          </div>
+        )}
+        {type === "success" && message && origin === "UploadAudio" && (
+          <div style={{ color: "green", marginTop: 20 }}>{message}</div>
+        )}
     </div>
   );
 };

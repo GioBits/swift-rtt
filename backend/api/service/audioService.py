@@ -1,17 +1,21 @@
 from sqlalchemy.orm import Session
-from db.database import AudioRecord
+from  db.database import AudioRecord, SessionLocal
+from fastapi import HTTPException
 from datetime import datetime
-from db.database import SessionLocal
 
-def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str, db: Session) -> AudioRecord:
+def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, content_type: str, 
+               transcription:str, language:str, db: Session) -> AudioRecord:
     """
     Función de servicio para guardar un archivo de audio en la base de datos.
 
     Args:
         chat_id (str): El ID del chat asociado al audio.
+        user_id (str): El nombre del usuarip
         filename (str): Nombre del archivo de audio.
         file_data (bytes): Datos binarios del archivo de audio.
         content_type (str): Tipo de contenido del archivo de audio.
+        transcription (str): Audio en texto
+        language (str): Lenguaje del archivo
         db (Session): Sesión de la base de datos.
 
     Returns:
@@ -20,14 +24,17 @@ def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str,
 
     # Crear una sesión de base de datos
     if not db:
-        db = SessionLocal();
+        db = SessionLocal()
 
     audio_record = AudioRecord(
         chat_id=chat_id,
+        user_id=user_id,
         filename=filename,
         audio_data=file_data,
         content_type=content_type,
         file_size=len(file_data),
+        transcription =transcription,
+        language=language,
         created_at=datetime.utcnow()
     )
 
@@ -36,3 +43,9 @@ def save_audio(chat_id: str, file_data: bytes, filename: str, content_type: str,
     db.commit()
     db.refresh(audio_record)
     return audio_record
+
+def retrieve_audio_files():
+    # Crear una sesión de base de datos
+    db = SessionLocal()
+    list = db.query(AudioRecord).all()
+    return list

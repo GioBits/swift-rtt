@@ -58,6 +58,6 @@ def apply_migrations():
         raise
 
 def run_migrations():
-    if check_for_changes():
-        generate_migration()
+    # if check_for_changes():
+    #     generate_migration()
     apply_migrations()

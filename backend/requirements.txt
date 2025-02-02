@@ -5,6 +5,7 @@ fastapi-cli==0.0.7
 psycopg2-binary==2.9.10
 pydantic==2.10.5
 pydantic_core==2.27.2
+pybase64==1.4.0
 Pygments==2.19.1
 python-dotenv==1.0.1
 python-multipart==0.0.20
@@ -15,3 +16,6 @@ uvicorn==0.34.0
 gunicorn==23.0.0
 alembic==1.14.1
 alembic-autogen-check==1.1.1
+openai-whisper==20231117  # o la última versión
+python-magic==0.4.27      # Para validar tipos de archivo
+ffmpeg-python==0.2.0      # Para manejar conversiones de audio

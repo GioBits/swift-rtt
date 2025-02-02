@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
-from backend.api.service.audioService import save_audio
-from backend.models.audio import AudioRecord
+from api.service.audioService import save_audio
+from models.audio import AudioRecord
 
 @pytest.fixture
 def mock_db():
