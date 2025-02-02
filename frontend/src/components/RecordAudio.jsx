@@ -34,7 +34,7 @@ const RecordAudio = () => {
 
 
   return (
-    <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '5px', maxWidth: '600px', margin: '20px auto' }}>
+    <div className='upload-input'>
       <h3>Grabar un audio</h3>
       <div>
         {isRecording ? (

@@ -13,9 +13,10 @@ const UploadAudio = () => {
 
   useEffect(() => {
     dispatch(clearError());
-  }, [dispatch]);
+  }, [dispatch,audioUrl]);
 
   const handleFileChange = (event) => {
+    setAudioUrl(null);
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       const url = URL.createObjectURL(selectedFile);
@@ -36,15 +37,7 @@ const UploadAudio = () => {
   };
 
   return (
-    <div
-      style={{
-        padding: '20px',
-        border: '1px solid #ddd',
-        borderRadius: '5px',
-        maxWidth: '600px',
-        margin: '20px auto',
-      }}
-    >
+    <div className='upload-input'>
       <h3>Cargar archivo de audio</h3>
       <input
         type="file"
