@@ -5,12 +5,15 @@ from models.audio import AudioRecord
 from pybase64 import b64encode
 
 
-async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRecord:
+async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
     """
     Función controladora para manejar la carga de un archivo de audio.
 
     Args:
         chat_id (str): El ID del chat asociado al audio.
+        user_id (str): El nombre del usuario.
+        transcription (str): El audio transcrito.
+        language (str): El idioma del audio.
         file (UploadFile): Archivo de audio enviado por el cliente.
         db (Session): Sesión de la base de datos.
 
@@ -41,15 +44,23 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
         # Verifica que el archivo no sea demasiado pesado (max 10MB)
         max_size = 10 * 1024 * 1024  # 10MB en Bytes
         if len(file_data) > max_size:
-            raise HTTPException(
-                status_code=422, detail="File size exceeds 10MB")
+            raise HTTPException(status_code = 422, detail="File size exceeds 10MB")
+                # Verifica el nombre no sea más de 255 caracteres de largo
+        
+        # Verifica el idioma no sea más de 50 caracteres de largo
+        if len(language) > 50:
+            raise HTTPException(status_code = 422, detail="Language name is too long")
+        
 
         # Llamar a la capa de servicio para guardar el audio
         audio_record = save_audio(
-            chat_id,
-            file_data,
-            file.filename,
+            chat_id, 
+            user_id,
+            file_data, 
+            file.filename, 
             file.content_type,
+            transcription,
+            language, 
             db
         )
 
@@ -58,9 +69,12 @@ async def process_audio(chat_id: str, file: UploadFile, db: Session) -> AudioRec
 
         return {
             "id": audio_record.id,
-            "filename": audio_record.filename,
-            "format": audio_record.content_type,
+            "user_id": audio_record.user_id,
+            "filename": audio_record.filename, 
+            "format": audio_record.content_type, 
             "size": len(audio_record.audio_data),
+            "transcription": audio_record.transcription,
+            "language": audio_record.language,
             "file": base64_encoded
         }
 

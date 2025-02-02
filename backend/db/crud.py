@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.models import models
+from  models.audio import models
 
 # Crear un nuevo usuario
 def create_user(db: Session, username: str, email: str, full_name: str):
