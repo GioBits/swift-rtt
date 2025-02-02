@@ -4,8 +4,8 @@ import RecordAudio from "./components/RecordAudio";
 import UploadAudio from "./components/UploadAudio";
 import TranscribeAudio from "./components/TranscribeAudio";
 
-function App() {
 
+function App() {
   return (
     <>
       <h1>Real Time Translation</h1>
@@ -15,7 +15,6 @@ function App() {
         <TranscribeAudio />
       </div>
       <PingComponent />
-      
     </>
   );
 }

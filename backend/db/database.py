@@ -1,9 +1,9 @@
+import os
+import sys
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
-import os
-import sys
 
 # Cargar las variables del archivo .env
 load_dotenv(dotenv_path='../.env')
@@ -39,7 +39,7 @@ Base = declarative_base()
 # Crear la sesión de SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-from models.audio import AudioRecord
+from  models.audio import AudioRecord
 
 # Crear las tablas en la base de datos (si no existen)
 def init_db():
