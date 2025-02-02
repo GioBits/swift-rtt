@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text
 from datetime import datetime
 from db.database import Base
 from pydantic import BaseModel
+from typing import Optional
 
 
 class AudioRecord(Base):
@@ -19,11 +20,14 @@ class AudioRecord(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class AudioRecordBase(BaseModel):
-    chat_id: str
-    filename: str
-    content_type: str
-    file_size: int
-    created_at: datetime
+    chat_id: Optional[str] = None
+    user_id: Optional[str] = None
+    filename: Optional[str] = None
+    content_type: Optional[str] = None
+    file_size: Optional[int] = None
+    transcription: Optional[str] = None
+    language: Optional[str] = None
+    created_at: Optional[datetime] = None
 
 class AudioRecordSchema(AudioRecordBase):
     id: int
