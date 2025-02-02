@@ -39,7 +39,7 @@ Base = declarative_base()
 # Crear la sesión de SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-from backend.models.audio import AudioRecord
+from  models.audio import AudioRecord
 
 # Crear las tablas en la base de datos (si no existen)
 def init_db():

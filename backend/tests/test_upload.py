@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from backend.api.service.audioService import save_audio
-from backend.db.database import SessionLocal
+from  api.service.audioService import save_audio
+from  db.database import SessionLocal
 
 def upload_audio_to_db(file_path: str, chat_id: str):
     """

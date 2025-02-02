@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
-from backend.api.service.audioService import save_audio
-from backend.models.audio import AudioRecord
+from  api.service.audioService import save_audio
+from  models.audio import AudioRecord
 
 async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
     """

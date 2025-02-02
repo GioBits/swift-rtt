@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text
 from datetime import datetime
-from backend.db.database import Base
+from  db.database import Base
 
 class AudioRecord(Base):
     __tablename__ = "audios"
