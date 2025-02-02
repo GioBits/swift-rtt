@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim
+FROM python:3.12-slim
 
 EXPOSE 8000
 
@@ -8,6 +8,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y ffmpeg && apt-get clean
 
 # Install pip requirements
 COPY requirements.txt .
