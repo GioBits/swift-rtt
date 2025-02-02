@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from  db.database import AudioRecord
+from  db.database import AudioRecord, SessionLocal
+from fastapi import HTTPException
 from datetime import datetime
-from  db.database import SessionLocal
 
 def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, content_type: str, 
                transcription:str, language:str, db: Session) -> AudioRecord:
@@ -43,3 +43,9 @@ def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, conte
     db.commit()
     db.refresh(audio_record)
     return audio_record
+
+def retrieve_audio_files():
+    # Crear una sesión de base de datos
+    db = SessionLocal()
+    list = db.query(AudioRecord).all()
+    return list

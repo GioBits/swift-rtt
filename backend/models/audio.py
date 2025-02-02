@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text
 from datetime import datetime
-from  db.database import Base
+from db.database import Base
+from pydantic import BaseModel
+
 
 class AudioRecord(Base):
     __tablename__ = "audios"
@@ -15,3 +17,16 @@ class AudioRecord(Base):
     transcription = Column(Text, nullable=True)  
     language = Column(String(50), nullable=True)  
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class AudioRecordBase(BaseModel):
+    chat_id: str
+    filename: str
+    content_type: str
+    file_size: int
+    created_at: datetime
+
+class AudioRecordSchema(AudioRecordBase):
+    id: int
+
+    class Config:
+        orm_mode = True
