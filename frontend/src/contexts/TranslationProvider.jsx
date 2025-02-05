@@ -5,7 +5,6 @@ import { setLanguage } from "../utils/languageUtils";
 import { TranslationContext } from "./TranslationContext";
 
 export const TranslationProvider = ({ children }) => {
-
   const [languages, setLanguages] = useState([]);
   const [audioUrl, setAudioUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -19,7 +18,6 @@ export const TranslationProvider = ({ children }) => {
     sourceLanguage: "es",
     targetLanguage: "en",
   });
-
 
   const handleSetSourceLanguage = (languageCode) => {
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
