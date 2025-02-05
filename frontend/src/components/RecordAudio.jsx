@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import Button from '@mui/material/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { handleFileUpload } from '../utils/uploadUtils';
 import { clearError } from '../store/slices/errorSlice';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { convertWavToMp3 } from '../utils/audioUtils';
+import { TranslationContext } from '../contexts/TranslationContext';
 
 
 const RecordAudio = () => {
-  const [uploading, setUploading] = useState(false);
+
+  // const { message, type, origin } = useSelector(state => state.error);
+  const { setUploading } = useContext(TranslationContext);
   const dispatch = useDispatch();
-  const { message, type, origin } = useSelector(state => state.error);
+
 
   const ffmpeg = new FFmpeg();
 
@@ -30,19 +33,18 @@ const RecordAudio = () => {
     }
   };
 
-  const { isRecording, audioUrl, startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
-
+  const { isRecording, startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
 
   return (
-    <div className='upload-input'>
-      <h3>Grabar un audio</h3>
+    <div>
       <div>
-        {isRecording ? (
-          <Button variant='contained' onClick={stopRecording}>Detener Grabación</Button>
-        ) : (
-          <Button variant='contained' onClick={startRecording}>Iniciar Grabación</Button>
-        )}
-        {audioUrl && (
+        <Button
+          variant="contained"
+          onClick={isRecording ? stopRecording : startRecording}>
+            {isRecording ? "Detener Grabación" : "Iniciar Grabación"}
+        </Button>
+
+        {/* {audioUrl && (
           <div style={{ marginTop: 20 }}>
             <audio controls src={audioUrl}></audio>
           </div>
@@ -55,7 +57,7 @@ const RecordAudio = () => {
         )}
         {type === "success" && message && origin === "RecordAudio" && (
           <div style={{ color: "green", marginTop: 20 }}>{message}</div>
-        )}
+        )} */}
       </div>
     </div>
   );
