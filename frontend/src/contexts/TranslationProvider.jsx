@@ -8,6 +8,8 @@ export const TranslationProvider = ({ children }) => {
 
   const [languages, setLanguages] = useState([]);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     setLanguages(idiomas); // Asignar los idiomas a partir del archivo JSON
@@ -18,7 +20,6 @@ export const TranslationProvider = ({ children }) => {
     targetLanguage: "en",
   });
 
-  const [uploading, setUploading] = useState(false);
 
   const handleSetSourceLanguage = (languageCode) => {
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
@@ -38,7 +39,9 @@ export const TranslationProvider = ({ children }) => {
         uploading,
         setUploading,
         audioUrl,
-        setAudioUrl
+        setAudioUrl,
+        isRecording,
+        setIsRecording
       }}
     >
       {children}
