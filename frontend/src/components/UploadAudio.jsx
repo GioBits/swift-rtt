@@ -8,7 +8,7 @@ import { TranslationContext } from '../contexts/TranslationContext';
 import "../styles.css";
 
 const UploadAudio = () => {
-  const { setUploading, setAudioUrl } = useContext(TranslationContext);
+  const { isRecording, setUploading, setAudioUrl } = useContext(TranslationContext);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -54,7 +54,7 @@ const UploadAudio = () => {
         variant="contained"
         className='upload-button'
         onClick={() => fileInputRef.current.click()}
-        // disabled={uploading} // se desactiva si `uploading` es verdadero
+        disabled={isRecording} // se desactiva si `uploading` es verdadero
       >
         Subir audio
       </Button>

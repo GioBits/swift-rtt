@@ -1,5 +1,5 @@
 import { TranslationContext } from '../contexts/TranslationContext';
-import { useState, useRef, useContext } from 'react';
+import { useRef, useContext } from 'react';
 import { setError } from '../store/slices/errorSlice';
 import { getMessage } from '../utils/localeHelper';
 
@@ -7,8 +7,7 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
   minRecordingTime = 3000,
   maxRecordingTime = 30000
 } = {}) => {
-  const [isRecording, setIsRecording] = useState(false);
-  const { setAudioUrl } = useContext(TranslationContext);
+  const { setAudioUrl, isRecording, setIsRecording } = useContext(TranslationContext);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);

@@ -11,11 +11,8 @@ import { TranslationContext } from '../contexts/TranslationContext';
 
 const RecordAudio = () => {
 
-  // const { message, type, origin } = useSelector(state => state.error);
   const { setUploading } = useContext(TranslationContext);
   const dispatch = useDispatch();
-
-
   const ffmpeg = new FFmpeg();
 
   useEffect(() => {
@@ -37,28 +34,11 @@ const RecordAudio = () => {
 
   return (
     <div>
-      <div>
-        <Button
-          variant="contained"
-          onClick={isRecording ? stopRecording : startRecording}>
-            {isRecording ? "Detener Grabación" : "Iniciar Grabación"}
-        </Button>
-
-        {/* {audioUrl && (
-          <div style={{ marginTop: 20 }}>
-            <audio controls src={audioUrl}></audio>
-          </div>
-        )}
-        {uploading && <p>Cargando archivo...</p>}
-        {type === 'error' && message && origin === "RecordAudio" && (
-          <div style={{ color: 'red', marginTop: 20 }}>
-            {message}
-          </div>
-        )}
-        {type === "success" && message && origin === "RecordAudio" && (
-          <div style={{ color: "green", marginTop: 20 }}>{message}</div>
-        )} */}
-      </div>
+      <Button
+        variant="contained"
+        onClick={isRecording ? stopRecording : startRecording}>
+        {isRecording ? "Detener Grabación" : "Iniciar Grabación"}
+      </Button>
     </div>
   );
 };
