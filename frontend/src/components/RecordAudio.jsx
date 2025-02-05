@@ -10,7 +10,6 @@ import { TranslationContext } from '../contexts/TranslationContext';
 
 
 const RecordAudio = () => {
-
   const { isRecording, setUploading } = useContext(TranslationContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();

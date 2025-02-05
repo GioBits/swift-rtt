@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 const TranslationAudio = () => {
   const { audioUrl, uploading } = useContext(TranslationContext);
   const { message, type, origin } = useSelector(state => state.error);
+
   return (
     <div className='trascripcion-audio'>
       {audioUrl && (
