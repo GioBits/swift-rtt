@@ -11,13 +11,13 @@ import { TranslationContext } from '../contexts/TranslationContext';
 
 const RecordAudio = () => {
 
-  const { setUploading } = useContext(TranslationContext);
+  const { isRecording, setUploading } = useContext(TranslationContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
 
   useEffect(() => {
     dispatch(clearError());
-  }, [dispatch]);
+  }, [dispatch, isRecording]);
 
   const uploadAudio = async (audioBlob) => {
     setUploading(true);
@@ -30,7 +30,7 @@ const RecordAudio = () => {
     }
   };
 
-  const { isRecording, startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
+  const { startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
 
   return (
     <div>

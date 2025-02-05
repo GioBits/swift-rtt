@@ -7,7 +7,7 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
   minRecordingTime = 3000,
   maxRecordingTime = 30000
 } = {}) => {
-  const { setAudioUrl, isRecording, setIsRecording } = useContext(TranslationContext);
+  const { setAudioUrl, setIsRecording } = useContext(TranslationContext);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
@@ -70,5 +70,5 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
     }
   };
 
-  return { isRecording, startRecording, stopRecording };
+  return { startRecording, stopRecording };
 };

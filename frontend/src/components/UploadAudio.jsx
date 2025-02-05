@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext } from 'react';
+import { useRef, useContext } from 'react';
 import Button from '@mui/material/Button';
 import { handleFileUpload } from '../utils/uploadUtils';
 import { useDispatch} from 'react-redux';
@@ -11,10 +11,6 @@ const UploadAudio = () => {
   const { isRecording, setUploading, setAudioUrl } = useContext(TranslationContext);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(clearError());
-  }, [dispatch]);
 
 
   const handleFileChange = async (event) => {
@@ -53,8 +49,13 @@ const UploadAudio = () => {
       <Button
         variant="contained"
         className='upload-button'
-        onClick={() => fileInputRef.current.click()}
-        disabled={isRecording} // se desactiva si `uploading` es verdadero
+        onClick={() => {
+          dispatch(clearError());
+          setAudioUrl(null);
+          fileInputRef.current.value = "";
+          fileInputRef.current.click();
+        }}
+        disabled={isRecording}
       >
         Subir audio
       </Button>
