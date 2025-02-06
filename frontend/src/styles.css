@@ -1,0 +1,8 @@
+.upload-button {
+  width: 180px;
+}
+
+.trasncription-audio {
+  display: flex;
+  flex-firection: column;
+}
