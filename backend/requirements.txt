@@ -16,6 +16,14 @@ uvicorn==0.34.0
 gunicorn==23.0.0
 alembic==1.14.1
 alembic-autogen-check==1.1.1
-openai-whisper==20231117  # o la última versión
-python-magic==0.4.27      # Para validar tipos de archivo
-ffmpeg-python==0.2.0      # Para manejar conversiones de audio
+openai-whisper==20231117
+python-magic==0.4.27
+ffmpeg-python==0.2.0
+sentencepiece==0.2.0  
+
+# PyTorch para CPU (Python 3.12)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.0
+torchaudio==2.3.0
+torchvision==0.18.0
+transformers==4.48.2
