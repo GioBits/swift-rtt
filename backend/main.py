@@ -11,6 +11,7 @@ import uvicorn
 # Importar las rutas
 from api.routes.uploadRoute import router as uploadAudioRouter
 from api.routes.transcriberRoute import router as transcriberRouter
+from api.routes.translateRoute import router as translateRouter
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
@@ -21,6 +22,8 @@ app = FastAPI()
 # Importación de rutas
 app.include_router(uploadAudioRouter, prefix=("/api"))
 app.include_router(transcriberRouter, prefix=("/api"))
+app.include_router(translateRouter, prefix=("/api"))
+
 
 # # Lista de origenes permitidos
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
