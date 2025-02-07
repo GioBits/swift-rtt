@@ -11,6 +11,7 @@ import uvicorn
 # Importar las rutas
 from api.routes.uploadRoute import router as uploadAudioRouter
 from api.routes.transcriberRoute import router as transcriberRouter
+from backend.api.validators.audioValidations import AudioValidationMiddleware
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')

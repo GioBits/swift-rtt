@@ -19,3 +19,6 @@ alembic-autogen-check==1.1.1
 openai-whisper==20231117  # o la última versión
 python-magic==0.4.27      # Para validar tipos de archivo
 ffmpeg-python==0.2.0      # Para manejar conversiones de audio
+httpx==0.23.0
+pytest== 8.3.4
+transformers==4.48.2

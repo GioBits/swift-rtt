@@ -30,12 +30,8 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
 
         # Verificar que los datos sean binarios
         if not isinstance(file_data, bytes):
-            raise ValueError(
-                "El archivo no se leyo correctamente como binario")
+            raise ValueError("El archivo no se leyo correctamente como binario")
 
-        filename = file.filename
-
-        # Usando una variable booleana para indicar si es válido o inválido
         # Verifica el nombre no sea más de 255 caracteres de largo
         if len(file.filename) > 255:
             raise HTTPException(status_code=422, detail="File name too long")
@@ -46,14 +42,13 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
             raise HTTPException(status_code=422, detail="Invalid file format")
 
         # Verifica que el archivo no sea demasiado pesado (max 10MB)
-        max_size = 10 * 1024 * 1024  # 10MB en Bytes
+        max_size = 1 * 1024 * 1024  # 10MB en Bytes
         if len(file_data) > max_size:
-            raise HTTPException(status_code = 422, detail="File size exceeds 10MB")
-                # Verifica el nombre no sea más de 255 caracteres de largo
+            raise HTTPException(status_code=422, detail="File size exceeds 10MB")
         
         # Verifica el idioma no sea más de 50 caracteres de largo
         if len(language) > 50:
-            raise HTTPException(status_code = 422, detail="Language name is too long")
+            raise HTTPException(status_code=422, detail="Language name is too long")
         
         # Crear un archivo temporal para almacenar el contenido del archivo subido
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:

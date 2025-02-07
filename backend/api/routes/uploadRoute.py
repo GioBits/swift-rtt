@@ -1,20 +1,21 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile, Depends
+from fastapi import APIRouter, File, HTTPException, UploadFile, Depends, Request
 from fastapi.responses import JSONResponse
 from api.controller.audioController import process_audio, retrieve_audio_controller
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models.audio import AudioRecordSchema
+from validators.audioValidations import validate_upload
 from typing import List
 
 router = APIRouter()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio")
-async def UploadAudio(uploadedAudio : UploadFile = File(...)):
+async def UploadAudio(uploadedAudio: UploadFile = File(...)):
     """
     Handles the upload of an audio file.
     Args:
-        uploadedAudio (UploadFile): The audio file to be uploaded.
+        validated_data: Recibe los datos de la validacion en un diccionario.
     Returns:
         JSONResponse: The response after processing the audio file.
     """
@@ -24,9 +25,17 @@ async def UploadAudio(uploadedAudio : UploadFile = File(...)):
     user_id = "12345"
     transcription = "Procesando audio"
     language = "Español"
-
-    response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)
-    return JSONResponse(content=response)
+    
+    try:
+        #file_data = await validate_upload(uploadedAudio, language)
+        # Procesar el audio con las validaciones ya realizadas
+        response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)
+        
+        return JSONResponse(content=response)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint "/audiolist", recupera una lista de archivos de la base de datos
 @router.get("/audiolist", response_model=List[AudioRecordSchema])
