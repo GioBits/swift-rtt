@@ -27,12 +27,3 @@ async def UploadAudio(uploadedAudio : UploadFile = File(...)):
 
     response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)
     return JSONResponse(content=response)
-
-# Endpoint "/audiolist", recupera una lista de archivos de la base de datos
-@router.get("/audiolist", response_model=List[AudioRecordSchema])
-async def retrieve_audiosFile_list():
-    try:
-        response = await retrieve_audio_controller()
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database Error")
