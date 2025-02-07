@@ -128,6 +128,10 @@ bug-busters/
 │   ├── models/               # Modelos de datos (Pydantic, ORM, etc.)
 │   ├── api/                  # Rutas o endpoints o versiones del API
 │   ├── db/                   # Base de datos (conexiones a la bd)
+│   ├── migrations/           # Migraciones de la base de datos
+│   ├── test/                 # Pruebas unitarias
+│   ├── utils/                # Almacenamineto de funciones de apoyo 
+|   |── alembic.ini           # Configuracion de alembic para las migraciones
 |   |── requirements.txt      # Dependencias del proyecto backend
 ├── frontend/                 # Código fuente del frontend
 │   ├── public/               # Archivos públicos
