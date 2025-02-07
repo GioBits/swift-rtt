@@ -4,7 +4,6 @@ from api.controller.audioController import process_audio, retrieve_audio_control
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models.audio import AudioRecordSchema
-from validators.audioValidations import validate_upload
 from typing import List
 
 router = APIRouter()
@@ -24,17 +23,18 @@ async def UploadAudio(uploadedAudio: UploadFile = File(...)):
     chat_id = "12345"
     user_id = "12345"
     transcription = "Procesando audio"
-    language = "Español"
+    language = "es"
     
     try:
-        #file_data = await validate_upload(uploadedAudio, language)
         # Procesar el audio con las validaciones ya realizadas
         response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)
         
         return JSONResponse(content=response)
     except HTTPException as e:
+        print(f"HTTPException capturada: {e.detail}")
         raise e
     except Exception as e:
+        print(f"Excepción general capturada: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Endpoint "/audiolist", recupera una lista de archivos de la base de datos
