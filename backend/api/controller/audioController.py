@@ -3,7 +3,7 @@ from fastapi import HTTPException, UploadFile
 from api.service.audioService import save_audio, retrieve_audio_files
 from models.audio import AudioRecord
 from pybase64 import b64encode
-from utils.transcribeController import transcription_control
+from utils.transcribe import transcriber
 from api.validators.audioValidations import validate_upload
 
 
@@ -26,7 +26,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
     try:
         file_data = await validate_upload(file, language)
         
-        transcription = await transcription_control(file_data)
+        transcription = await transcriber.transcription_handler(file_data)
 
         # Llamar a la capa de servicio para guardar el audio
         audio_record = save_audio(
