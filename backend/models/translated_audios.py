@@ -2,6 +2,9 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, LargeBinar
 from sqlalchemy.orm import relationship
 from db.database import Base
 from datetime import datetime
+from pydantic import BaseModel
+from typing import Optional
+
 
 class TranslatedAudio(Base):
     __tablename__ = 'translated_audios'
@@ -16,3 +19,16 @@ class TranslatedAudio(Base):
     # Relación con el modelo de audio original
     original_audio = relationship("AudioRecord", back_populates="translated_audios")
 
+class TranslatedAudioBase(BaseModel):
+    audio_id: Optional[str] = None
+    audio_data: Optional[str] = None
+    file_size: Optional[int] = None
+    language: Optional[str] = None
+    transcription: Optional[str] = None
+    created_at: Optional[datetime] = None
+
+class TranslationRecordSchema(TranslatedAudioBase):
+    id: int
+
+    class Config:
+        orm_mode = True
