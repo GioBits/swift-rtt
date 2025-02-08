@@ -12,6 +12,7 @@ import uvicorn
 from api.routes.uploadRoute import router as uploadAudioRouter
 from api.routes.transcriberRoute import router as transcriberRouter
 from api.routes.translateRoute import router as translateRouter
+from api.routes.translationByIDRoute import router as translationByIDRouter
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
@@ -23,6 +24,7 @@ app = FastAPI()
 app.include_router(uploadAudioRouter, prefix=("/api"))
 app.include_router(transcriberRouter, prefix=("/api"))
 app.include_router(translateRouter, prefix=("/api"))
+app.include_router(translationByIDRouter, prefix=("/api"))
 
 
 # # Lista de origenes permitidos

@@ -21,7 +21,6 @@ class TranslatedAudio(Base):
 
 class TranslatedAudioBase(BaseModel):
     audio_id: Optional[str] = None
-    audio_data: Optional[str] = None
     file_size: Optional[int] = None
     language: Optional[str] = None
     transcription: Optional[str] = None
