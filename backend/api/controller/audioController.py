@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
-from api.service.audioService import save_audio, retrieve_audio_files
+from api.service.audioService import save_audio, retrieve_audio_files, retrieve_audio_by_ID
 from models.audio import AudioRecord
 from pybase64 import b64encode
 from utils.transcribe import transcriber
@@ -80,5 +80,17 @@ async def retrieve_audio_controller():
     try:
         result = retrieve_audio_files()
         return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
+    
+from api.service.audioService import retrieve_audio_files
+
+async def retrieve_audio_by_id_controller(id: int):
+    try:
+        result = retrieve_audio_by_ID(id)
+        if result != None:
+            return result
+        else:
+            raise HTTPException(status_code=404, detail="Not Found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)
