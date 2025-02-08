@@ -56,9 +56,4 @@ def retrieve_audio_by_ID(id : int):
     # Crear una sesión de base de datos
     db = SessionLocal()
     record = db.query(AudioRecord).get(id)
-    
-    if (not record):
-        print(record)
-        return {}
-
     return record

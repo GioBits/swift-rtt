@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile, Depends, Request
 from fastapi.responses import JSONResponse
-from api.controller.audioController import process_audio, retrieve_audio_controller
+from api.controller.audioController import process_audio, retrieve_audio_controller, retrieve_audio_by_id_controller
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from models.audio import AudioRecordSchema
@@ -43,5 +43,15 @@ async def retrieve_audiosFile_list():
     try:
         response = await retrieve_audio_controller()
         return response
+    except HTTPException as e:
+        print(f"HTTPException capturada: {e.detail}")
+        raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database Error")
+        print(f"Excepción general capturada: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Endpoint "/audioID", recupera un audio de la base de datos
+@router.get("/audioID", response_model=AudioRecordSchema)
+async def retrieve_audio_by_ID(id : int):
+    response = await retrieve_audio_by_id_controller(id)
+    return response

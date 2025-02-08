@@ -9,7 +9,7 @@ import os
 import uvicorn 
 
 # Importar las rutas
-from api.routes.uploadRoute import router as uploadAudioRouter
+from api.routes.audioRoute import router as audioRouter
 from api.routes.transcriberRoute import router as transcriberRouter
 from api.routes.translateRoute import router as translateRouter
 
@@ -20,7 +20,7 @@ load_dotenv(dotenv_path='../.env')
 app = FastAPI()
 
 # Importación de rutas
-app.include_router(uploadAudioRouter, prefix=("/api"))
+app.include_router(audioRouter, prefix=("/api"))
 app.include_router(transcriberRouter, prefix=("/api"))
 app.include_router(translateRouter, prefix=("/api"))
 
