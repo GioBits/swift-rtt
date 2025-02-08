@@ -2,6 +2,9 @@ import whisper
 from typing import Optional
 import warnings
 import os
+import tempfile
+import asyncio
+
 
 warnings.filterwarnings("ignore", message="FP16 is not supported on CPU; using FP32 instead")
 
@@ -17,6 +20,16 @@ class Transcriber:
         return model
     
     def transcribe_audio(self, file_path: str) -> str:
+        """
+        Transcribes the audio file at the given file path.
+        Args:
+            file_path (str): The path to the audio file to be transcribed.
+        Returns:
+            str: The transcribed text from the audio file.
+        Raises:
+            FileNotFoundError: If the audio file does not exist at the given file path.
+            Exception: If an error occurs during the transcription process.
+        """
         # Mensaje de depuración para verificar la ruta del archivo
         print(f"Transcribing file at: {file_path}")
         
@@ -34,6 +47,39 @@ class Transcriber:
         except Exception as e:
             print(f"Error during transcription: {str(e)}")
             raise
+
+    async def transcription_handler(self, file_data: bytes)-> str:
+        """
+        Controlador para manejar la transcripción de un archivo de audio.
+
+        Args:
+            file_data (bytes): Datos binarios del archivo de audio.
+
+        Returns:
+            str: Transcripción del audio.
+        """
+        try:
+            # Crear un archivo temporal para almacenar el contenido del archivo subido
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file_data)
+                temp_path = temp_file.name
+
+            # Obtener el bucle de eventos actual
+            loop = asyncio.get_running_loop()
+
+            # Ejecutar la transcripción en un ejecutor (hilo separado)
+            transcription = await loop.run_in_executor(
+                None,
+                lambda: self.transcribe_audio(temp_path)
+            )
+
+            # Eliminar el archivo temporal
+            os.unlink(temp_path)
+
+            return transcription
+        
+        except Exception as e:
+            raise e
 
 # Crear una instancia global del transcriptor
 transcriber = Transcriber()

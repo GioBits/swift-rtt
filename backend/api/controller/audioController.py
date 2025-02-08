@@ -5,9 +5,7 @@ from models.audio import AudioRecord
 from pybase64 import b64encode
 from utils.transcribe import transcriber
 from api.validators.audioValidations import validate_upload
-import tempfile
-import os
-import asyncio
+
 
 
 async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
@@ -28,22 +26,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
     try:
         file_data = await validate_upload(file, language)
         
-        # Crear un archivo temporal para almacenar el contenido del archivo subido
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(file_data)
-            temp_path = temp_file.name
-
-        # Obtener el bucle de eventos actual
-        loop = asyncio.get_running_loop()
-
-        # Ejecutar la transcripción en un ejecutor (hilo separado)
-        transcription = await loop.run_in_executor(
-            None,
-            lambda: transcriber.transcribe_audio(temp_path)
-        )
-
-        # Eliminar el archivo temporal
-        os.unlink(temp_path)
+        transcription = await transcriber.transcription_handler(file_data)
 
         # Llamar a la capa de servicio para guardar el audio
         audio_record = save_audio(
