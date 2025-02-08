@@ -6,3 +6,39 @@
   display: flex;
   flex-firection: column;
 }
+
+.record-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.record-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.blinking-circle {
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  border-radius: 50%;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+.timer {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.upload-file {
+  display: flex;
+  align-items: flex-end;
+}
