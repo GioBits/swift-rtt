@@ -4,6 +4,7 @@ from api.service.audioService import save_audio, retrieve_audio_files
 from models.audio import AudioRecord
 from pybase64 import b64encode
 from utils.transcribe import transcriber
+from api.validators.audioValidations import validate_upload
 import tempfile
 import os
 import asyncio
@@ -25,35 +26,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
         AudioRecord: Registro del audio almacenado en la base de datos.
     """
     try:
-        # Leer los datos binarios del archivo
-        file_data = await file.read()
-
-        # Verificar que los datos sean binarios
-        if not isinstance(file_data, bytes):
-            raise ValueError(
-                "El archivo no se leyo correctamente como binario")
-
-        filename = file.filename
-
-        # Usando una variable booleana para indicar si es válido o inválido
-        # Verifica el nombre no sea más de 255 caracteres de largo
-        if len(file.filename) > 255:
-            raise HTTPException(status_code=422, detail="File name too long")
-
-        # Verifica que el archivo sea de un formato aceptado por el sistema
-        valid_formats = {"audio/mpeg", "audio/mp3", "audio/wav"}
-        if file.content_type not in valid_formats:
-            raise HTTPException(status_code=422, detail="Invalid file format")
-
-        # Verifica que el archivo no sea demasiado pesado (max 10MB)
-        max_size = 10 * 1024 * 1024  # 10MB en Bytes
-        if len(file_data) > max_size:
-            raise HTTPException(status_code = 422, detail="File size exceeds 10MB")
-                # Verifica el nombre no sea más de 255 caracteres de largo
-        
-        # Verifica el idioma no sea más de 50 caracteres de largo
-        if len(language) > 50:
-            raise HTTPException(status_code = 422, detail="Language name is too long")
+        file_data = await validate_upload(file, language)
         
         # Crear un archivo temporal para almacenar el contenido del archivo subido
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
