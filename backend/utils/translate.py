@@ -1,7 +1,7 @@
 from transformers import MarianMTModel, MarianTokenizer
 
 class Translate:
-    def __init__(self, model_name: str = "Helsinki-NLP/opus-mt-en-es"):
+    def __init__(self, model_name: str = "Helsinki-NLP/opus-mt-es-en"):
         self.model_name = model_name
         self.model, self.tokenizer = self.load_model_and_tokenizer() 
     
