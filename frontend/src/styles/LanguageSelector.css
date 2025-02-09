@@ -1,0 +1,37 @@
+.language-selector {
+  margin: 20px;
+}
+
+.language-selector > * {
+  width: 200px;
+}
+
+.language-selector .MuiSelect-root {
+  color: white; /* Color de las palabras dentro del botón */
+  border-color: white; /* Color del borde del botón */
+}
+
+.language-selector .MuiOutlinedInput-notchedOutline {
+  border-color: white; /* Color del borde del botón */
+}
+
+.language-selector .MuiMenuItem-root {
+  color: white; /* Color de las palabras dentro del menú */
+}
+
+.language-selector .MuiInputLabel-root {
+  color: white; /* Color del label */
+}
+
+.language-selector .MuiSvgIcon-root {
+  color: white; /* Color del icono del botón desplegable */
+}
+
+.language-selector .MuiSelect-root:hover,
+.language-selector .MuiSelect-root.Mui-focused {
+  color: #1565c0; /* Color azul cuando el mouse está encima o el elemento está enfocado */
+  border-color: #1565c0; /* Color azul del borde */
+}
+.language-selector .MuiInputLabel-root.Mui-focused {
+  color: #1565c0; /* Color azul del label cuando está enfocado */
+}
