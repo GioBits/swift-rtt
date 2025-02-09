@@ -32,7 +32,6 @@
   color: #1565c0; /* Color azul cuando el mouse está encima o el elemento está enfocado */
   border-color: #1565c0; /* Color azul del borde */
 }
-
 .language-selector .MuiInputLabel-root.Mui-focused {
   color: #1565c0; /* Color azul del label cuando está enfocado */
 }
