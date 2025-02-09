@@ -36,7 +36,7 @@ const UploadAudio = () => {
   };
 
   return (
-    <div>
+    <div className='upload-file'>
       <input
         type="file"
         accept="audio/mp3"
