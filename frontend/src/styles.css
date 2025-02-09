@@ -5,10 +5,13 @@
 .trasncription-audio {
   display: block;
   flex-firection: column;
+  max-width: 400px;
+  margin: auto;
 }
 
 .trasncription-audio > * {
   margin-top: 20px;
+  white-space: pre-wrap;
 }
 
 .record-container {
