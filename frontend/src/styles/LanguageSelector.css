@@ -1,9 +1,9 @@
 .language-selector {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  margin-left: 100px;
-  margin-right: 100px;
+  margin: 20px;
+}
+
+.language-selector > * {
+  width: 200px;
 }
 
 .language-selector .MuiSelect-root {

@@ -12,7 +12,7 @@ function App() {
     <>
       <h1>Real Time Translation</h1>
       <LanguageProvider>
-        <div className="LanguageSelector">
+        <div>
           <LanguageSelector />
         </div>
         <TranslationProvider>

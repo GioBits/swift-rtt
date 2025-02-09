@@ -1,13 +1,18 @@
 import React, { useContext } from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { LanguageContext } from '../contexts/LanguageContext.jsx'; // Ensure you import the context
-import '../LanguageSelector.css';
+import '../styles/LanguageSelector.css';
 
 export default function LanguageSelector() {
   const { originLanguage, setOriginLanguage, targetLanguage, setTargetLanguage } = useContext(LanguageContext);
 
   const handleOriginChange = (event) => {
     const selectedLanguage = event.target.value;
+
+    if(selectedLanguage === '') {
+      return;
+    }
+
     if (selectedLanguage === targetLanguage) {
       setTargetLanguage(originLanguage);
     }
@@ -16,6 +21,11 @@ export default function LanguageSelector() {
 
   const handleTargetChange = (event) => {
     const selectedLanguage = event.target.value;
+
+    if(selectedLanguage === '') {
+      return;
+    }
+
     if (selectedLanguage === originLanguage) {
       setOriginLanguage(targetLanguage);
     }
