@@ -21,3 +21,7 @@ jobs:
       - name: Deploy to server
         run: |
           sshpass -p "${{ secrets.REMOTE_PASSWORD }}" rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" ./ root@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_PATH }}
+
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.DOT_ENV }}" | sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cat > ${{ secrets.REMOTE_PATH }}/.env"
