@@ -24,8 +24,6 @@ services:
       - "${VITE_PORT}:80"
     env_file:
       - .env
-    depends_on:
-      - backend
     networks:
       - app-network
     mem_limit: 1g
@@ -42,6 +40,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
+    mem_limit: 2g
 
 volumes:
   postgres_data:

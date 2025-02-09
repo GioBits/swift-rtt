@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text
 from datetime import datetime
 from db.database import Base
+from sqlalchemy.orm import relationship
 from pydantic import BaseModel
 from typing import Optional
 
@@ -18,6 +19,8 @@ class AudioRecord(Base):
     transcription = Column(Text, nullable=True)  
     language = Column(String(50), nullable=True)  
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    translated_audios = relationship("TranslatedAudio", back_populates="original_audio")
 
 class AudioRecordBase(BaseModel):
     chat_id: Optional[str] = None
