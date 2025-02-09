@@ -7,9 +7,6 @@ router = APIRouter()
 
 # Endpoint "/translation", recupera una traduccion de la base de datos mediante su ID
 @router.get("/translated/{id}", response_model=TranslationRecordSchema)
-async def retrieve_translation_by_ID(id : int):
-    try:
-        response = await retrieve_translation_by_id_controller(id)
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database Error")
+async def retrieve_translation_by_id(id : int):
+    response = await retrieve_translation_by_id_controller(id)
+    return response
