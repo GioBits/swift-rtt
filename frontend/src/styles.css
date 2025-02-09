@@ -3,8 +3,12 @@
 }
 
 .trasncription-audio {
-  display: flex;
+  display: block;
   flex-firection: column;
+}
+
+.trasncription-audio > * {
+  margin-top: 20px;
 }
 
 .record-container {
