@@ -28,4 +28,4 @@ jobs:
 
       - name: Run docker-compose commands
         run: |
-          sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_PATH }} && docker-compose down && docker-compose up --build"
+          sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_PATH }} && docker-compose down || true && docker-compose up --build"
