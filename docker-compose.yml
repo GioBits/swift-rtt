@@ -33,7 +33,8 @@ services:
   db:
     image: postgres:latest
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_PORT}:${DB_PORT}"
+    command: postgres -p ${DB_PORT}  
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -42,6 +43,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
+    mem_limit: 2g
 
 volumes:
   postgres_data:

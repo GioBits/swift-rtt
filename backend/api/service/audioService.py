@@ -44,8 +44,16 @@ def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, conte
     db.refresh(audio_record)
     return audio_record
 
+# Retorna lista de todos los audios
 def retrieve_audio_files():
     # Crear una sesión de base de datos
     db = SessionLocal()
     list = db.query(AudioRecord).all()
     return list
+
+# Retorna el audio con el ID dado
+def retrieve_audio_by_id(id : int):
+    # Crear una sesión de base de datos
+    db = SessionLocal()
+    record = db.query(AudioRecord).get(id)
+    return record
