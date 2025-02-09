@@ -1,4 +1,7 @@
 from transformers import MarianMTModel, MarianTokenizer
+import warnings
+
+warnings.filterwarnings("ignore", message="Recommended: pip install sacremoses.")
 
 class Translate:
     def __init__(self, model_name: str = "Helsinki-NLP/opus-mt-es-en"):
