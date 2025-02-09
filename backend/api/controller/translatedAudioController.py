@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from api.service.translatedAudioService import get_translation_by_id
+from api.service.translatedAudioService import get_translation_by_id, save_translated_audio
 
 async def retrieve_translation_by_id_controller(id: int):
     try:
@@ -21,3 +21,26 @@ async def retrieve_translation_by_id_controller(id: int):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail="Internal Server Error"
         )
+
+async def save_translated_audio_controller(audio_id: int, transcription: str, ):
+
+    #mock
+    audio_data: bytes = b"mock"
+    file_size: int = 123456
+    language: str = "en"
+
+    try:
+    
+        translated_audio_record = save_translated_audio(
+            audio_id,
+            audio_data,
+            file_size,
+            transcription,
+            language
+        )
+
+        return translated_audio_record
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        pass

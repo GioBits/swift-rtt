@@ -4,7 +4,9 @@ from api.service.audioService import save_audio, retrieve_audio_files, retrieve_
 from models.audio import AudioRecord
 from pybase64 import b64encode
 from utils.transcribe import transcriber
+from utils.translate import translate
 from api.validators.audioValidations import validate_upload
+from api.controller.translatedAudioController import save_translated_audio_controller
 
 
 
@@ -40,6 +42,12 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
             db
         )
 
+        #Traducir el texto transcrito
+        translated_text = translate.translate_text(transcription)
+        
+        #Llamar a la capa de controlador para guardar el audio traducido
+        audio_translated_record = await save_translated_audio_controller(audio_record.id, translated_text)
+
         # Encode binary data to base64
         base64_encoded = b64encode(audio_record.audio_data).decode('utf-8')
 
@@ -51,6 +59,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
             "size": len(audio_record.audio_data),
             "transcription": audio_record.transcription,
             "language": audio_record.language,
+            "translated_text": translated_text,
             "file": base64_encoded
         }
 
