@@ -52,7 +52,7 @@ def retrieve_audio_files():
     return list
 
 # Retorna el audio con el ID dado
-def retrieve_audio_by_ID(id : int):
+def retrieve_audio_by_id(id : int):
     # Crear una sesión de base de datos
     db = SessionLocal()
     record = db.query(AudioRecord).get(id)
