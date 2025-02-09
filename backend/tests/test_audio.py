@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from fastapi import FastAPI, UploadFile, File
 from sqlalchemy.orm import Session
-from api.routes.uploadRoute import router as audio_router
+from api.routes.audioRoute import router as audio_router
 from unittest.mock import Mock, patch
 import io
 
