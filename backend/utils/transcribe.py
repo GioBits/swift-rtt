@@ -61,7 +61,7 @@ class Transcriber:
             # Ejecutar la transcripción en un ejecutor (hilo separado)
             transcription = await loop.run_in_executor(
                 None,
-                lambda: self.transcribe_audio(temp_path)
+                lambda: self.transcribe_audio(temp_path, "spanish")
             )
 
             # Eliminar el archivo temporal
