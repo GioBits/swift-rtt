@@ -1,13 +1,11 @@
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, UploadFile
-from api.service.audioService import save_audio, retrieve_audio_files
+from fastapi import HTTPException, UploadFile, status
+from api.service.audioService import save_audio, retrieve_audio_files, retrieve_audio_by_id
 from models.audio import AudioRecord
 from pybase64 import b64encode
 from utils.transcribe import transcriber
 from api.validators.audioValidations import validate_upload
-import tempfile
-import os
-import asyncio
+
 
 
 async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
@@ -28,22 +26,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
     try:
         file_data = await validate_upload(file, language)
         
-        # Crear un archivo temporal para almacenar el contenido del archivo subido
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            temp_file.write(file_data)
-            temp_path = temp_file.name
-
-        # Obtener el bucle de eventos actual
-        loop = asyncio.get_running_loop()
-
-        # Ejecutar la transcripción en un ejecutor (hilo separado)
-        transcription = await loop.run_in_executor(
-            None,
-            lambda: transcriber.transcribe_audio(temp_path)
-        )
-
-        # Eliminar el archivo temporal
-        os.unlink(temp_path)
+        transcription = await transcriber.transcription_handler(file_data)
 
         # Llamar a la capa de servicio para guardar el audio
         audio_record = save_audio(
@@ -82,3 +65,24 @@ async def retrieve_audio_controller():
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)
+    
+async def retrieve_audio_by_id_controller(id: int):
+    try:
+        result = retrieve_audio_by_id(id)
+        if result is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="Audio no encontrado"
+            )
+
+        return result
+        
+    except HTTPException as e:
+        print(f"HTTPException capturada: {e.detail}")
+        raise e
+    except Exception as e:  # Capturar excepciones generales
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            detail="Internal Server Error"
+        )
