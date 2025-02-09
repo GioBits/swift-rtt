@@ -54,8 +54,12 @@ const RecordAudio = () => {
   return (
     <div className="record-container">
       <div className="record-status">
-        {isRecording && <div className="blinking-circle"></div>}
-        <span className="timer">{formatTime(elapsedTime)}</span>
+        {isRecording && (
+          <>
+            <div className="blinking-circle"></div>
+            <span className="timer">{formatTime(elapsedTime)}</span>
+          </>
+        )}
       </div>
       <Button variant="contained" onClick={isRecording ? stopRecording : startRecording}>
         {isRecording ? "Detener Grabación" : "Iniciar Grabación"}
