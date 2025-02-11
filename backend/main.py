@@ -14,6 +14,11 @@ from api.routes.transcriberRoute import router as transcriberRouter
 from api.routes.translateRoute import router as translateRouter
 from api.routes.translatedAudioRoute import router as translatedAudioRouter
 from api.routes.languageRoute import router as languageRouter
+
+# Import the populate script
+from scripts.populate import populate as populate_tables
+
+
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
 
@@ -72,6 +77,13 @@ if __name__ == "__main__":
         print(f"❌ Error en migraciones: {str(e)}")
         raise
 
+    # Call the populate script
+    try:
+        populate_tables()
+        print("✅ Data population completed")
+    except Exception as e:
+        print(f"❌ Data population error: {str(e)}")
+        raise
     
     if environment == "development":
         uvicorn.run(app, host=host, port=port)
