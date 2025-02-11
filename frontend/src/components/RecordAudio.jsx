@@ -6,11 +6,11 @@ import { clearError } from '../store/slices/errorSlice';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../utils/audioUtils';
-import { TranslationContext } from '../contexts/TranslationContext';
+import { MediaContext } from '../contexts/MediaContext';
 import '../styles.css';
 
 const RecordAudio = () => {
-  const { isRecording, setUploading } = useContext(TranslationContext);
+  const { isRecording, setUploading } = useContext(MediaContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
   const [elapsedTime, setElapsedTime] = useState(0);
