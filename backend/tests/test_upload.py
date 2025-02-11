@@ -2,13 +2,12 @@ from sqlalchemy.orm import Session
 from  api.service.audioService import save_audio
 from  db.database import SessionLocal
 
-def upload_audio_to_db(file_path: str, chat_id: str):
+def upload_audio_to_db(file_path: str):
     """
     Subir un archivo de audio a la base de datos.
 
     Args:
         file_path (str): Ruta del archivo de audio a subir.
-        chat_id (str): ID del chat asociado al audio.
     """
     # Crear una sesión de base de datos
     db: Session = SessionLocal()
@@ -28,7 +27,7 @@ def upload_audio_to_db(file_path: str, chat_id: str):
         language = "Español"
         
         # Llamar a la función para guardar el archivo
-        result = save_audio(chat_id, user_id, file_content, filename, content_type, transcription, language, db)
+        result = save_audio(user_id, file_content, filename, content_type, transcription, language, db)
 
         # Confirmar que el archivo fue subido
         print(f"Archivo guardado con éxito en la base de datos: {result.filename}")

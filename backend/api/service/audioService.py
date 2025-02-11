@@ -3,13 +3,12 @@ from  db.database import AudioRecord, SessionLocal
 from fastapi import HTTPException
 from datetime import datetime
 
-def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, content_type: str, 
+def save_audio(user_id:str, file_data: bytes, filename: str, content_type: str, 
                transcription:str, language:str, db: Session) -> AudioRecord:
     """
     Función de servicio para guardar un archivo de audio en la base de datos.
 
     Args:
-        chat_id (str): El ID del chat asociado al audio.
         user_id (str): El nombre del usuarip
         filename (str): Nombre del archivo de audio.
         file_data (bytes): Datos binarios del archivo de audio.
@@ -27,7 +26,6 @@ def save_audio(chat_id: str, user_id:str, file_data: bytes, filename: str, conte
         db = SessionLocal()
 
     audio_record = AudioRecord(
-        chat_id=chat_id,
         user_id=user_id,
         filename=filename,
         audio_data=file_data,

@@ -10,12 +10,11 @@ from api.controller.translatedAudioController import save_translated_audio_contr
 
 
 
-async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
+async def process_audio(user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
     """
     Función controladora para manejar la carga de un archivo de audio.
 
     Args:
-        chat_id (str): El ID del chat asociado al audio.
         user_id (str): El nombre del usuario.
         transcription (str): El audio transcrito.
         language (str): El idioma del audio.
@@ -31,8 +30,7 @@ async def process_audio(chat_id: str, user_id: str, transcription:str, language:
         transcription = await transcriber.transcription_handler(file_data)
 
         # Llamar a la capa de servicio para guardar el audio
-        audio_record = save_audio(
-            chat_id, 
+        audio_record = save_audio( 
             user_id,
             file_data, 
             file.filename, 
