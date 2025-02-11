@@ -21,6 +21,9 @@ class AudioRecord(Base):
     # Relationship to the Language model
     language = relationship("LanguageRecord")
 
+    # Relationship to the TranscriptionRecord model
+    transcriptions = relationship("TranscriptionRecord", back_populates="audio")
+
 class AudioRecordBase(BaseModel):
     user_id: Optional[str] = None
     filename: Optional[str] = None
