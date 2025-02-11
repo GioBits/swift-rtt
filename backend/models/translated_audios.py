@@ -17,7 +17,7 @@ class TranslatedAudio(Base):
     transcription = Column(Text, nullable=True)  # Transcripción opcional
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     # Relación con el modelo de audio original
-    original_audio = relationship("AudioRecord", back_populates="translated_audios")
+    # original_audio = relationship("AudioRecord", back_populates="translated_audios")
 
 class TranslatedAudioBase(BaseModel):
     audio_id: Optional[str] = None

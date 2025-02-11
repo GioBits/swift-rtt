@@ -16,7 +16,7 @@ async def retrieve_all_languages_controller():
         HTTPException: If no languages are found (404) or if an internal server error occurs (500).
     """
     try:
-        result = await get_all_languages()
+        result = get_all_languages()
         if not result:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -53,7 +53,7 @@ async def create_language_controller(code: str, name: str):
         server error occurs (HTTP 500).
     """
     try:
-        new_language = await create_language(code, name)
+        new_language = create_language(code, name)
         if new_language is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

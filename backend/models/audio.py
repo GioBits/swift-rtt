@@ -19,7 +19,7 @@ class AudioRecord(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationship to the Language model
-    language = relationship("Language")
+    language = relationship("LanguageRecord")
 
 class AudioRecordBase(BaseModel):
     user_id: Optional[str] = None
