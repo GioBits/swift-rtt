@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from db.database import Base
 from pydantic import BaseModel
 
-class Language(Base):
+class LanguageRecord(Base):
     __tablename__ = 'languages'
 
     id = Column(Integer, primary_key=True, index=True)

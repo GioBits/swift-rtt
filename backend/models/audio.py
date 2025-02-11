@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text
+from sqlalchemy import Column, Integer, String, DateTime, LargeBinary, Text, ForeignKey
 from datetime import datetime
 from db.database import Base
 from sqlalchemy.orm import relationship
@@ -15,15 +15,18 @@ class AudioRecord(Base):
     audio_data = Column(LargeBinary)
     content_type = Column(String(50))
     file_size = Column(Integer)  
-    # language_id = Column(Integer, ForeignKey('languages.id'))  
+    language_id = Column(Integer, ForeignKey('languages.id'))  
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationship to the Language model
+    language = relationship("Language")
 
 class AudioRecordBase(BaseModel):
     user_id: Optional[str] = None
     filename: Optional[str] = None
     content_type: Optional[str] = None
     file_size: Optional[int] = None
-    # language: Optional[str] = None
+    language_id: Optional[str] = None
     created_at: Optional[datetime] = None
 
 class AudioRecordSchema(AudioRecordBase):
