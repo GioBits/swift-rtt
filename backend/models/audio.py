@@ -23,6 +23,7 @@ class AudioRecord(Base):
 
     # Relationship to the TranscriptionRecord model
     transcriptions = relationship("TranscriptionRecord", back_populates="audio")
+    translations = relationship("TranslationRecord", back_populates="audio")
 
 class AudioRecordBase(BaseModel):
     user_id: Optional[str] = None
