@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
+import MicIcon from '@mui/icons-material/Mic';
 import { useDispatch } from 'react-redux';
 import { handleFileUpload } from '../utils/uploadUtils';
 import { clearError } from '../store/slices/errorSlice';
@@ -24,11 +25,19 @@ const RecordAudio = () => {
     if (isRecording) {
       setElapsedTime(0);
       timer = setInterval(() => {
-        setElapsedTime(prevTime => prevTime + 1);
+        setElapsedTime(prevTime => {
+          const newTime = prevTime + 1;
+          if (newTime >= 30) {
+            stopRecording();
+            return 30;
+          }
+          return newTime;
+        });
       }, 1000);
     } else {
       clearInterval(timer);
     }
+
     return () => clearInterval(timer);
   }, [isRecording]);
 
@@ -53,17 +62,39 @@ const RecordAudio = () => {
 
   return (
     <div className="record-container">
-      <div className="record-status">
-        {isRecording && (
-          <>
+      <IconButton
+        onClick={isRecording ? stopRecording : startRecording}
+        color="primary"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
+          '&:hover': {
+            backgroundColor: 'transparent',
+            '& svg': {
+              opacity: 0.7
+            }
+          }
+        }}
+      >
+        {isRecording
+          ?
+          <div className="record-status">
             <div className="blinking-circle"></div>
-            <span className="timer">{formatTime(elapsedTime)}</span>
-          </>
-        )}
-      </div>
-      <Button variant="contained" onClick={isRecording ? stopRecording : startRecording}>
-        {isRecording ? "Detener Grabación" : "Iniciar Grabación"}
-      </Button>
+            <span className="timer" style={{ color: 'black' }}>{formatTime(elapsedTime)}</span>
+          </div>
+          :
+          <MicIcon sx={{ fontSize: '60px', color: 'rgb(220 38 38)' }} />
+        }
+        {isRecording
+          ?
+          <div className='button-detener'>
+            <p>Detener grabación</p>
+          </div>
+          :
+          <p>Iniciar grabación</p>}
+      </IconButton>
     </div>
   );
 };

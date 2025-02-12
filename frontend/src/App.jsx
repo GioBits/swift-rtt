@@ -1,10 +1,9 @@
 import "./App.css";
 import PingComponent from "./components/PingComponent";
-import RecordAudio from "./components/RecordAudio";
-import UploadAudio from "./components/UploadAudio";
 import { MediaProvider } from "./contexts/MediaProvider";
 import TranslationAudio from "./components/TranslationAudio";
 import LanguageSelector from "./components/LanguageSelector";
+import MediaUpload from "./components/MediaUpload";
 
 function App() {
   return (
@@ -13,8 +12,7 @@ function App() {
         <h1>Real Time Translation</h1>
         <LanguageSelector />
         <div className="upload-input">
-          <UploadAudio />
-          <RecordAudio />
+          <MediaUpload />
         </div>
         <TranslationAudio />
       </MediaProvider>

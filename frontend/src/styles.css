@@ -15,21 +15,26 @@
 }
 
 .record-container {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  margin: 0 auto;
 }
 
 .record-status {
+  width: 100%;
   display: flex;
+  justify-content: center;
+  margin: 0 auto;
   align-items: center;
   gap: 10px;
+  font-size: 40px;
 }
 
 .blinking-circle {
-  width: 15px;
-  height: 15px;
+  width: 3rem;
+  height: 3rem;
   background-color: red;
   border-radius: 50%;
   animation: blink 1s infinite alternate;
@@ -41,7 +46,7 @@
 }
 
 .timer {
-  font-size: 1.2rem;
+  font-size: 3rem;
   font-weight: bold;
 }
 
@@ -124,4 +129,14 @@
 span {
   line-height: 1.2;
   display: block;
+}
+
+p {
+  color: black;
+  font-size: 16px;
+}
+
+.button-detener {
+  display: flex;
+  flex-direction: row;
 }
