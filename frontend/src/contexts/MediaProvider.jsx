@@ -13,6 +13,9 @@ export const MediaProvider = ({ children }) => {
     sourceLanguage: "es",
     targetLanguage: "en",
   });
+  const [audioSelected, setAudioSelected] = useState({
+    id: ""
+  })
 
   useEffect(() => {
     setLanguages(languagesSupport);
@@ -39,7 +42,9 @@ export const MediaProvider = ({ children }) => {
         audioUrl,
         setAudioUrl,
         isRecording,
-        setIsRecording
+        setIsRecording,
+        audioSelected,
+        setAudioSelected
       }}
     >
       {children}
