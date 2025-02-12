@@ -13,7 +13,7 @@ from api.routes.audioRoute import router as audioRouter
 from api.routes.translatedAudioRoute import router as translatedAudioRouter
 from api.routes.languageRoute import router as languageRouter
 from api.routes.transcriptionRoute import router as transcriptionRouter
-from api.routes.translationRoutes import router as translationRouter
+from api.routes.translationRoute import router as translationRouter
 
 # Import the populate script
 from scripts.populate import populate as populate_tables

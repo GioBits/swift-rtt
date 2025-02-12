@@ -2,8 +2,7 @@ from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from fastapi import HTTPException
 from typing import Dict, Any, Type
-from models.transcription_providers import TranscriptionProviderRecord, TranscriptionProviderSchema
-from models.translation_providers import TranslationProviderRecord, TranslationProviderSchema
+from models.providers import  TranscriptionProviderRecord, TranscriptionProviderSchema, TranslationProviderRecord, TranslationProviderSchema
 
 MODEL_MAP = {
     "transcription_provider": {
