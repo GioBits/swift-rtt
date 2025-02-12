@@ -14,6 +14,7 @@ from api.routes.transcriberRoute import router as transcriberRouter
 from api.routes.translateRoute import router as translateRouter
 from api.routes.translatedAudioRoute import router as translatedAudioRouter
 from api.routes.languageRoute import router as languageRouter
+from api.routes.transcriptionRoute import router as transcriptionRouter
 
 # Import the populate script
 from scripts.populate import populate as populate_tables
@@ -29,6 +30,7 @@ app = FastAPI()
 app.include_router(audioRouter, prefix=("/api"))
 app.include_router(translatedAudioRouter, prefix=("/api"))
 app.include_router(languageRouter, prefix=("/api"))
+app.include_router(transcriptionRouter, prefix=("/api"))
 
 #Test endpoints
 app.include_router(transcriberRouter, prefix=("/api"))

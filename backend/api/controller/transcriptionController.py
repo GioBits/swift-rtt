@@ -1,0 +1,146 @@
+from fastapi import HTTPException, status
+from api.service.transcriptionService import (
+    get_all_transcriptions,
+    create_transcription,
+    get_transcription_by_id,
+    get_transcriptions_by_audio_id
+)
+
+async def retrieve_all_transcriptions_controller():
+    """
+    Asynchronously retrieves all transcriptions.
+
+    This function attempts to retrieve all transcriptions by calling the `get_all_transcriptions` function.
+    If no transcriptions are found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Returns:
+        list: A list of transcriptions if found.
+
+    Raises:
+        HTTPException: If no transcriptions are found (404) or if an internal server error occurs (500).
+    """
+    try:
+        result = get_all_transcriptions()
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No transcriptions found"
+            )
+        return result
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
+
+async def create_transcription_controller(audio_id: int, provider_id: int, language_id: int, transcription_text: str):
+    """
+    Asynchronously creates a new transcription.
+
+    This function attempts to create a new transcription using the provided audio_id, provider_id, language_id, and transcription_text.
+    If any error occurs during the process, it raises an HTTP 500 error.
+
+    Args:
+        audio_id (int): The ID of the audio.
+        provider_id (int): The ID of the transcription provider.
+        language_id (int): The ID of the language.
+        transcription_text (str): The transcription text.
+
+    Returns:
+        The newly created transcription object if successful.
+
+    Raises:
+        HTTPException: If an internal server error occurs (HTTP 500).
+    """
+    try:
+        new_transcription = create_transcription(audio_id, provider_id, language_id, transcription_text)
+        if new_transcription is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Transcription could not be created"
+            )
+        return new_transcription
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
+
+async def retrieve_transcription_by_id_controller(transcription_id: int):
+    """
+    Asynchronously retrieves a transcription by its ID.
+
+    This function attempts to retrieve a transcription by calling the `get_transcription_by_id` function.
+    If the transcription is not found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Args:
+        transcription_id (int): The ID of the transcription to be retrieved.
+
+    Returns:
+        The transcription object if found.
+
+    Raises:
+        HTTPException: If the transcription is not found (404) or if an internal server error occurs (500).
+    """
+    try:
+        transcription = get_transcription_by_id(transcription_id)
+        if transcription is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Transcription not found"
+            )
+        return transcription
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
+
+async def retrieve_transcriptions_by_audio_id_controller(audio_id: int):
+    """
+    Asynchronously retrieves all transcriptions for a given audio ID.
+
+    This function attempts to retrieve all transcriptions by calling the `get_transcriptions_by_audio_id` function.
+    If no transcriptions are found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Args:
+        audio_id (int): The ID of the audio.
+
+    Returns:
+        list: A list of transcriptions if found.
+
+    Raises:
+        HTTPException: If no transcriptions are found (404) or if an internal server error occurs (500).
+    """
+    try:
+        result = get_transcriptions_by_audio_id(audio_id)
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No transcriptions found for the given audio ID"
+            )
+        return result
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
