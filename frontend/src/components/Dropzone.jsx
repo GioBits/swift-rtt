@@ -11,19 +11,18 @@ const Dropzone = () => {
   const dispatch = useDispatch();
   const { setUploading, setAudioUrl } = useContext(MediaContext);
 
-  // Manejo de archivos arrastrados o seleccionados
   const handleDrop = async (acceptedFiles) => {
-    const file = acceptedFiles[0]; // Tomamos el primer archivo
+    const file = acceptedFiles[0];
 
     if (file) {
       const fileUploadedBase64 = await uploadFile(file);
       const blob = b64toBlob(fileUploadedBase64, 'audio/mp3');
       const url = URL.createObjectURL(blob);
-      setAudioUrl(url); // Establecer la URL para reproducir el archivo
+      setAudioUrl(url);
     }
   };
 
-  // Llamada a la función que maneja la carga del archivo
+  
   const uploadFile = async (file) => {
     setUploading(true);
     try {
