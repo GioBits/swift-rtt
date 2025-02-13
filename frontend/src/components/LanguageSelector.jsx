@@ -11,6 +11,14 @@ export default function LanguageSelector() {
     setTargetLanguage,
   } = useContext(MediaContext);
 
+  const validSourceLanguage = languages.some(lang => lang.code === selectedLanguages.sourceLanguage)
+    ? selectedLanguages.sourceLanguage
+    : "";
+
+  const validTargetLanguage = languages.some(lang => lang.code === selectedLanguages.targetLanguage)
+    ? selectedLanguages.targetLanguage
+    : "";
+
   const handleOriginChange = (event) => {
     const selectedLanguage = event.target.value;
     if (selectedLanguage === selectedLanguages.targetLanguage) {
@@ -32,14 +40,14 @@ export default function LanguageSelector() {
       <FormControl sx={{ minWidth: 120, width: '50%', margin: 'auto', display: 'flex' }}>
         <Select
           id="origin-language-select"
-          value={selectedLanguages.sourceLanguage}
+          value={validSourceLanguage}
           onChange={handleOriginChange}
           sx={{
             fontSize: "14px",
             height: "40px",
             width: "145px",
             margin: 'auto',
-            borderRadius: '4px', // Asegura que tenga bordes redondeados
+            borderRadius: '4px',
           }}
         >
           {languages.map((lang) => (
@@ -52,14 +60,14 @@ export default function LanguageSelector() {
       <FormControl sx={{ minWidth: 120, width: '50%', margin: 'auto', display: 'flex' }}>
         <Select
           id="target-language-select"
-          value={selectedLanguages.targetLanguage}
+          value={validTargetLanguage}
           onChange={handleTargetChange}
           sx={{
             fontSize: "14px",
             height: "40px",
             width: "145px",
             margin: 'auto',
-            borderRadius: '4px', // Asegura que tenga bordes redondeados
+            borderRadius: '4px',
           }}
         >
           {languages.map((lang) => (
