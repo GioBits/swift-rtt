@@ -6,7 +6,6 @@ from pybase64 import b64encode
 from utils.transcribe import transcriber
 from utils.translate import translate
 from api.validators.audioValidations import validate_upload
-from api.controller.translatedAudioController import save_translated_audio_controller
 
 
 
@@ -44,7 +43,7 @@ async def process_audio(user_id: str, transcription:str, language:str, file: Upl
         translated_text = translate.translate_text(transcription)
         
         #Llamar a la capa de controlador para guardar el audio traducido
-        audio_translated_record = await save_translated_audio_controller(audio_record.id, translated_text)
+        # audio_translated_record = await save_translated_audio_controller(audio_record.id, translated_text)
 
         # Encode binary data to base64
         base64_encoded = b64encode(audio_record.audio_data).decode('utf-8')
