@@ -21,7 +21,7 @@ def get_all_audios():
     finally:
         db.close()
 
-def create_audio(user_id: str, filename: str, audio_data: bytes, content_type: str, file_size: int, language_id: int):
+def create_audio(user_id: int, filename: str, audio_data: bytes, content_type: str, file_size: int, language_id: int):
     """
     Create a new audio entry in the database.
     Args:
@@ -69,7 +69,7 @@ def get_audio_by_id(audio_id: int):
     finally:
         db.close()
 
-def get_audios_by_user_id(user_id: str):
+def get_audios_by_user_id(user_id: int):
     """
     Retrieve all audio records for a given user ID.
     Args:

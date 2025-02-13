@@ -1,13 +1,45 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile, status
-from api.service.audioService import create_audio, get_all_audios, get_audio_by_id, get_audios_by_user_id
-from models.audio import AudioRecordSchema
+from api.service.audioService import (
+    create_audio, 
+    get_all_audios, 
+    get_audio_by_id, 
+    get_audios_by_user_id
+)
+from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema
 from pybase64 import b64encode
 from utils.transcribe import transcriber
 from utils.translate import translate
 from api.validators.audioValidations import validate_upload
 
-async def create_audio_controller(user_id: int, language_id: int, file: UploadFile) -> AudioRecordSchema:
+def parse_audio_response(audio_record: AudioRecordSchema, with_audio: bool) -> AudioResponseSchema:
+    """
+    Parse an audio record to an audio response schema.
+
+    Args:
+        audio_record (AudioRecordSchema): The audio record to be parsed.
+        with_audio (bool): Flag to include audio data in the response.
+
+    Returns:
+        AudioResponseSchema: The parsed audio response schema.
+    """
+    base_response = {
+        "id": audio_record.id,
+        "user_id": audio_record.user_id,
+        "filename": audio_record.filename,
+        "content_type": audio_record.content_type,
+        "file_size": audio_record.file_size,
+        "language_id": audio_record.language_id,
+        "created_at": audio_record.created_at
+    }
+
+    if with_audio:
+        base_response["audio_data"] = b64encode(audio_record.audio_data).decode('utf-8')
+        return AudioResponseWithAudioSchema(**base_response)
+    else:
+        return AudioResponseSchema(**base_response)
+
+async def create_audio_controller(user_id: int, language_id: int, file: UploadFile) -> AudioResponseSchema:
     """
     Controller function to handle the upload of an audio file.
 
@@ -37,26 +69,14 @@ async def create_audio_controller(user_id: int, language_id: int, file: UploadFi
 
         # Translate the transcribed text
         translated_text = translate.translate_text(transcription)
-
-        # Encode binary data to base64
-        base64_encoded = b64encode(audio_record.audio_data).decode('utf-8')
-
-        return {
-            "id": audio_record.id,
-            "user_id": audio_record.user_id,
-            "filename": audio_record.filename,
-            "format": audio_record.content_type,
-            "size": len(audio_record.audio_data),
-            "transcription": transcription,
-            "language": audio_record.language_id,
-            "translated_text": translated_text,
-            "file": base64_encoded
-        }
+ 
+        return parse_audio_response(audio_record, True)
 
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
     except Exception as e:
+        print(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 async def retrieve_all_audios_controller():
@@ -80,7 +100,7 @@ async def retrieve_all_audios_controller():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No audios found"
             )
-        return result
+        return [parse_audio_response(audio, False) for audio in result]
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
@@ -115,7 +135,7 @@ async def retrieve_audio_by_id_controller(audio_id: int):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Audio not found"
             )
-        return result
+        return parse_audio_response(result, True)
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
@@ -126,7 +146,7 @@ async def retrieve_audio_by_id_controller(audio_id: int):
             detail="Internal Server Error"
         )
 
-async def retrieve_audios_by_user_id_controller(user_id: str):
+async def retrieve_audios_by_user_id_controller(user_id: int):
     """
     Asynchronously retrieves all audios for a given user ID.
 
@@ -150,7 +170,7 @@ async def retrieve_audios_by_user_id_controller(user_id: str):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No audios found for the given user ID"
             )
-        return result
+        return [parse_audio_response(audio, False) for audio in result]
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e

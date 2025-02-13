@@ -1,6 +1,6 @@
 from fastapi import HTTPException, UploadFile, File
 
-async def validate_upload(file: UploadFile = File(...), language = str):
+async def validate_upload(file: UploadFile = File(...)):
     try:
         # Leer los datos binarios del archivo
         file_data = await file.read()
@@ -14,7 +14,7 @@ async def validate_upload(file: UploadFile = File(...), language = str):
             raise HTTPException(status_code=422, detail="File name too long")
 
         # Verifica que el archivo sea de un formato aceptado por el sistema
-        valid_formats = {"audio/mpeg", "audio/mp3", "audio/wav"}
+        valid_formats = {"audio/mpeg", "audio/mp3"}
         if file.content_type not in valid_formats:
             raise HTTPException(status_code=422, detail="Invalid file format")
 
@@ -22,10 +22,6 @@ async def validate_upload(file: UploadFile = File(...), language = str):
         max_size = 10 * 1024 * 1024  # 10MB en Bytes
         if len(file_data) > max_size:
             raise HTTPException(status_code=422, detail="File size exceeds 10MB")
-        
-        # Verifica el idioma no sea más de 50 caracteres de largo
-        if len(language) > 50:
-            raise HTTPException(status_code=422, detail="Language name is too long")
 
         return file_data
     except HTTPException as e:
