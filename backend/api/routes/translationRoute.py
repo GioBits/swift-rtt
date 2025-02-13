@@ -19,19 +19,17 @@ async def get_translations():
     return await retrieve_all_translations_controller()
 
 @router.post("/translations", response_model=TranslationRecordSchema, tags=["Translated text"])
-async def add_translation(audio_id: int, transcription_id: int, provider_id: int, language_id: int, translation_text: str):
+async def add_translation(transcription_id: int, provider_id: int, language_id: int):
     """
     Adds a new translation.
     Args:
-        audio_id (int): The ID of the audio.
         transcription_id (int): The ID of the transcription.
         provider_id (int): The ID of the translation provider.
         language_id (int): The ID of the language.
-        translation_text (str): The translation text.
     Returns:
         TranslationRecordSchema: The newly created translation object.
     """
-    return await create_translation_controller(audio_id, transcription_id, provider_id, language_id, translation_text)
+    return await create_translation_controller(transcription_id, provider_id, language_id)
 
 @router.get("/translations/{translation_id}", response_model=TranslationRecordSchema, tags=["Translated text"])
 async def get_translation_by_id(translation_id: int):

@@ -6,6 +6,9 @@ from api.service.translationService import (
     get_translations_by_audio_id
 )
 
+from api.service.transcriptionService import get_transcription_by_id
+from utils.translate import translate
+
 async def retrieve_all_translations_controller():
     """
     Asynchronously retrieves all translations.
@@ -38,7 +41,7 @@ async def retrieve_all_translations_controller():
             detail="Internal Server Error"
         )
 
-async def create_translation_controller(audio_id: int, transcription_id: int, provider_id: int, language_id: int, translation_text: str):
+async def create_translation_controller(transcription_id: int, provider_id: int, language_id: int):
     """
     Asynchronously creates a new translation.
 
@@ -46,11 +49,9 @@ async def create_translation_controller(audio_id: int, transcription_id: int, pr
     If any error occurs during the process, it raises an HTTP 500 error.
 
     Args:
-        audio_id (int): The ID of the audio.
         transcription_id (int): The ID of the transcription.
         provider_id (int): The ID of the translation provider.
         language_id (int): The ID of the language.
-        translation_text (str): The translation text.
 
     Returns:
         The newly created translation object if successful.
@@ -59,7 +60,22 @@ async def create_translation_controller(audio_id: int, transcription_id: int, pr
         HTTPException: If an internal server error occurs (HTTP 500).
     """
     try:
-        new_translation = create_translation(audio_id, transcription_id, provider_id, language_id, translation_text)
+        # Retrieve the transcription by ID
+        transcription = get_transcription_by_id(transcription_id)
+        if transcription is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Transcription not found"
+            )
+        
+        # Set the audio_id from the transcription record
+        audio_id = transcription.audio_id
+        
+        # Translate the transcribed text
+        translated_text = translate.translate_text(transcription.transcription_text)
+        
+        # Create the new translation
+        new_translation = create_translation(audio_id, transcription_id, provider_id, language_id, translated_text)
         if new_translation is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
