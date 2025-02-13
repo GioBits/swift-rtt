@@ -19,6 +19,7 @@ class TranslationRecord(Base):
     # Relationships
     audio = relationship("AudioRecord", back_populates="translations")
     transcription = relationship("TranscriptionRecord", back_populates="translation")
+    translated_audio = relationship("TranslatedAudioRecord", back_populates="translation")
     provider = relationship("TranslationProviderRecord")
     language = relationship("LanguageRecord")
 
