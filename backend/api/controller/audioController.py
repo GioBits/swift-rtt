@@ -11,6 +11,9 @@ from pybase64 import b64encode
 from utils.transcribe import transcriber
 from utils.translate import translate
 from api.validators.audioValidations import validate_upload
+from api.controller.transcriptionController import create_transcription_controller
+from api.controller.translationController import create_translation_controller
+from api.controller.translatedAudioController import create_translated_audio_controller
 
 def parse_audio_response(audio_record: AudioRecordSchema, with_audio: bool) -> AudioResponseSchema:
     """
@@ -65,11 +68,14 @@ async def create_audio_controller(user_id: int, language_id: int, file: UploadFi
         )
 
         # Transcribe the audio
-        transcription = await transcriber.transcription_handler(file_data)
+        transcription_record = await create_transcription_controller(audio_record.id, 1)
 
-        # Translate the transcribed text
-        translated_text = translate.translate_text(transcription)
- 
+        # Translate the transcription
+        translation_record = await create_translation_controller(transcription_record.id, 1, 1)
+
+        # Genereta tts audio
+        translation_audio_record = await create_translated_audio_controller(translation_record.id, 1)
+
         return parse_audio_response(audio_record, True)
 
     except HTTPException as e:
