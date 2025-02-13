@@ -2,13 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import { resolve } from 'path'
+import tailwindcss from '@tailwindcss/vite'
 
 // Cargar variables de entorno desde el archivo .env
 dotenv.config({ path: resolve(__dirname, '../.env') })
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss(),],
   optimizeDeps: {
     exclude: ['@ffmpeg/ffmpeg']
   },
