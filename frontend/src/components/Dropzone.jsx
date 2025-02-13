@@ -37,19 +37,19 @@ const Dropzone = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: 'audio/mp3',
+    accept: { 'audio/mpeg': ['.mp3'] },
     maxSize: 100 * 1024 * 1024,
   });
 
   return (
     <div
       {...getRootProps()}
-      class="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
+      className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
 
     >
       <input {...getInputProps()} />
       <div>
-        <div class="text-sky-600 text-center">
+        <div className="text-sky-600 text-center">
           <AddCircleOutlineOutlinedIcon
             sx={{
               display: 'flex',
@@ -61,7 +61,7 @@ const Dropzone = () => {
         </div>
           <div>
           <p style={{ color: 'black', fontSize: '1rem' }}>
-            Arrastra y suelta un archivo <br />o <b class="text-sky-600">haz click para subir uno</b>
+            Arrastra y suelta un archivo <br />o <b className="text-sky-600">haz click para subir uno</b>
           </p>
           <span className='dropzone-span'>
             Admite solo formatos de audio mp3, hasta 10MB y 30 segundos de grabación.
