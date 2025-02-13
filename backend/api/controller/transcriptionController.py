@@ -6,6 +6,9 @@ from api.service.transcriptionService import (
     get_transcriptions_by_audio_id
 )
 
+from api.service.audioService import get_audio_by_id
+from utils.transcribe import transcriber
+
 async def retrieve_all_transcriptions_controller():
     """
     Asynchronously retrieves all transcriptions.
@@ -38,7 +41,7 @@ async def retrieve_all_transcriptions_controller():
             detail="Internal Server Error"
         )
 
-async def create_transcription_controller(audio_id: int, provider_id: int, language_id: int, transcription_text: str):
+async def create_transcription_controller(audio_id: int, provider_id: int):
     """
     Asynchronously creates a new transcription.
 
@@ -48,8 +51,6 @@ async def create_transcription_controller(audio_id: int, provider_id: int, langu
     Args:
         audio_id (int): The ID of the audio.
         provider_id (int): The ID of the transcription provider.
-        language_id (int): The ID of the language.
-        transcription_text (str): The transcription text.
 
     Returns:
         The newly created transcription object if successful.
@@ -58,7 +59,22 @@ async def create_transcription_controller(audio_id: int, provider_id: int, langu
         HTTPException: If an internal server error occurs (HTTP 500).
     """
     try:
-        new_transcription = create_transcription(audio_id, provider_id, language_id, transcription_text)
+        # Retrieve audio information
+        audio_info = get_audio_by_id(audio_id)
+        if audio_info is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Audio not found"
+            )
+        
+        language_id = audio_info.language_id
+        file_data = audio_info.audio_data
+
+        # Transcribe the audio
+        transcription = await transcriber.transcription_handler(file_data)
+
+        new_transcription = create_transcription(audio_id, provider_id, language_id, transcription)
+
         if new_transcription is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

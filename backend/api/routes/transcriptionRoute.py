@@ -14,8 +14,8 @@ async def get_transcriptions():
     return await retrieve_all_transcriptions_controller()
 
 @router.post("/transcriptions", response_model=TranscriptionRecordSchema, tags=["Transcriptions"])
-async def add_transcription(audio_id: int, provider_id: int, language_id: int, transcription_text: str):
-    return await create_transcription_controller(audio_id, provider_id, language_id, transcription_text)
+async def add_transcription(audio_id: int, provider_id: int):
+    return await create_transcription_controller(audio_id, provider_id)
 
 @router.get("/transcriptions/{transcription_id}", response_model=TranscriptionRecordSchema, tags=["Transcriptions"])
 async def get_transcription_by_id(transcription_id: int):
