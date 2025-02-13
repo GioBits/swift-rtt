@@ -6,7 +6,7 @@ import '../styles.css';
 
 const MediaUpload = () => {
   const [buttonSelected, setButtonSelected] = useState(true);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(true);
 
   const handleButtonClick = (selected) => {
     if (buttonSelected !== selected) {
@@ -16,16 +16,18 @@ const MediaUpload = () => {
   };
 
   return (
-    <div className='media-container'>
-      <div className='button-upload'>
+    <div className='flex flex-col w-full max-w-[350px] m-auto bg-white mt-0 rounded-b'>
+      <div className='w-full flex flex-row space-between h-auto m-auto'>
         <Button
           variant="contained"
           onClick={() => handleButtonClick(true)}
           sx={{
             textTransform: 'none',
             pointerEvents: isClicked && buttonSelected === true ? 'none' : 'auto',
+            width: '50%',
+            height: '50px',
+            margin: '10px',
           }}
-          className='button-item'
         >
           Subir archivo
         </Button>
@@ -35,15 +37,17 @@ const MediaUpload = () => {
           sx={{
             textTransform: 'none',
             pointerEvents: isClicked && buttonSelected === false ? 'none' : 'auto',
+            width: '50%',
+            height: '50px',
+            margin: '10px',
+
           }}
-          className='button-item'
         >
           Iniciar grabación
         </Button>
       </div>
 
-      {/* Renderizamos el componente según la selección */}
-      <div className='media-upload'>
+      <div className='box-border w-full bg-white h-[260px] p-2 rounded-lg'>
         {buttonSelected ? (
           <Dropzone />
         ) : (

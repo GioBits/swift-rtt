@@ -28,15 +28,20 @@ export default function LanguageSelector() {
   };
 
   return (
-    <Box className="language-selector">
-      <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel id="origin-language-select-label">Idioma de Origen</InputLabel>
+    <Box className="flex flex-row w-full max-w-[350px] m-auto bg-white h-[70px] mb-0 rounded-t">
+      <FormControl sx={{ minWidth: 120, width: '50%', margin: 'auto', display: 'flex' }}>
+        <InputLabel id="origin-language-select-label"
+            
+          >
+            Idioma de Origen
+          </InputLabel>
         <Select
           labelId="origin-language-select-label"
           id="origin-language-select"
           value={selectedLanguages.sourceLanguage}
           label="Idioma de Origen"
           onChange={handleOriginChange}
+          sx={{ fontSize: "14px", height: "40px", width: "120px", margin: 'auto' }}
         >
           {languages.map((lang) => (
             <MenuItem key={lang.code} value={lang.code}>
@@ -45,7 +50,7 @@ export default function LanguageSelector() {
           ))}
         </Select>
       </FormControl>
-      <FormControl sx={{ minWidth: 120, marginLeft: 2 }}>
+      <FormControl sx={{ minWidth: 120, width: '50%', margin: 'auto', display: 'flex'}}>
         <InputLabel id="target-language-select-label">Idioma de Destino</InputLabel>
         <Select
           labelId="target-language-select-label"
@@ -53,6 +58,7 @@ export default function LanguageSelector() {
           value={selectedLanguages.targetLanguage}
           label="Idioma de Destino"
           onChange={handleTargetChange}
+          sx={{ fontSize: "14px", height: "40px", width: "120px", margin: 'auto' }}
         >
           {languages.map((lang) => (
             <MenuItem key={lang.code} value={lang.code}>

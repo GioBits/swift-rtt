@@ -44,7 +44,8 @@ const Dropzone = () => {
   return (
     <div
       {...getRootProps()}
-      className='dropzone'
+      class="border border-dashed border-gray-400 p-2 text-center rounded cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
+
     >
       <input {...getInputProps()} />
       <div>
