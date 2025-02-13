@@ -10,7 +10,7 @@ class TranscriptionRecord(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     audio_id = Column(Integer, ForeignKey('audios.id'))  # Foreign key to audios table
-    provider_id = Column(Integer, ForeignKey('transcription_providers.id'))  # Foreign key to transcription_providers table
+    provider_id = Column(Integer, ForeignKey('providers.id'))  # Foreign key to transcription_providers table
     language_id = Column(Integer, ForeignKey('languages.id'))  # Foreign key to languages table
     transcription_text = Column(Text, nullable=False)  # Transcription text
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -18,7 +18,7 @@ class TranscriptionRecord(Base):
     # Relationships
     audio = relationship("AudioRecord", back_populates="transcriptions")
     translation = relationship("TranslationRecord", back_populates="transcription")
-    provider = relationship("TranscriptionProviderRecord")
+    provider = relationship("ProviderRecord")
     language = relationship("LanguageRecord")
 
 class TranscriptionRecordBase(BaseModel):

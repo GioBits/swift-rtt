@@ -1,8 +1,8 @@
-"""Create translated_audios table with relationships
+"""translated audio table
 
-Revision ID: ff4d6107254e
-Revises: 126007a0caab
-Create Date: 2025-02-12 20:13:46.564647
+Revision ID: ec2b4ea51efb
+Revises: 95527ea4457d
+Create Date: 2025-02-13 00:38:35.449556
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'ff4d6107254e'
-down_revision: Union[str, None] = '126007a0caab'
+revision: str = 'ec2b4ea51efb'
+down_revision: Union[str, None] = '95527ea4457d'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -31,7 +31,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['audio_id'], ['audios.id'], ),
     sa.ForeignKeyConstraint(['language_id'], ['languages.id'], ),
-    sa.ForeignKeyConstraint(['provider_id'], ['tts_providers.id'], ),
+    sa.ForeignKeyConstraint(['provider_id'], ['providers.id'], ),
     sa.ForeignKeyConstraint(['translation_id'], ['translation_records.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

@@ -1,8 +1,8 @@
 """audios table
 
-Revision ID: 3cde5c82a1e5
-Revises: 
-Create Date: 2025-02-11 13:04:51.495532
+Revision ID: c5ac1001efb0
+Revises: 49b322498d1a
+Create Date: 2025-02-13 00:33:55.348487
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '3cde5c82a1e5'
-down_revision: Union[str, None] = None
+revision: str = 'c5ac1001efb0'
+down_revision: Union[str, None] = '49b322498d1a'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -27,7 +27,9 @@ def upgrade() -> None:
     sa.Column('audio_data', sa.LargeBinary(), nullable=True),
     sa.Column('content_type', sa.String(length=50), nullable=True),
     sa.Column('file_size', sa.Integer(), nullable=True),
+    sa.Column('language_id', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['language_id'], ['languages.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_audios_id'), 'audios', ['id'], unique=False)

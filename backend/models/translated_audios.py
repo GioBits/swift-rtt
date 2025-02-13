@@ -11,7 +11,7 @@ class TranslatedAudioRecord(Base):
     id = Column(Integer, primary_key=True, index=True)
     audio_id = Column(Integer, ForeignKey('audios.id'))  # Foreign key to audios table
     translation_id = Column(Integer, ForeignKey('translation_records.id'))  # Foreign key to translation_records table
-    provider_id = Column(Integer, ForeignKey('tts_providers.id'))  # Foreign key to tts_providers table
+    provider_id = Column(Integer, ForeignKey('providers.id'))  # Foreign key to tts_providers table
     language_id = Column(Integer, ForeignKey('languages.id'))  # Foreign key to languages table
     audio_data = Column(LargeBinary)  # LargeBinary to store the audio file
     file_size = Column(Integer)  # File size in bytes
@@ -20,7 +20,7 @@ class TranslatedAudioRecord(Base):
     # Relationships
     audio = relationship("AudioRecord", back_populates="translated_audio")
     translation = relationship("TranslationRecord", back_populates="translated_audio")
-    provider = relationship("TTSProviderRecord")
+    provider = relationship("ProviderRecord")
     language = relationship("LanguageRecord")
 
 class TranslatedAudioRecordBase(BaseModel):

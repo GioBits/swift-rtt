@@ -41,7 +41,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 from models.audio import AudioRecord
 from models.languages import LanguageRecord
-from models.providers import TranscriptionProviderRecord, TranslationProviderRecord, TTSProviderRecord
+from models.providers import ProviderRecord
 from models.transcription_records import TranscriptionRecord
 from models.translation_records import TranslationRecord
 from models.translated_audios import TranslatedAudioRecord

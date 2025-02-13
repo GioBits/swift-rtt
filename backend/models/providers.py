@@ -1,44 +1,24 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Enum
 from db.database import Base
 from pydantic import BaseModel
+from enum import Enum as PyEnum
 
-class TranscriptionProviderRecord(Base):
-    __tablename__ = 'transcription_providers'
+class ProviderType(PyEnum):
+    TRANSCRIPTION = "transcription"
+    TRANSLATION = "translation"
+    TTS = "tts"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False)  # Name of the provider (e.g., 'Whisper')
-
-class TranscriptionProviderSchema(BaseModel):
-    id: int
-    name: str
-
-    class Config:
-        from_attributes = True
-
-
-class TranslationProviderRecord(Base):
-    __tablename__ = 'translation_providers'
+class ProviderRecord(Base):
+    __tablename__ = 'providers'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False)  # Name of the provider (e.g., 'Google Translate')
+    name = Column(String(50), unique=True, nullable=False)
+    type = Column(Enum(ProviderType), nullable=False)
 
-class TranslationProviderSchema(BaseModel):
+class ProviderSchema(BaseModel):
     id: int
     name: str
-
-    class Config:
-        from_attributes = True
-    
-
-class TTSProviderRecord(Base):
-    __tablename__ = 'tts_providers'
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False)  # Name of the provider (e.g., 'Google TTS')
-
-class TTSProviderSchema(BaseModel):
-    id: int
-    name: str
+    type: ProviderType
 
     class Config:
         from_attributes = True
