@@ -8,7 +8,7 @@ import asyncio
 
 router = APIRouter()
 
-@router.post("/transcribe")
+@router.post("/transcribe", tags=["Utils"])
 async def transcribe_audio_file(file: UploadFile = File(...), language: str = Form(...)):
     try:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -30,7 +30,7 @@ async def transcribe_audio_file(file: UploadFile = File(...), language: str = Fo
             os.unlink(temp_path)
         raise HTTPException(status_code=500, detail=f"Error en transcripción: {str(e)}")
 
-@router.post("/translate")
+@router.post("/translate", tags=["Utils"])
 async def translate_file(file: UploadFile = File(...)):
     temp_path = None 
     

@@ -27,6 +27,20 @@ load_dotenv(dotenv_path='../.env')
 # Instancia de la aplicacion 
 app = FastAPI()
 
+# Definir las etiquetas en el orden deseado
+tags_metadata = [
+    {"name": "Health", "description": "Health check endpoint"},
+    {"name": "Languages", "description": "Operations related to languages"},
+    {"name": "Audio", "description": "Operations related to audio files"},
+    {"name": "Transcriptions", "description": "Operations related to transcriptions"},
+    {"name": "Translated text", "description": "Operations related to translations"},
+    {"name": "Translated Audios", "description": "Operations related to translated audio files"},
+    {"name": "Utils", "description": "Utility endpoints"}
+]
+
+# Instancia de la aplicacion con metadata de etiquetas
+app = FastAPI(openapi_tags=tags_metadata)
+
 # Importación de rutas
 app.include_router(audioRouter, prefix=("/api"))
 app.include_router(translatedAudioRouter, prefix=("/api"))
@@ -51,13 +65,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# Ruta Raiz
-@app.get("/")
-async def root():
-    return {"message":"Hola a todos, sean bienvenidos"}
-
 # Endpoint "/ping", debe retornar "pong"
-@app.get("/ping")
+@app.get("/ping", tags=["Health"])
 def ping():
     try:
         return {"message" : "pong"}

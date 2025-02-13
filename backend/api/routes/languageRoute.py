@@ -13,10 +13,10 @@ Functions:
 
 router = APIRouter()
 
-@router.get("/languages", response_model=list)
+@router.get("/languages", response_model=list, tags=["Languages"])
 async def get_languages():
     return await retrieve_all_languages_controller()
 
-@router.post("/languages", response_model=dict)
+@router.post("/languages", response_model=dict, tags=["Languages"])
 async def add_language(code: str, name: str):
     return await create_language_controller(code, name)

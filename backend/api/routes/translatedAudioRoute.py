@@ -10,7 +10,7 @@ from typing import List
 
 router = APIRouter()
 
-@router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema])
+@router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
 async def get_translated_audios():
     """
     Retrieves all translated audios.
@@ -19,7 +19,7 @@ async def get_translated_audios():
     """
     return await retrieve_all_translated_audios_controller()
 
-@router.post("/translated_audios", response_model=TranslatedAudioRecordSchema)
+@router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def add_translated_audio(audio_id: int, translation_id: int, provider_id: int, language_id: int, audio_data: bytes = File(...)):
     """
     Adds a new translated audio.
@@ -34,7 +34,7 @@ async def add_translated_audio(audio_id: int, translation_id: int, provider_id: 
     """
     return await create_translated_audio_controller(audio_id, translation_id, provider_id, language_id, audio_data)
 
-@router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema)
+@router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def get_translated_audio_by_id(translated_audio_id: int):
     """
     Retrieves a translated audio by its ID.
@@ -45,7 +45,7 @@ async def get_translated_audio_by_id(translated_audio_id: int):
     """
     return await retrieve_translated_audio_by_id_controller(translated_audio_id)
 
-@router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema])
+@router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
 async def get_translated_audios_by_audio_id(audio_id: int):
     """
     Retrieves all translated audios for a given audio ID.

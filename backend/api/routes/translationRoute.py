@@ -9,7 +9,7 @@ from models.translation_records import TranslationRecordSchema
 
 router = APIRouter()
 
-@router.get("/translations", response_model=list[TranslationRecordSchema])
+@router.get("/translations", response_model=list[TranslationRecordSchema], tags=["Translated text"])
 async def get_translations():
     """
     Retrieves all translations.
@@ -18,7 +18,7 @@ async def get_translations():
     """
     return await retrieve_all_translations_controller()
 
-@router.post("/translations", response_model=TranslationRecordSchema)
+@router.post("/translations", response_model=TranslationRecordSchema, tags=["Translated text"])
 async def add_translation(audio_id: int, transcription_id: int, provider_id: int, language_id: int, translation_text: str):
     """
     Adds a new translation.
@@ -33,7 +33,7 @@ async def add_translation(audio_id: int, transcription_id: int, provider_id: int
     """
     return await create_translation_controller(audio_id, transcription_id, provider_id, language_id, translation_text)
 
-@router.get("/translations/{translation_id}", response_model=TranslationRecordSchema)
+@router.get("/translations/{translation_id}", response_model=TranslationRecordSchema, tags=["Translated text"])
 async def get_translation_by_id(translation_id: int):
     """
     Retrieves a translation by its ID.
@@ -44,7 +44,7 @@ async def get_translation_by_id(translation_id: int):
     """
     return await retrieve_translation_by_id_controller(translation_id)
 
-@router.get("/translations/audio/{audio_id}", response_model=list[TranslationRecordSchema])
+@router.get("/translations/audio/{audio_id}", response_model=list[TranslationRecordSchema], tags=["Translated text"])
 async def get_translations_by_audio_id(audio_id: int):
     """
     Retrieves all translations for a given audio ID.

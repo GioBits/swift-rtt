@@ -11,7 +11,7 @@ from typing import List
 router = APIRouter()
 
 # Endpoint "/audio", recibe archivo de audio
-@router.post("/audio", response_model=AudioRecordSchema)
+@router.post("/audio", response_model=AudioRecordSchema, tags=["Audio"])
 async def upload_audio(file: UploadFile = File(...)):
     """
     Handles the upload of an audio file.
@@ -26,7 +26,7 @@ async def upload_audio(file: UploadFile = File(...)):
     return await create_audio_controller(user_id, language_id, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
-@router.get("/audio", response_model=List[AudioRecordSchema])
+@router.get("/audio", response_model=List[AudioRecordSchema], tags=["Audio"])
 async def retrieve_audios_list():
     """
     Retrieves a list of audio files from the database.
@@ -36,7 +36,7 @@ async def retrieve_audios_list():
     return await retrieve_all_audios_controller()
 
 # Endpoint "/audio/{id}", recupera un audio de la base de datos
-@router.get("/audio/{id}", response_model=AudioRecordSchema)
+@router.get("/audio/{id}", response_model=AudioRecordSchema, tags=["Audio"])
 async def retrieve_audio_by_id(id: int):
     """
     Retrieves an audio file by its ID from the database.
@@ -48,7 +48,7 @@ async def retrieve_audio_by_id(id: int):
     return await retrieve_audio_by_id_controller(id)
 
 # Endpoint "/audio/user/{user_id}", recupera todos los audios de un usuario
-@router.get("/audio/user/{user_id}", response_model=List[AudioRecordSchema])
+@router.get("/audio/user/{user_id}", response_model=List[AudioRecordSchema], tags=["Audio"])
 async def retrieve_audios_by_user_id(user_id: str):
     """
     Retrieves all audio files for a given user ID from the database.
