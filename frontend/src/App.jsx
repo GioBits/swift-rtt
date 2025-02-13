@@ -1,5 +1,6 @@
 import { MediaProvider } from "./contexts/MediaProvider";
 import LanguageSelector from "./components/LanguageSelector";
+import PingComponent from "./components/PingComponent";
 import MediaUpload from "./components/MediaUpload";
 import "./index.css";
 import MediaText from "./components/MediaText";
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <div className="bg-neutral-800 h-screen w-screen flex">
+      <PingComponent />
       <div className="w-[60vw] h-[70vh] flex m-auto">
         <MediaProvider>
           <div className="w-1/2 h-full flex flex-col m-auto p-4">
