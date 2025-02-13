@@ -61,7 +61,7 @@ const RecordAudio = () => {
   const { startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
 
   return (
-    <div className="record-container">
+    <div className="h-full w-full flex flex-col m-auto border border-dashed border-gray-400 rounded">
       <IconButton
         onClick={isRecording ? stopRecording : startRecording}
         color="primary"
@@ -77,10 +77,11 @@ const RecordAudio = () => {
             }
           }
         }}
+        disableRipple
       >
         {isRecording
           ?
-          <div className="record-status">
+          <div className="w-full flex justify-center items-center mx-auto gap-2 text-4xl">
             <div className="blinking-circle"></div>
             <span className="timer" style={{ color: 'black' }}>{formatTime(elapsedTime)}</span>
           </div>
