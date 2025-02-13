@@ -1,69 +1,82 @@
-import React, { useContext } from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { LanguageContext } from '../contexts/LanguageContext.jsx'; // Ensure you import the context
-import '../styles/LanguageSelector.css';
+import { useContext } from "react";
+import { Box, FormControl, Select, MenuItem } from "@mui/material";
+import { MediaContext } from "../contexts/MediaContext";
+import "../styles/LanguageSelector.css";
 
 export default function LanguageSelector() {
-  const { originLanguage, setOriginLanguage, targetLanguage, setTargetLanguage } = useContext(LanguageContext);
+  const {
+    languages,
+    selectedLanguages,
+    setSourceLanguage,
+    setTargetLanguage,
+  } = useContext(MediaContext);
+
+  const validSourceLanguage = languages.some(lang => lang.code === selectedLanguages.sourceLanguage)
+    ? selectedLanguages.sourceLanguage
+    : "";
+
+  const validTargetLanguage = languages.some(lang => lang.code === selectedLanguages.targetLanguage)
+    ? selectedLanguages.targetLanguage
+    : "";
 
   const handleOriginChange = (event) => {
     const selectedLanguage = event.target.value;
-
-    if(selectedLanguage === '') {
-      return;
+    if (selectedLanguage === selectedLanguages.targetLanguage) {
+      setTargetLanguage(selectedLanguages.sourceLanguage);
     }
-
-    if (selectedLanguage === targetLanguage) {
-      setTargetLanguage(originLanguage);
-    }
-    setOriginLanguage(selectedLanguage);
+    setSourceLanguage(selectedLanguage);
   };
 
   const handleTargetChange = (event) => {
     const selectedLanguage = event.target.value;
-
-    if(selectedLanguage === '') {
-      return;
-    }
-
-    if (selectedLanguage === originLanguage) {
-      setOriginLanguage(targetLanguage);
+    if (selectedLanguage === selectedLanguages.sourceLanguage) {
+      setSourceLanguage(selectedLanguages.targetLanguage);
     }
     setTargetLanguage(selectedLanguage);
   };
 
+  const selectStyle = {
+    fontSize: "14px",
+    height: "40px",
+    minWidth: "30px",
+    maxwidth: "120px",
+    width  : '100%',
+    margin: 'auto',
+    borderRadius: '4px',
+  }
+
   return (
-    <Box className="language-selector">
-      <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel id="origin-language-select-label">Idioma de Origen</InputLabel>
-        <Select
-          labelId="origin-language-select-label"
-          id="origin-language-select"
-          value={originLanguage}
-          label="Idioma de Origen"
-          onChange={handleOriginChange}
-        >
-          <MenuItem value=""><em>Seleccione un idioma</em></MenuItem>
-          <MenuItem value="en">English</MenuItem>
-          <MenuItem value="es">Español</MenuItem>
-          {/* Add more languages as needed */}
-        </Select>
-      </FormControl>
-      <FormControl sx={{ minWidth: 120, marginLeft: 2 }}>
-        <InputLabel id="target-language-select-label">Idioma de Destino</InputLabel>
-        <Select
-          labelId="target-language-select-label"
-          id="target-language-select"
-          value={targetLanguage}
-          label="Idioma de Destino"
-          onChange={handleTargetChange}
-        >
-          <MenuItem value=""><em>Seleccione un idioma</em></MenuItem>
-          <MenuItem value="en">English</MenuItem>
-          <MenuItem value="es">Español</MenuItem>
-          {/* Add more languages as needed */}
-        </Select>
-      </FormControl>
-    </Box>
+    <div className="flex flex-row w-full max-w-[410px] m-auto bg-white h-[70px] p-10 mb-0 rounded-t-lg">
+      <Box className="flex flex-row w-full">
+        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+          <Select
+            id="origin-language-select"
+            value={validSourceLanguage}
+            onChange={handleOriginChange}
+            sx={selectStyle}
+          >
+            {languages.map((lang) => (
+              <MenuItem key={lang.code} value={lang.code}>
+                {lang.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+          <Select
+            id="target-language-select"
+            value={validTargetLanguage}
+            onChange={handleTargetChange}
+            sx={selectStyle}
+          >
+            {languages.map((lang) => (
+              <MenuItem key={lang.code} value={lang.code}>
+                {lang.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+    </div>
   );
 }

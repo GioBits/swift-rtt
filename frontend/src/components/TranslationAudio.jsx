@@ -1,10 +1,10 @@
-import { TranslationContext } from '../contexts/TranslationContext';
+import { MediaContext } from '../contexts/MediaContext';
 import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import "../styles.css"
 
 const TranslationAudio = () => {
-  const { audioUrl, uploading } = useContext(TranslationContext);
+  const { audioUrl, uploading } = useContext(MediaContext);
   const { message, type, origin } = useSelector(state => state.error);
 
   let validateOrigin = origin === "UploadAudio" || origin === "RecordAudio";

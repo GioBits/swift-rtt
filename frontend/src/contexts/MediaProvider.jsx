@@ -1,23 +1,26 @@
-import {useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import idiomas from "../locales/languages.json";
+import { useState, useEffect } from "react";
+import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
-import { TranslationContext } from "./TranslationContext";
+import languagesSupport from "../locales/languages.json";
+import PropTypes from "prop-types";
 
-export const TranslationProvider = ({ children }) => {
-  const [languages, setLanguages] = useState([]);
-  const [audioUrl, setAudioUrl] = useState(null);
+export const MediaProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
-
-  useEffect(() => {
-    setLanguages(idiomas); // Asignar los idiomas a partir del archivo JSON
-  }, []);
-
+  const [languages, setLanguages] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: "es",
     targetLanguage: "en",
   });
+  const [audioSelected, setAudioSelected] = useState({
+    id: ""
+  })
+
+  useEffect(() => {
+    setLanguages(languagesSupport);
+  }, []);
+
 
   const handleSetSourceLanguage = (languageCode) => {
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
@@ -28,7 +31,7 @@ export const TranslationProvider = ({ children }) => {
   };
 
   return (
-    <TranslationContext.Provider
+    <MediaContext.Provider
       value={{
         languages,
         selectedLanguages,
@@ -39,14 +42,16 @@ export const TranslationProvider = ({ children }) => {
         audioUrl,
         setAudioUrl,
         isRecording,
-        setIsRecording
+        setIsRecording,
+        audioSelected,
+        setAudioSelected
       }}
     >
       {children}
-    </TranslationContext.Provider>
+    </MediaContext.Provider>
   );
 };
 
-TranslationProvider.propTypes = {
+MediaProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

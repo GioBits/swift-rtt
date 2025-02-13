@@ -4,11 +4,11 @@ import { handleFileUpload } from '../utils/uploadUtils';
 import { useDispatch} from 'react-redux';
 import { clearError } from '../store/slices/errorSlice';
 import { b64toBlob } from '../utils/audioUtils';
-import { TranslationContext } from '../contexts/TranslationContext';
+import { MediaContext } from '../contexts/MediaContext';
 import "../styles.css";
 
 const UploadAudio = () => {
-  const { isRecording, setUploading, setAudioUrl } = useContext(TranslationContext);
+  const { isRecording, setUploading, setAudioUrl } = useContext(MediaContext);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
