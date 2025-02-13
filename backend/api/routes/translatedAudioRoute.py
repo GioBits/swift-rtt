@@ -20,19 +20,16 @@ async def get_translated_audios():
     return await retrieve_all_translated_audios_controller()
 
 @router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
-async def add_translated_audio(audio_id: int, translation_id: int, provider_id: int, language_id: int, audio_data: bytes = File(...)):
+async def add_translated_audio(translation_id: int, provider_id: int):
     """
     Adds a new translated audio.
     Args:
-        audio_id (int): The ID of the audio.
         translation_id (int): The ID of the translation.
         provider_id (int): The ID of the TTS provider.
-        language_id (int): The ID of the language.
-        audio_data (bytes): The audio data.
     Returns:
         TranslatedAudioRecordSchema: The newly created translated audio object.
     """
-    return await create_translated_audio_controller(audio_id, translation_id, provider_id, language_id, audio_data)
+    return await create_translated_audio_controller(translation_id, provider_id)
 
 @router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def get_translated_audio_by_id(translated_audio_id: int):

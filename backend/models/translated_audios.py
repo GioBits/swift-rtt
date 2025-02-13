@@ -28,12 +28,20 @@ class TranslatedAudioRecordBase(BaseModel):
     translation_id: Optional[int] = None
     provider_id: Optional[int] = None
     language_id: Optional[int] = None
-    file_size: Optional[int] = None
+    file_size: Optional[int] = None  
     transcription: Optional[str] = None
     created_at: Optional[datetime] = None
 
 class TranslatedAudioRecordSchema(TranslatedAudioRecordBase):
     id: int
+    audio_data: Optional[bytes] = None
+
+    class Config:
+        from_attributes = True
+
+class TranslatedAudioResponseSchema(TranslatedAudioRecordBase):
+    id: int
+    audio_data: Optional[str] = None
 
     class Config:
         from_attributes = True

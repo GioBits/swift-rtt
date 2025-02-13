@@ -5,6 +5,33 @@ from api.service.translatedAudioService import (
     get_translated_audio_by_id,
     get_translated_audios_by_audio_id
 )
+from pybase64 import b64encode
+from api.service.translationService import get_translation_by_id
+from api.service.audioService import get_audio_by_id
+from models.translated_audios import TranslatedAudioRecordSchema, TranslatedAudioResponseSchema
+
+def parse_audio_response(audio_record: TranslatedAudioRecordSchema) -> TranslatedAudioResponseSchema:
+    """
+    Parse an audio record to an audio response schema.
+
+    Args:
+        audio_record (TranslatedAudioRecordSchema): The audio record to be parsed.
+
+    Returns:
+        TranslatedAudioResponseSchema: The parsed audio response schema.
+    """
+    base_response = {
+        "id": audio_record.id,
+        "audio_id": audio_record.audio_id,
+        "translation_id": audio_record.translation_id,
+        "provider_id": audio_record.provider_id,
+        "language_id": audio_record.language_id,
+        "file_size": audio_record.file_size,
+        "created_at": audio_record.created_at,
+        "audio_data": b64encode(audio_record.audio_data).decode('utf-8')
+    }
+
+    return TranslatedAudioResponseSchema(**base_response)
 
 async def retrieve_all_translated_audios_controller():
     """
@@ -27,7 +54,7 @@ async def retrieve_all_translated_audios_controller():
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No translated audios found"
             )
-        return result
+        return [parse_audio_response(audio) for audio in result]
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
@@ -38,7 +65,7 @@ async def retrieve_all_translated_audios_controller():
             detail="Internal Server Error"
         )
 
-async def create_translated_audio_controller(audio_id: int, translation_id: int, provider_id: int, language_id: int, audio_data: bytes, file_size: int, transcription: str):
+async def create_translated_audio_controller(translation_id: int, provider_id: int):
     """
     Asynchronously creates a new translated audio.
 
@@ -46,13 +73,8 @@ async def create_translated_audio_controller(audio_id: int, translation_id: int,
     If any error occurs during the process, it raises an HTTP 500 error.
 
     Args:
-        audio_id (int): The ID of the audio.
         translation_id (int): The ID of the translation.
         provider_id (int): The ID of the TTS provider.
-        language_id (int): The ID of the language.
-        audio_data (bytes): The audio data.
-        file_size (int): The file size in bytes.
-        transcription (str): The transcription text.
 
     Returns:
         The newly created translated audio object if successful.
@@ -61,13 +83,32 @@ async def create_translated_audio_controller(audio_id: int, translation_id: int,
         HTTPException: If an internal server error occurs (HTTP 500).
     """
     try:
-        new_translated_audio = create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, file_size, transcription)
+        # Retrieve the translation record using the translation_id
+        translation_record = get_translation_by_id(translation_id)
+        if translation_record is None:
+            raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Translation not found"
+            )
+        language_id = translation_record.language_id
+        audio_id = translation_record.audio_id
+
+        # Retrieve the audio record using the audio_id
+        audio_record = get_audio_by_id(audio_id)
+        if audio_record is None:
+            raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Audio not found"
+            )
+        audio_data = audio_record.audio_data # get the generated audio data generate_tts(tranlation_record.trasnlation_text, provider_id)
+
+        new_translated_audio = create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, len(audio_data))
         if new_translated_audio is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Translated audio could not be created"
             )
-        return new_translated_audio
+        return parse_audio_response(new_translated_audio)
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
@@ -102,7 +143,7 @@ async def retrieve_translated_audio_by_id_controller(translated_audio_id: int):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Translated audio not found"
             )
-        return translated_audio
+        return parse_audio_response(translated_audio)
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
@@ -137,7 +178,7 @@ async def retrieve_translated_audios_by_audio_id_controller(audio_id: int):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No translated audios found for the given audio ID"
             )
-        return result
+        return [parse_audio_response(audio) for audio in result]
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
