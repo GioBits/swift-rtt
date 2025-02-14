@@ -5,10 +5,15 @@ import { useDispatch} from 'react-redux';
 import { clearError } from '../store/slices/errorSlice';
 import { b64toBlob } from '../utils/audioUtils';
 import { MediaContext } from '../contexts/MediaContext';
+import { transcriptionService } from '../service/transcribeService';
 import "../styles.css";
 
 const UploadAudio = () => {
-  const { isRecording, setUploading, setAudioUrl } = useContext(MediaContext);
+  const {
+    isRecording,
+    setUploading,
+    setAudioUrl,
+    setTranscription } = useContext(MediaContext);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -26,8 +31,11 @@ const UploadAudio = () => {
   const uploadFile = async (file) => {
     setUploading(true);
     try {
-      const fileBase64 = await handleFileUpload(file, '/api/audio', dispatch, "UploadAudio");
-      return fileBase64;
+      const response = await handleFileUpload(file, '/api/audio');
+      const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(response);
+      const transcriptionText = transcriptionResponse.transcription;
+      setTranscription(transcriptionText);
+      //TODO translate request and setTranslate, include setTranslate on MediaContext
     } catch {
       // El error ya fue manejado por Redux en handleFileUpload
     } finally {
