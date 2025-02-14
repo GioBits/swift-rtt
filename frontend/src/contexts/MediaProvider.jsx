@@ -9,6 +9,9 @@ export const MediaProvider = ({ children }) => {
   const [audioUrl, setAudioUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
+  const [transcription, setTranscription] = useState("");
+  const [translate, setTranslate] = useState("");
+  
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: "es",
     targetLanguage: "en",
@@ -44,7 +47,11 @@ export const MediaProvider = ({ children }) => {
         isRecording,
         setIsRecording,
         audioSelected,
-        setAudioSelected
+        setAudioSelected,
+        transcription,
+        setTranscription,
+        translate,
+        setTranslate
       }}
     >
       {children}
