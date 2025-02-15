@@ -17,7 +17,7 @@ export const handleFileUpload = async (file, endpoint) => {
       },
     });
 
-    return response.id;
+    return response;
 
   } catch (error) {
     console.log(error);

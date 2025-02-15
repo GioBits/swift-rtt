@@ -26,10 +26,12 @@ const Dropzone = () => {
     setUploading(true);
     try {
       const response = await handleFileUpload(file, '/api/audio');
-      const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(response);
+      console.log(response);
+      const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(response.id);
       const transcriptionText = transcriptionResponse.transcription;
       setTranscription(transcriptionText);
       //TODO translate request and setTranslate, include setTranslate on MediaContext
+      return response.audio_data;
     } catch {
       // El error ya fue manejado por Redux en handleFileUpload
     } finally {
