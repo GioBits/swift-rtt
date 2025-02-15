@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, Query, HTTPException
 from api.controller.audioController import (
     create_audio_controller,
     retrieve_all_audios_controller,
@@ -26,14 +26,26 @@ async def upload_audio(file: UploadFile = File(...)):
     return await create_audio_controller(user_id, language_id, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
-@router.get("/audio", response_model=List[AudioResponseSchema], tags=["Audio"])
-async def retrieve_audios_list():
+@router.get("/audio", response_model=dict, tags=["Audio"])
+async def retrieve_audios_list(
+    page: int = Query(1, ge=1, description="Número de página"),
+    size: int = Query(10, ge=1, le=50, description="Número de elementos por página")
+):
     """
-    Retrieves a list of audio files from the database.
+    Retrieves a paginated list of audio files from the database.
+    Args:
+        page (int): The page number to retrieve.
+        size (int): The number of items per page.
     Returns:
         list: A list of AudioResponseSchema objects.
     """
-    return await retrieve_all_audios_controller()
+    try:
+        if page < 1 or size < 1:
+            raise HTTPException(status_code=400, detail="Page y size deben ser números positivos.")
+        
+        return await retrieve_all_audios_controller(page, size)
+    except HTTPException as e:
+        raise e
 
 # Endpoint "/audio/{id}", recupera un audio de la base de datos
 @router.get("/audio/{id}", response_model=AudioResponseWithAudioSchema, tags=["Audio"])

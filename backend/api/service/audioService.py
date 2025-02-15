@@ -3,21 +3,36 @@ from db.database import SessionLocal
 from models.audio import AudioRecord, AudioRecordSchema
 from fastapi import HTTPException
 
-def get_all_audios():
+def get_all_audios(page: int, size: int):
     """
-    Retrieve all audio records from the database.
+    Retrieve all audio records from the database with pagination.
 
-    This function creates a new database session, queries all records from the
-    AudioRecord table, converts them to AudioRecordSchema objects,
-    and returns them as a list. The database session is closed after the operation.
+    Args:
+        page (int): The page number to retrieve.
+        size (int): The number of records per page.
 
     Returns:
-        list: A list of AudioRecordSchema objects representing all audios in the database.
+        tuple: A tuple containing a list of AudioRecordSchema objects representing the audios,
+               the total number of items, and the total number of pages.
     """
     db = SessionLocal()
     try:
-        audios = db.query(AudioRecord).all()
-        return [AudioRecordSchema.from_orm(audio) for audio in audios]
+        # Get the total number of items without pagination
+        total_items = db.query(AudioRecord).count()
+
+        # Calculate the offset for the query
+        offset = (page - 1) * size
+        
+        # Query the audios applying pagination (limit and offset)
+        audios = db.query(AudioRecord).offset(offset).limit(size).all()
+
+        # Calculate the total number of pages
+        total_pages = (total_items + size - 1) // size  # Round up to get the number of pages
+
+        return audios, total_items, total_pages
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         db.close()
 

@@ -85,28 +85,41 @@ async def create_audio_controller(user_id: int, language_id: int, file: UploadFi
         print(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-async def retrieve_all_audios_controller():
+async def retrieve_all_audios_controller(page: int, size: int):
     """
-    Asynchronously retrieves all audios.
+    Asynchronously retrieves all audios with pagination.
 
     This function attempts to retrieve all audios by calling the `get_all_audios` function.
     If no audios are found, it raises an HTTP 404 exception.
     If any other exception occurs, it raises an HTTP 500 exception.
 
+    Args:
+        page (int): The page number for pagination.
+        size (int): The number of items per page.
+
     Returns:
-        list: A list of audios if found.
+        dict: A dictionary containing the list of audios and pagination details.
 
     Raises:
         HTTPException: If no audios are found (404) or if an internal server error occurs (500).
     """
     try:
-        result = get_all_audios()
-        if not result:
+        audios, total_items, total_pages = get_all_audios(page, size)
+        if not audios:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No audios found"
             )
-        return [parse_audio_response(audio, False) for audio in result]
+        response = {
+            "data": audios,
+            "pagination": {
+                "page": page,
+                "size": size,
+                "total_items": total_items,
+                "total_pages": total_pages
+            }
+        }
+        return response
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e
