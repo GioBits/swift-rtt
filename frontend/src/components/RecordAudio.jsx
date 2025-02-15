@@ -9,9 +9,10 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../utils/audioUtils';
 import { MediaContext } from '../contexts/MediaContext';
 import '../styles.css';
+import { b64toBlob } from '../utils/audioUtils';
 
 const RecordAudio = () => {
-  const { isRecording, setUploading } = useContext(MediaContext);
+  const { isRecording, setUploading, setAudioSelected, setAudioUrl } = useContext(MediaContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -52,7 +53,11 @@ const RecordAudio = () => {
     try {
       await ffmpeg.load();
       const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
-      await handleFileUpload(mp3File, '/api/audio', dispatch, "RecordAudio");
+      const response = await handleFileUpload(mp3File, '/api/audio');
+      setAudioSelected(response);
+      const blob = b64toBlob(response.audio_data, 'audio/mp3');
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
     } finally {
       setUploading(false);
     }
