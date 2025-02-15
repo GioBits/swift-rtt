@@ -31,7 +31,8 @@ const MediaText = ({ title, response, models }) => {
     if (!audioUrl) return;
     const link = document.createElement("a");
     link.href = audioUrl;
-    link.setAttribute("download", "audio.mp3");
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    link.setAttribute("download", `audio-${timestamp}.mp3`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
