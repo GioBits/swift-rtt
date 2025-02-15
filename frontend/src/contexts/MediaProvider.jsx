@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
-import languagesSupport from "../locales/languages.json";
+import { languageService }  from "../service/languageService";
 import PropTypes from "prop-types";
 
 export const MediaProvider = ({ children }) => {
@@ -22,11 +22,19 @@ export const MediaProvider = ({ children }) => {
   })
 
   useEffect(() => {
-    setLanguages(languagesSupport);
+    const fetchLanguages = async () => {
+      try {
+        const data = await languageService.getLanguages();
+        setLanguages(data);
+      } catch (error) {
+        console.error("Error fetching languages:", error);
+      }
+    };
+
+    fetchLanguages();
   }, []);
 
-
-  const handleSetSourceLanguage = (languageCode) => {
+  const handleSetSourceLanguage = (languageCode) => { 
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
   };
 
