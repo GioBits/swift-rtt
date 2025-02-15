@@ -6,7 +6,7 @@ from api.service.audioService import (
     get_audio_by_id, 
     get_audios_by_user_id
 )
-from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema
+from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from utils.transcribe import transcriber
 from utils.translate import translate
@@ -105,11 +105,7 @@ async def retrieve_all_audios_controller(page: int, size: int):
     """
     try:
         audios, total_items, total_pages = get_all_audios(page, size)
-        if not audios:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="No audios found"
-            )
+
         response = {
             "data": audios,
             "pagination": {
@@ -119,7 +115,9 @@ async def retrieve_all_audios_controller(page: int, size: int):
                 "total_pages": total_pages
             }
         }
-        return response
+
+        # Convert the response to the schema
+        return AudioListResponseSchema(**response)
     except HTTPException as e:
         print(f"HTTPException captured: {e.detail}")
         raise e

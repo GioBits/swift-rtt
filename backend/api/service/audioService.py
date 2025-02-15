@@ -29,7 +29,7 @@ def get_all_audios(page: int, size: int):
         # Calculate the total number of pages
         total_pages = (total_items + size - 1) // size  # Round up to get the number of pages
 
-        return audios, total_items, total_pages
+        return [AudioRecordSchema.from_orm(audio) for audio in audios], total_items, total_pages
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

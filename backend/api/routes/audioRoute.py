@@ -5,7 +5,7 @@ from api.controller.audioController import (
     retrieve_audio_by_id_controller,
     retrieve_audios_by_user_id_controller
 )
-from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema
+from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
 router = APIRouter()
@@ -26,7 +26,7 @@ async def upload_audio(file: UploadFile = File(...)):
     return await create_audio_controller(user_id, language_id, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
-@router.get("/audio", response_model=dict, tags=["Audio"])
+@router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])
 async def retrieve_audios_list(
     page: int = Query(1, ge=1, description="Número de página"),
     size: int = Query(10, ge=1, le=50, description="Número de elementos por página")
