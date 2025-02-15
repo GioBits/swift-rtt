@@ -1,15 +1,13 @@
 import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { handleFileUpload } from '../utils/uploadUtils';
-import { useDispatch } from 'react-redux';
 import { MediaContext } from '../contexts/MediaContext';
 import { b64toBlob } from '../utils/audioUtils';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import '../styles.css'
 
 const Dropzone = () => {
-  const dispatch = useDispatch();
-  const { setUploading, setAudioUrl } = useContext(MediaContext);
+  const { setUploading, setAudioUrl, setTranscription, setAudioSelected } = useContext(MediaContext);
 
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -26,15 +24,16 @@ const Dropzone = () => {
   const uploadFile = async (file) => {
     setUploading(true);
     try {
-      const fileBase64 = await handleFileUpload(file, '/api/audio', dispatch, "Dropzone");
-      return fileBase64;
+      const response = await handleFileUpload(file, '/api/audio');
+      setAudioSelected(response);
+      //TODO translate request and setTranslate, include setTranslate on MediaContext
+      return response.audio_data;
     } catch {
       // El error ya fue manejado por Redux en handleFileUpload
     } finally {
       setUploading(false);
     }
   };
-
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     accept: { 'audio/mpeg': ['.mp3'] },

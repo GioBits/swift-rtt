@@ -40,10 +40,8 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
             setIsRecording(false);
             return;
           }
-
+          
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-          const url = URL.createObjectURL(audioBlob);
-          setAudioUrl(url);
           await uploadAudio(audioBlob);
           audioChunksRef.current = [];
         };
