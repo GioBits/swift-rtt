@@ -1,6 +1,7 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { MediaContext } from "../contexts/MediaContext"
 import MediaText from "./MediaText"
+import { transcriptionService } from '../service/transcribeService';
 
 const MediaResponse = () => {
   const models = [
@@ -8,7 +9,20 @@ const MediaResponse = () => {
     { id: "2", name: "Modelo 2" },
     { id: "3", name: "Modelo 3" },
   ];
-  const { transcription, translate } = useContext(MediaContext)
+  const { transcription, setTranscription,translate, audioSelected } = useContext(MediaContext)
+
+  useEffect(() => {
+    fetchTranscriptionByAudioId(audioSelected.id);
+  },[audioSelected])
+
+  const fetchTranscriptionByAudioId = async (audioId) => {
+    if(audioId === "") return;
+    
+    const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
+    const transcriptionText = transcriptionResponse.transcription;
+    setTranscription(transcriptionText);
+  }
+
   return (
     <>
       <MediaText title="Transcripción" response={transcription || ""} models={models} />

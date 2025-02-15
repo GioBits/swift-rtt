@@ -4,11 +4,10 @@ import { handleFileUpload } from '../utils/uploadUtils';
 import { MediaContext } from '../contexts/MediaContext';
 import { b64toBlob } from '../utils/audioUtils';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import { transcriptionService } from '../service/transcribeService';
 import '../styles.css'
 
 const Dropzone = () => {
-  const { setUploading, setAudioUrl, setTranscription } = useContext(MediaContext);
+  const { setUploading, setAudioUrl, setTranscription, setAudioSelected } = useContext(MediaContext);
 
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -26,10 +25,7 @@ const Dropzone = () => {
     setUploading(true);
     try {
       const response = await handleFileUpload(file, '/api/audio');
-      console.log(response);
-      const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(response.id);
-      const transcriptionText = transcriptionResponse.transcription;
-      setTranscription(transcriptionText);
+      setAudioSelected(response);
       //TODO translate request and setTranslate, include setTranslate on MediaContext
       return response.audio_data;
     } catch {

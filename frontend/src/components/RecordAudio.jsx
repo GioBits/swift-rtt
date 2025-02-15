@@ -9,10 +9,10 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../utils/audioUtils';
 import { MediaContext } from '../contexts/MediaContext';
 import '../styles.css';
-import { transcriptionService } from '../service/transcribeService';
+import { b64toBlob } from '../utils/audioUtils';
 
 const RecordAudio = () => {
-  const { isRecording, setUploading, setTranscription } = useContext(MediaContext);
+  const { isRecording, setUploading, setAudioSelected, setAudioUrl } = useContext(MediaContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -54,10 +54,10 @@ const RecordAudio = () => {
       await ffmpeg.load();
       const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
       const response = await handleFileUpload(mp3File, '/api/audio');
-      const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(response);
-      const transcriptionText = transcriptionResponse.transcription;
-      setTranscription(transcriptionText);
-      //TODO translate request and setTranslate, include setTranslate on MediaContext
+      setAudioSelected(response);
+      const blob = b64toBlob(response.audio_data, 'audio/mp3');
+      const url = URL.createObjectURL(blob);
+      setAudioUrl(url);
     } finally {
       setUploading(false);
     }
