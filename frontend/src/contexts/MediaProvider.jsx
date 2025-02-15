@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MediaContext } from "./MediaContext";
-import { setLanguage } from "../utils/languageUtils";
-import { languageService }  from "../service/languageService";
+import { setLanguage } from "@utils/languageUtils";
+import { languageService }  from "@service/languageService";
 import PropTypes from "prop-types";
 
 export const MediaProvider = ({ children }) => {

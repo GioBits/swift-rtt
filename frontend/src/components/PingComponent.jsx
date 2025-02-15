@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiService } from '../service/api';
+import { apiService } from '@service/api';
 
 const PingComponent = () => {
   const [online, setOnline] = useState(null);

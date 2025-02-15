@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { MediaContext } from "../contexts/MediaContext";
+import { MediaContext } from "@contexts/MediaContext";
 import { Box, MenuItem, FormControl, Select, IconButton } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";

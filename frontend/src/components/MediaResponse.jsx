@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react"
-import { MediaContext } from "../contexts/MediaContext"
+import { MediaContext } from "@contexts/MediaContext"
 import MediaText from "./MediaText"
-import { transcriptionService } from '../service/transcribeService';
+import { transcriptionService } from '@service/transcribeService';
 
 const MediaResponse = () => {
   const models = [

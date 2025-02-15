@@ -1,4 +1,4 @@
-import { apiService } from '../service/api';
+import { apiService } from '@service/api';
 
 /**
  * Function to handle file upload.

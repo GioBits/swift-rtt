@@ -2,14 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import { IconButton } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import { useDispatch } from 'react-redux';
-import { handleFileUpload } from '../utils/uploadUtils';
-import { clearError } from '../store/slices/errorSlice';
-import { useAudioRecorder } from '../hooks/useAudioRecorder';
+import { handleFileUpload } from '@utils/uploadUtils';
+import { clearError } from '@store/slices/errorSlice';
+import { useAudioRecorder } from '@hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { convertWavToMp3 } from '../utils/audioUtils';
-import { MediaContext } from '../contexts/MediaContext';
-import '../styles.css';
-import { b64toBlob } from '../utils/audioUtils';
+import { convertWavToMp3 } from '@utils/audioUtils';
+import { MediaContext } from '@contexts/MediaContext';
+import { b64toBlob } from '@utils/audioUtils';
 
 const RecordAudio = () => {
   const { isRecording, setUploading, setAudioSelected, setAudioUrl } = useContext(MediaContext);
@@ -93,13 +92,7 @@ const RecordAudio = () => {
           :
           <MicIcon sx={{ fontSize: '60px', color: 'rgb(220 38 38)' }} />
         }
-        {isRecording
-          ?
-          <div className='button-detener'>
-            <p>Detener grabación</p>
-          </div>
-          :
-          <p>Iniciar grabación</p>}
+        {isRecording ? <p>Detener grabación</p> : <p>Iniciar grabación</p>}
       </IconButton>
     </div>
   );
