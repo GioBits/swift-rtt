@@ -93,16 +93,8 @@ async def create_translated_audio_controller(translation_id: int, provider_id: i
             )
         language_id = translation_record.language_id
         audio_id = translation_record.audio_id
-
-        # Retrieve the audio record using the audio_id
-        audio_record = get_audio_by_id(audio_id)
-        if audio_record is None:
-            raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Audio not found"
-            )
         
-        audio_data = text2speech.t2s(translation_record.translation_text, translation_record.language_id)# get the generated audio data generate_tts(tranlation_record.trasnlation_text, provider_id)
+        audio_data = await text2speech.t2s(translation_record.translation_text, translation_record.language_id)
 
         new_translated_audio = create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, len(audio_data))
         if new_translated_audio is None:
