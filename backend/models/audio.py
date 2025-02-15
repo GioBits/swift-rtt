@@ -3,7 +3,8 @@ from datetime import datetime
 from db.database import Base
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+
 
 
 class AudioRecord(Base):
@@ -53,3 +54,13 @@ class AudioResponseWithAudioSchema(AudioRecordBase):
 
     class Config:
         from_attributes = True
+
+class PaginationSchema(BaseModel):
+    page: int
+    size: int
+    total_items: int
+    total_pages: int
+
+class AudioListResponseSchema(BaseModel):
+    pagination: PaginationSchema
+    data: List[AudioResponseSchema]
