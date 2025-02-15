@@ -21,7 +21,9 @@ export const MediaProvider = ({ children }) => {
     const fetchLanguages = async () => {
       try {
         const data = await getLanguages();
-        setLanguages(data);
+        if (data) {
+          setLanguages(data);
+        }
       } catch (error) {
         console.error("Error fetching languages:", error);
       }
