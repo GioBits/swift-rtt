@@ -62,7 +62,7 @@ const Dropzone = () => {
           <p style={{ color: 'black', fontSize: '1rem' }}>
             Arrastra y suelta un archivo <br />o <b className="text-sky-600">haz click para subir uno</b>
           </p>
-          <span className='dropzone-span'>
+          <span className='leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs'>
             Admite solo formatos de audio mp3, hasta 10MB y 30 segundos de grabación.
           </span>
         </div>
