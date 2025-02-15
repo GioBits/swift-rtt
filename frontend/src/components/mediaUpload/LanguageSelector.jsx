@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Box, FormControl, Select, MenuItem } from "@mui/material";
-import { MediaContext } from "@contexts/MediaContext";
+import { MediaContext } from "../../contexts/MediaContext";
 
 export default function LanguageSelector() {
   const {

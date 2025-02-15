@@ -1,7 +1,7 @@
 import { MediaContext } from '@contexts/MediaContext';
 import { useRef, useContext } from 'react';
-import { setError } from '@store/slices/errorSlice';
-import { getMessage } from '@utils/localeHelper';
+import { setError } from '../store/slices/errorSlice';
+import { getMessage } from '../utils/localeHelper';
 
 export const useAudioRecorder = (dispatch, uploadAudio, {
   minRecordingTime = 3000,

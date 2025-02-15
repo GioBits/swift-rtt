@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
 import { Button, CircularProgress } from '@mui/material';
-import { MediaContext } from '@contexts/MediaContext';
+import { MediaContext } from '../../contexts/MediaContext';
 
 const MediaUpload = () => {
   const { uploading } = useContext(MediaContext);
