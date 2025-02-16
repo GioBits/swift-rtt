@@ -72,7 +72,7 @@ async def create_translation_controller(transcription_id: int, provider_id: int,
         audio_id = transcription.audio_id
         
         # Translate the transcribed text
-        translated_text = translate.translate_text(transcription.transcription_text)
+        translated_text = await translate.translate_text(transcription.transcription_text)
         
         # Create the new translation
         new_translation = create_translation(audio_id, transcription_id, provider_id, language_id, translated_text)

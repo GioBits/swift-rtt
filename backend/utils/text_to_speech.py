@@ -1,7 +1,12 @@
 import io
 import numpy as np
+import asyncio
+import logging
 from scipy.io.wavfile import write
 from TTS.api import TTS, ModelManager
+
+# Set up logging configuration to suppress TTS logs
+logging.getLogger("TTS").setLevel(logging.ERROR)
 class Text2Speech:
     def __init__(self):
         '''
@@ -83,31 +88,15 @@ class Text2Speech:
         Exception: Any other unexpected error that may occur during the execution of the method.
         '''
         print("Creating audio from text")
+        
+        loop = asyncio.get_running_loop()
         try:
-            audio = None
-            # Generate audio based on the specified language
-            if language_id == 1:
-                print("Your audio is created in Spanish")
-                audio = self.spanish(text)
-            elif language_id == 2:
-                print("Your audio is created in English")
-                audio = self.english(text)
-            else:
-                raise ValueError(f"Language '{language_id}' not supported. Supported languages are: 'es', 'en'")
-            
-            # Ensure the generated audio is not empty
-            if audio is None or len(audio) == 0:
-                raise ValueError("Generated audio is empty")
-            
-            # Normalize the audio to int16 format
-            audio_normalized = np.int16(audio / np.max(np.abs(audio)) * 32767)
-            
-            # Save the audio array to a WAV file in a memory buffer
-            audio_buffer = io.BytesIO()
-            write(audio_buffer, 22050, audio_normalized)  # Assuming a sample rate of 22050 Hz
-            audio_buffer.seek(0)
+            audio = await loop.run_in_executor(
+                None,
+                lambda: self._generate_audio(text, language_id)
+            )
             print("Audio was created with success")
-            return audio_buffer.read()
+            return audio
 
         except ValueError as ve:
             print(f"ValueError: {str(ve)}")
@@ -121,6 +110,31 @@ class Text2Speech:
         except Exception as e:
             print(f"Error with the creation of audio: {str(e)}")
             raise
+
+    def _generate_audio(self, text: str, language_id: int) -> bytes:
+        audio = None
+        # Generate audio based on the specified language
+        if language_id == 1:
+            print("Your audio is being created in English")
+            audio = self.english(text)
+        elif language_id == 2:
+            print("Your audio is being created in Spanish")
+            audio = self.spanish(text)
+        else:
+            raise ValueError(f"Language '{language_id}' not supported. Supported languages are: 'es', 'en'")
+        
+        # Ensure the generated audio is not empty
+        if audio is None or len(audio) == 0:
+            raise ValueError("Generated audio is empty")
+        
+        # Normalize the audio to int16 format
+        audio_normalized = np.int16(audio / np.max(np.abs(audio)) * 32767)
+        
+        # Save the audio array to a WAV file in a memory buffer
+        audio_buffer = io.BytesIO()
+        write(audio_buffer, 22050, audio_normalized)  # Assuming a sample rate of 22050 Hz
+        audio_buffer.seek(0)
+        return audio_buffer.read()
 
 # Global instance of the Text2Speech class
 text2speech = Text2Speech()
