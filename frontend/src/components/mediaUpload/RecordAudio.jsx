@@ -8,7 +8,6 @@ import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../../utils/audioUtils';
 import { MediaContext } from '../../contexts/MediaContext';
-import { b64toBlob } from '../../utils/audioUtils';
 import '../../index.css'
 
 const RecordAudio = () => {

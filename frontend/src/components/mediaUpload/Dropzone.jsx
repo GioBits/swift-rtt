@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { handleFileUpload } from '../../utils/uploadUtils';
-import { b64toBlob } from '../../utils/audioUtils';
 import { MediaContext } from '../../contexts/MediaContext';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 

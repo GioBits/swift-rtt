@@ -47,17 +47,16 @@ const MediaResponse = () => {
     let wsResponseData = JSON.parse(wsResponse);
     let audioId = wsResponseData.audio_id;
     let task = wsResponseData.task;
-
     if (task === "transcribe") {
       await fetchTranscriptionByAudioId(audioId);
     }
 
-    if(task === "transcribe"){
+    if(task === "translate"){
       await fetchTranslationByAudioId(audioId);
     }
 
     if(task === "generate_audio"){
-      await fetchTranslatedAudioById(audioId);
+      await fetchTranslatedAudioByAudioId(audioId);
     }
   } 
 
@@ -77,7 +76,7 @@ const MediaResponse = () => {
     setTranslate(translationText);
   };
 
-  const fetchTranslatedAudioById = async (audioId) => {
+  const fetchTranslatedAudioByAudioId = async (audioId) => {
     if (!audioId) return;
 
     try {
