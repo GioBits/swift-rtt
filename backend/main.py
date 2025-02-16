@@ -88,15 +88,28 @@ def ping():
     except:
         raise HTTPException(status_code=500, detail= "Internal Server Error")
 
+active_connections = []
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
+    active_connections.append(websocket)
     try:
         while True:
             message = await message_queue.get()
-            await websocket.send_text(message)
+            await send_message(message)
     except WebSocketDisconnect:
+        active_connections.remove(websocket)
         print("El cliente WebSocket se desconectó.")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        active_connections.remove(websocket)
+
+async def send_message(message: str):
+    for connection in active_connections.copy():
+        try:
+            await connection.send_text(message)
+        except:
+            active_connections.remove(connection)
 
 # Config host and port for the server
 if __name__ == "__main__":
