@@ -89,7 +89,7 @@ const MediaResponse = () => {
 
   const base64ToUrl = (base64) => {
     const blob = b64toBlob(base64, 'audio/mp3');
-    return URL.createObjectURL(blob);
+    return blob ? URL.createObjectURL(blob): null;
   }
 
   return (

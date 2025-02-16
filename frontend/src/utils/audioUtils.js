@@ -52,8 +52,8 @@ export const convertWavToMp3 = async (ffmpeg, audioBlob) => {
  */
 export const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
 
-  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(b64Data)) {
-    throw new Error("Invalid base64 string");
+  if (!b64Data) {
+    return null;
   }
 
   const byteCharacters = atob(b64Data);
