@@ -39,7 +39,7 @@ const MediaText = ({ title, response, models, audio, placeholder }) => {
   return (
     <div className="bg-white w-full h-1/2 border p-5 rounded-lg">
       <div className="w-full flex flex-col h-[120px] box-border">
-        <div className="bg-sky-600 flex w-full h-1/2 rounded">
+        <div className="bg-sky-600 flex w-full h-1/2 rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
         </div>
         <div className="hidden w-full m-auto"> {/*change hidden by flex flex-row*/}

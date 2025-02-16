@@ -7,10 +7,10 @@ import MediaResponse from "./components/mediaResponse/MediaResponse";
 function App() {
   return (
     <div className="bg-neutral-800 h-screen w-screen flex">
-      <div className="w-[60vw] h-[70vh] lg:flex m-auto block overflow-auto">
+      <div className="w-[60vw] h-[80vh] lg:flex m-auto block overflow-auto">
         <MediaProvider>
           <div className="lg:w-1/2 w-full h-full flex flex-col m-auto p-4">
-            <LanguageSelector />
+            {/* <LanguageSelector /> */}
             <MediaUpload />
           </div>
           <div className="lg:w-1/2 w-full h-full flex flex-col m-auto rounded gap-4">
