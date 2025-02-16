@@ -8,13 +8,9 @@ from api.service.audioService import (
 )
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
-from utils.transcribe import transcriber
-from utils.translate import translate
 from api.validators.audioValidations import validate_upload
-from api.controller.transcriptionController import create_transcription_controller
-from api.controller.translationController import create_translation_controller
-from api.controller.translatedAudioController import create_translated_audio_controller
-from utils.queueHelper import send_message
+from utils.queueHelper import send_message, process_audio_tasks
+import asyncio
 
 def parse_audio_response(audio_record: AudioRecordSchema, with_audio: bool) -> AudioResponseSchema:
     """
@@ -70,14 +66,8 @@ async def create_audio_controller(user_id: int, language_id: int, file: UploadFi
 
         await send_message("Audio uploaded")
 
-        # Transcribe the audio
-        #transcription_record = await create_transcription_controller(audio_record.id, 1)
-
-        # Translate the transcription
-        #translation_record = await create_translation_controller(transcription_record.id, 1, 1)
-
-        # Genereta tts audio
-        #translation_audio_record = await create_translated_audio_controller(translation_record.id, 1)
+        # Execute the audio processing tasks asynchronously
+        asyncio.create_task(process_audio_tasks(audio_record.id, 1))
 
         return parse_audio_response(audio_record, True)
 
