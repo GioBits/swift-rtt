@@ -28,6 +28,9 @@ from api.routes.utilsRoute import router as utilsRouter
 #Import queue helper
 from utils.queueHelper import message_queue, start_background_process
 
+#Template html
+from utils.html_template import html
+
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
 
@@ -64,8 +67,6 @@ app.include_router(translatedAudioRouter, prefix=("/api"))
 #Test endpoints
 app.include_router(utilsRouter, prefix=("/utils"))
 
-
-
 # # Cors confic
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 app.add_middleware(
@@ -75,42 +76,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-
-
-html = """
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Chat</title>
-    </head>
-    <body>
-        <h1>WebSocket Chat</h1>
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
-        <script>
-            var ws = new WebSocket("ws://localhost:8000/ws");
-            ws.onmessage = function(event) {
-                var messages = document.getElementById('messages')
-                var message = document.createElement('li')
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-            };
-            function sendMessage(event) {
-                var input = document.getElementById("messageText")
-                ws.send(input.value)
-                input.value = ''
-                event.preventDefault()
-            }
-        </script>
-    </body>
-</html>
-"""
 
 @app.get("/")
 async def get():
