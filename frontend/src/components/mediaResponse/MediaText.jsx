@@ -7,7 +7,7 @@ import Typewriter from "typewriter-effect";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
 
-const MediaText = ({ title, response, models, audio }) => {
+const MediaText = ({ title, response, models, audio, placeholder }) => {
   const [selectedModel, setSelectedModel] = useState("");
   const [playing, setPlaying] = useState(false);
 
@@ -85,7 +85,8 @@ const MediaText = ({ title, response, models, audio }) => {
       </div>
       <div className="h-[calc(100%-150px)]">
         <div className="w-full h-full p-4 border border-dashed border-gray-400 box-border rounded shadow-lg max-h-full overflow-y-auto">
-          <Typewriter
+          {response ? (
+            <Typewriter
             options={{
               strings: response,
               autoStart: true,
@@ -94,6 +95,9 @@ const MediaText = ({ title, response, models, audio }) => {
               cursor: "",
             }}
           />
+          ) : (
+            <div className=" text-slate-500 whitespace-pre-wrap text-4xl">{placeholder}</div>
+          )}
         </div>
       </div>
       <div className="h-[50px] flex flex-row">
@@ -126,5 +130,6 @@ MediaText.propTypes = {
   title: PropTypes.string.isRequired,
   response: PropTypes.string.isRequired,
   models: PropTypes.array.isRequired,
-  audio: PropTypes.string.isRequired
+  audio: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired
 };

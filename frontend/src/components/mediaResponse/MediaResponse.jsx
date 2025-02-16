@@ -51,7 +51,7 @@ const MediaResponse = () => {
     }
   }, [audioSelected, fetchTranslationByAudioId]);
 
-  
+
   const fetchTranslatedAudioById = useCallback(async (audioId) => {
     if (!audioId) return;
 
@@ -73,8 +73,18 @@ const MediaResponse = () => {
 
   return (
     <>
-      <MediaText title="Transcripción" response={transcription || ""} audio={audioUrl} models={models} />
-      <MediaText title="Traducción" response={translate || ""} audio={audioTranslation} models={models} />
+      <MediaText
+        title="Traducción"
+        response={transcription || ""}
+        audio={audioUrl || ""}
+        models={models}
+        placeholder="Esperando audio transcrito..." />
+      <MediaText
+        title="Transcripción"
+        response={translate || ""}
+        audio={audioTranslation || ""}
+        models={models}
+        placeholder="Esperando texto traducido..."/>
     </>
   )
 }
