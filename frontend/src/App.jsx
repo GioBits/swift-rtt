@@ -1,31 +1,28 @@
-import "./App.css";
-import PingComponent from "./components/PingComponent";
-import RecordAudio from "./components/RecordAudio";
-import UploadAudio from "./components/UploadAudio";
-import { TranslationProvider } from "./contexts/TranslationProvider";
-import TranslationAudio from "./components/TranslationAudio";
-import { LanguageProvider } from "./contexts/LanguageContext";
-import LanguageSelector from "./components/LanguageSelector";
+import { MediaProvider } from "./contexts/MediaProvider";
+import LanguageSelector from "./components/mediaUpload/LanguageSelector";
+import MediaUpload from "./components/mediaUpload/MediaUpload";
+import "./index.css";
+import MediaResponse from "./components/mediaResponse/MediaResponse";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <>
-      <h1>Real Time Translation</h1>
-      <LanguageProvider>
-        <div>
-          <LanguageSelector />
-        </div>
-        <TranslationProvider>
-          <div className="upload-input">
-            <UploadAudio />
-            <RecordAudio />
+    <div className="bg-neutral-800 h-screen w-screen flex">
+      <div>
+        <Toaster/>
+      </div>
+      <div className="w-[60vw] h-[80vh] lg:flex m-auto block overflow-auto">
+        <MediaProvider>
+          <div className="lg:w-1/2 w-full h-full flex flex-col m-auto p-4">
+            {/* <LanguageSelector /> */}
+            <MediaUpload />
           </div>
-          <TranslationAudio />
-        </TranslationProvider>
-      </LanguageProvider>
-      <PingComponent />
-    </>
+          <div className="lg:w-1/2 w-full h-full flex flex-col m-auto rounded gap-4">
+            <MediaResponse />
+          </div>
+        </MediaProvider>
+      </div>
+    </div>
   );
 }
-
 export default App;

@@ -8,7 +8,6 @@ def test_create_translated_audio():
     try:
         # Crear un audio original
         original_audio = AudioRecord(
-            chat_id="12345",
             user_id="user1",
             filename="test_audio.wav",
             audio_data=b"audio_in_binary_format",

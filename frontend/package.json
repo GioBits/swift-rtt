@@ -17,12 +17,18 @@
     "@ffmpeg/core": "^0.12.10",
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
+    "@mui/icons-material": "^6.4.4",
     "@mui/material": "^6.4.0",
     "@reduxjs/toolkit": "^2.5.1",
+    "@tailwindcss/vite": "^4.0.6",
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-redux": "^9.2.0"
+    "react-dropzone": "^14.3.5",
+    "react-hot-toast": "^2.5.2",
+    "react-player": "^2.16.0",
+    "react-redux": "^9.2.0",
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.7",
@@ -31,6 +37,7 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
     "axios-mock-adapter": "^2.1.0",
     "cypress": "^14.0.0",
     "cypress-dotenv": "^3.0.1",
@@ -43,6 +50,8 @@
     "globals": "^15.14.0",
     "json-server": "^1.0.0-beta.3",
     "node-fetch": "^3.3.2",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^4.0.6",
     "vite": "^6.0.5",
     "vitest": "^3.0.5"
   }

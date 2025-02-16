@@ -1,5 +1,5 @@
 import { fetchFile } from '@ffmpeg/util';
-import { getMessage } from "../utils/localeHelper";
+import { getMessage } from "@utils/localeHelper";
 
 /**
  * Convierte un archivo de audio WAV a MP3 usando FFmpeg.
@@ -51,6 +51,11 @@ export const convertWavToMp3 = async (ffmpeg, audioBlob) => {
  * @returns {Blob} - The resulting Blob object.
  */
 export const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+
+  if (!b64Data) {
+    return null;
+  }
+
   const byteCharacters = atob(b64Data);
   const byteArrays = [];
 

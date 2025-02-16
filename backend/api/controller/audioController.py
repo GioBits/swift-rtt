@@ -1,97 +1,189 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile, status
-from api.service.audioService import save_audio, retrieve_audio_files, retrieve_audio_by_id
-from models.audio import AudioRecord
+from api.service.audioService import (
+    create_audio, 
+    get_all_audios, 
+    get_audio_by_id, 
+    get_audios_by_user_id
+)
+from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
-from utils.transcribe import transcriber
-from utils.translate import translate
 from api.validators.audioValidations import validate_upload
-from api.controller.translatedAudioController import save_translated_audio_controller
+from utils.queueHelper import add_audio_task
 
-
-
-async def process_audio(chat_id: str, user_id: str, transcription:str, language:str, file: UploadFile, db: Session) -> AudioRecord:
+def parse_audio_response(audio_record: AudioRecordSchema, with_audio: bool) -> AudioResponseSchema:
     """
-    Función controladora para manejar la carga de un archivo de audio.
+    Parse an audio record to an audio response schema.
 
     Args:
-        chat_id (str): El ID del chat asociado al audio.
-        user_id (str): El nombre del usuario.
-        transcription (str): El audio transcrito.
-        language (str): El idioma del audio.
-        file (UploadFile): Archivo de audio enviado por el cliente.
-        db (Session): Sesión de la base de datos.
+        audio_record (AudioRecordSchema): The audio record to be parsed.
+        with_audio (bool): Flag to include audio data in the response.
 
     Returns:
-        AudioRecord: Registro del audio almacenado en la base de datos.
+        AudioResponseSchema: The parsed audio response schema.
+    """
+    base_response = {
+        "id": audio_record.id,
+        "user_id": audio_record.user_id,
+        "filename": audio_record.filename,
+        "content_type": audio_record.content_type,
+        "file_size": audio_record.file_size,
+        "language_id": audio_record.language_id,
+        "created_at": audio_record.created_at
+    }
+
+    if with_audio:
+        base_response["audio_data"] = b64encode(audio_record.audio_data).decode('utf-8')
+        return AudioResponseWithAudioSchema(**base_response)
+    else:
+        return AudioResponseSchema(**base_response)
+
+async def create_audio_controller(user_id: int, language_id: int, file: UploadFile) -> AudioResponseSchema:
+    """
+    Controller function to handle the upload of an audio file.
+
+    Args:
+        user_id (str): The user ID.
+        file (UploadFile): Audio file uploaded by the client.
+        db (Session): Database session.
+
+    Returns:
+        AudioRecordSchema: Record of the audio stored in the database.
     """
     try:
-        file_data = await validate_upload(file, language)
-        
-        transcription = await transcriber.transcription_handler(file_data)
+        file_data = await validate_upload(file)
 
-        # Llamar a la capa de servicio para guardar el audio
-        audio_record = save_audio(
-            chat_id, 
-            user_id,
-            file_data, 
-            file.filename, 
-            file.content_type,
-            transcription,
-            language, 
-            db
+        # Call the service layer to create the audio
+        audio_record = create_audio(
+            user_id=user_id,
+            filename=file.filename,
+            audio_data=file_data,
+            content_type=file.content_type,
+            file_size=len(file_data),
+            language_id=language_id
         )
 
-        #Traducir el texto transcrito
-        translated_text = translate.translate_text(transcription)
-        
-        #Llamar a la capa de controlador para guardar el audio traducido
-        audio_translated_record = await save_translated_audio_controller(audio_record.id, translated_text)
+        # Add the audio processing task to the queue
+        await add_audio_task(audio_record.id, 1, "transcribe")
 
-        # Encode binary data to base64
-        base64_encoded = b64encode(audio_record.audio_data).decode('utf-8')
-
-        return {
-            "id": audio_record.id,
-            "user_id": audio_record.user_id,
-            "filename": audio_record.filename, 
-            "format": audio_record.content_type, 
-            "size": len(audio_record.audio_data),
-            "transcription": audio_record.transcription,
-            "language": audio_record.language,
-            "translated_text": translated_text,
-            "file": base64_encoded
-        }
+        return parse_audio_response(audio_record, True)
 
     except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
         raise e
     except Exception as e:
+        print(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-async def retrieve_audio_controller():
-    try:
-        result = retrieve_audio_files()
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=e)
-    
-async def retrieve_audio_by_id_controller(id: int):
-    try:
-        result = retrieve_audio_by_id(id)
-        if result is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Audio no encontrado"
-            )
+async def retrieve_all_audios_controller(page: int, size: int):
+    """
+    Asynchronously retrieves all audios with pagination.
 
-        return result
-        
+    This function attempts to retrieve all audios by calling the `get_all_audios` function.
+    If no audios are found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Args:
+        page (int): The page number for pagination.
+        size (int): The number of items per page.
+
+    Returns:
+        dict: A dictionary containing the list of audios and pagination details.
+
+    Raises:
+        HTTPException: If no audios are found (404) or if an internal server error occurs (500).
+    """
+    try:
+        audios, total_items, total_pages = get_all_audios(page, size)
+
+        response = {
+            "data": audios,
+            "pagination": {
+                "page": page,
+                "size": size,
+                "total_items": total_items,
+                "total_pages": total_pages
+            }
+        }
+
+        # Convert the response to the schema
+        return AudioListResponseSchema(**response)
     except HTTPException as e:
-        print(f"HTTPException capturada: {e.detail}")
+        print(f"HTTPException captured: {e.detail}")
         raise e
-    except Exception as e:  # Capturar excepciones generales
+    except Exception as e:  # Capture general exceptions
         print(f"Error: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
+
+async def retrieve_audio_by_id_controller(audio_id: int):
+    """
+    Asynchronously retrieves an audio by its ID.
+
+    This function attempts to retrieve an audio by calling the `get_audio_by_id` function.
+    If the audio is not found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Args:
+        audio_id (int): The ID of the audio to be retrieved.
+
+    Returns:
+        The audio object if found.
+
+    Raises:
+        HTTPException: If the audio is not found (404) or if an internal server error occurs (500).
+    """
+    try:
+        result = get_audio_by_id(audio_id)
+        if result is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Audio not found"
+            )
+        return parse_audio_response(result, True)
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error"
+        )
+
+async def retrieve_audios_by_user_id_controller(user_id: int):
+    """
+    Asynchronously retrieves all audios for a given user ID.
+
+    This function attempts to retrieve all audios by calling the `get_audios_by_user_id` function.
+    If no audios are found, it raises an HTTP 404 exception.
+    If any other exception occurs, it raises an HTTP 500 exception.
+
+    Args:
+        user_id (str): The ID of the user.
+
+    Returns:
+        list: A list of audios if found.
+
+    Raises:
+        HTTPException: If no audios are found (404) or if an internal server error occurs (500).
+    """
+    try:
+        result = get_audios_by_user_id(user_id)
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No audios found for the given user ID"
+            )
+        return [parse_audio_response(audio, False) for audio in result]
+    except HTTPException as e:
+        print(f"HTTPException captured: {e.detail}")
+        raise e
+    except Exception as e:  # Capture general exceptions
+        print(f"Error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error"
         )

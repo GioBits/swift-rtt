@@ -1,57 +1,72 @@
-from fastapi import APIRouter, File, HTTPException, UploadFile, Depends, Request
-from fastapi.responses import JSONResponse
-from api.controller.audioController import process_audio, retrieve_audio_controller, retrieve_audio_by_id_controller
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-from models.audio import AudioRecordSchema
+from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from api.controller.audioController import (
+    create_audio_controller,
+    retrieve_all_audios_controller,
+    retrieve_audio_by_id_controller,
+    retrieve_audios_by_user_id_controller
+)
+from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
 router = APIRouter()
 
 # Endpoint "/audio", recibe archivo de audio
-@router.post("/audio")
-async def UploadAudio(uploadedAudio: UploadFile = File(...)):
+@router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
+async def upload_audio(file: UploadFile = File(...)):
     """
     Handles the upload of an audio file.
     Args:
-        validated_data: Recibe los datos de la validacion en un diccionario.
+        user_id (str): The user ID.
+        file (UploadFile): Audio file uploaded by the client.
     Returns:
-        JSONResponse: The response after processing the audio file.
+        AudioResponseSchema: The response after processing the audio file.
     """
+    user_id = 1
+    language_id = 2
+    return await create_audio_controller(user_id, language_id, file)
 
-    #mock chat_id, userd_id, translation and language
-    chat_id = "12345"
-    user_id = "12345"
-    transcription = "Procesando audio"
-    language = "es"
-    
+# Endpoint "/audio", recupera una lista de archivos de la base de datos
+@router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])
+async def retrieve_audios_list(
+    page: int = Query(1, ge=1, description="Número de página"),
+    size: int = Query(10, ge=1, le=50, description="Número de elementos por página")
+):
+    """
+    Retrieves a paginated list of audio files from the database.
+    Args:
+        page (int): The page number to retrieve.
+        size (int): The number of items per page.
+    Returns:
+        list: A list of AudioResponseSchema objects.
+    """
     try:
-        # Procesar el audio con las validaciones ya realizadas
-        response = await process_audio(chat_id, user_id, transcription, language, uploadedAudio, db=None)
+        if page < 1 or size < 1:
+            raise HTTPException(status_code=400, detail="Page y size deben ser números positivos.")
         
-        return JSONResponse(content=response)
+        return await retrieve_all_audios_controller(page, size)
     except HTTPException as e:
-        print(f"HTTPException capturada: {e.detail}")
         raise e
-    except Exception as e:
-        print(f"Excepción general capturada: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-# Endpoint "/audiolist", recupera una lista de archivos de la base de datos
-@router.get("/audio", response_model=List[AudioRecordSchema])
-async def retrieve_audiosFile_list():
-    try:
-        response = await retrieve_audio_controller()
-        return response
-    except HTTPException as e:
-        print(f"HTTPException capturada: {e.detail}")
-        raise e
-    except Exception as e:
-        print(f"Excepción general capturada: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+# Endpoint "/audio/{id}", recupera un audio de la base de datos
+@router.get("/audio/{id}", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
+async def retrieve_audio_by_id(id: int):
+    """
+    Retrieves an audio file by its ID from the database.
+    Args:
+        id (int): The ID of the audio file.
+    Returns:
+        AudioResponseSchema: The audio file object.
+    """
+    return await retrieve_audio_by_id_controller(id)
 
-# Endpoint "/audioID", recupera un audio de la base de datos
-@router.get("/audio/{id}", response_model=AudioRecordSchema)
-async def retrieve_audio_by_id(id : int):
-    response = await retrieve_audio_by_id_controller(id)
-    return response
+# Endpoint "/audio/user/{user_id}", recupera todos los audios de un usuario
+@router.get("/audio/user/{user_id}", response_model=List[AudioResponseSchema], tags=["Audio"])
+async def retrieve_audios_by_user_id(user_id: int):
+    """
+    Retrieves all audio files for a given user ID from the database.
+    Args:
+        user_id (str): The ID of the user.
+    Returns:
+        list: A list of AudioResponseSchema objects.
+    """
+    return await retrieve_audios_by_user_id_controller(user_id)

@@ -23,8 +23,6 @@ def test_audio_upload(mock_db):
     
     # Simular que el servicio devuelve un AudioRecord
     mock_audio_record = AudioRecord(
-        id=1,
-        chat_id="12345",
         filename="gkdb.wav",
         audio_data=file_content,
         content_type="audio/wav",
@@ -36,11 +34,10 @@ def test_audio_upload(mock_db):
     mock_db.refresh.return_value = mock_audio_record
 
     # Llamar al controlador
-    result = process_audio(chat_id="12345", file=real_file, db=mock_db)
+    result = process_audio(file=real_file, db=mock_db)
 
     # Verificar resultados
     assert result.filename == "gkdb.mp3"
-    assert result.chat_id == "12345"
     assert result.content_type == "audio/wav"
     assert result.file_size == len(file_content)
 

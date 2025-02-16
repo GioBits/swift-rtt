@@ -1,12 +1,54 @@
-from fastapi import APIRouter, HTTPException
-from api.controller.translatedAudioController import retrieve_translation_by_id_controller
-from models.translated_audios import TranslationRecordSchema
+from fastapi import APIRouter, UploadFile, File
+from api.controller.translatedAudioController import (
+    retrieve_all_translated_audios_controller,
+    create_translated_audio_controller,
+    retrieve_translated_audio_by_id_controller,
+    retrieve_translated_audios_by_audio_id_controller
+)
+from models.translated_audios import TranslatedAudioRecordSchema
 from typing import List
 
 router = APIRouter()
 
-# Endpoint "/translation", recupera una traduccion de la base de datos mediante su ID
-@router.get("/translated/{id}", response_model=TranslationRecordSchema)
-async def retrieve_translation_by_id(id : int):
-    response = await retrieve_translation_by_id_controller(id)
-    return response
+@router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
+async def get_translated_audios():
+    """
+    Retrieves all translated audios.
+    Returns:
+        list: A list of TranslatedAudioRecordSchema objects.
+    """
+    return await retrieve_all_translated_audios_controller()
+
+@router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
+async def add_translated_audio(translation_id: int, provider_id: int):
+    """
+    Adds a new translated audio.
+    Args:
+        translation_id (int): The ID of the translation.
+        provider_id (int): The ID of the TTS provider.
+    Returns:
+        TranslatedAudioRecordSchema: The newly created translated audio object.
+    """
+    return await create_translated_audio_controller(translation_id, provider_id)
+
+@router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
+async def get_translated_audio_by_id(translated_audio_id: int):
+    """
+    Retrieves a translated audio by its ID.
+    Args:
+        translated_audio_id (int): The ID of the translated audio.
+    Returns:
+        TranslatedAudioRecordSchema: The translated audio object.
+    """
+    return await retrieve_translated_audio_by_id_controller(translated_audio_id)
+
+@router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
+async def get_translated_audios_by_audio_id(audio_id: int):
+    """
+    Retrieves all translated audios for a given audio ID.
+    Args:
+        audio_id (int): The ID of the audio.
+    Returns:
+        list: A list of TranslatedAudioRecordSchema objects.
+    """
+    return await retrieve_translated_audios_by_audio_id_controller(audio_id)
