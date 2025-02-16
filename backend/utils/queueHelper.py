@@ -46,7 +46,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
                 "messaage": f"Transcription for audio {audio_id} completed",
                 "audio_id": audio_id,
                 "transcription_id": transcription_record.id,
-                "taks": task,
+                "task": task,
             }
             await send_message(json.dumps(response))
 
@@ -59,7 +59,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
                 "messaage": f"Translate for transcription {audio_id} completed",
                 "audio_id": translation_record.audio_id,
                 "translate_id": translation_record.id,
-                "taks": task,
+                "task": task,
             }
             await send_message(json.dumps(response))
 
@@ -71,7 +71,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
                 "messaage": f"Audio generated for translation {audio_id} completed",
                 "audio_id": translation_audio_record.audio_id,
                 "transtaled_audio_id": translation_audio_record.id,
-                "taks": task,
+                "task": task,
             }
             await send_message(json.dumps(response))
 
