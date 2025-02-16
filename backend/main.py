@@ -91,9 +91,12 @@ def ping():
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        message = await message_queue.get()
-        await websocket.send_text(message)
+    try:
+        while True:
+            message = await message_queue.get()
+            await websocket.send_text(message)
+    except WebSocketDisconnect:
+        print("El cliente WebSocket se desconectó.")
 
 # Config host and port for the server
 if __name__ == "__main__":
