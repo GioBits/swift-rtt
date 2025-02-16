@@ -9,15 +9,15 @@ from contextlib import asynccontextmanager
 import os
 import uvicorn
 import asyncio
-from utils.queueHelper import send_message, message_queue
 
-# Importar las rutas
+# Importar las routes
 from api.routes.audioRoute import router as audioRouter
 from api.routes.translatedAudioRoute import router as translatedAudioRouter
 from api.routes.languageRoute import router as languageRouter
 from api.routes.transcriptionRoute import router as transcriptionRouter
 from api.routes.translationRoute import router as translationRouter
 from api.routes.providerRoute import router as providerRouter
+from contextlib import asynccontextmanager
 
 # Import the populate script
 from scripts.populate import populate as populate_tables
@@ -25,13 +25,13 @@ from scripts.populate import populate as populate_tables
 #Import the utils router
 from api.routes.utilsRoute import router as utilsRouter
 
+#Import queue helper
+from utils.queueHelper import message_queue, start_background_process
+
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
 
-# Instancia de la aplicacion 
-app = FastAPI()
-
-# Definir las etiquetas en el orden deseado
+# Tags for swagger documentation
 tags_metadata = [
     {"name": "Health", "description": "Health check endpoint"},
     {"name": "Languages", "description": "Operations related to languages"},
@@ -43,10 +43,17 @@ tags_metadata = [
     {"name": "Utils", "description": "Utility endpoints"}
 ]
 
-# Instancia de la aplicacion con metadata de etiquetas
-app = FastAPI(openapi_tags=tags_metadata)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_background_process()
+    yield
 
-# Importación de rutas
+app = FastAPI(
+    lifespan=lifespan,
+    openapi_tags=tags_metadata
+)
+
+# Routes
 app.include_router(languageRouter, prefix=("/api"))
 app.include_router(providerRouter, prefix=("/api"))
 app.include_router(audioRouter, prefix=("/api"))
@@ -59,10 +66,8 @@ app.include_router(utilsRouter, prefix=("/utils"))
 
 
 
-# # Lista de origenes permitidos
+# # Cors confic
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
-
-# Configuracion de CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -111,7 +116,6 @@ html = """
 async def get():
     return HTMLResponse(html)
 
-# Endpoint "/ping", debe retornar "pong"
 @app.get("/ping", tags=["Health"])
 def ping():
     try:
@@ -126,7 +130,7 @@ async def websocket_endpoint(websocket: WebSocket):
         message = await message_queue.get()
         await websocket.send_text(message)
 
-# Configuración del host y puerto
+# Config host and port for the server
 if __name__ == "__main__":
     environment = os.getenv("API_ENV", "development")
     host = os.getenv("API_HOST", "127.0.0.1")

@@ -9,8 +9,7 @@ from api.service.audioService import (
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
-from utils.queueHelper import send_message, process_audio_tasks
-import asyncio
+from utils.queueHelper import add_audio_task
 
 def parse_audio_response(audio_record: AudioRecordSchema, with_audio: bool) -> AudioResponseSchema:
     """
@@ -64,10 +63,8 @@ async def create_audio_controller(user_id: int, language_id: int, file: UploadFi
             language_id=language_id
         )
 
-        await send_message("Audio uploaded")
-
-        # Execute the audio processing tasks asynchronously
-        asyncio.create_task(process_audio_tasks(audio_record.id, 1))
+        # Add the audio processing task to the queue
+        await add_audio_task(audio_record.id, 1, "transcribe")
 
         return parse_audio_response(audio_record, True)
 
