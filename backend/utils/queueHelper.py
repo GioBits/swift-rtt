@@ -3,6 +3,7 @@ import logging
 from api.controller.transcriptionController import create_transcription_controller
 from api.controller.translationController import create_translation_controller
 from api.controller.translatedAudioController import create_translated_audio_controller
+import json
 
 # Configuración básica de logging
 logging.basicConfig(level=logging.INFO)
@@ -22,27 +23,59 @@ async def add_audio_task(audio_id: int, provider_id: int, task: str):
     await task_queue.put((audio_id, provider_id, task))
 
 async def process_audio_tasks():
+    """
+    This loop only dispatches tasks:
+    - Consumes the queue,
+    - Launches individual coroutines,
+    - Quickly releases the queue to avoid blocking.
+    """
     while True:
         audio_id, provider_id, task = await task_queue.get()
-        try:
+        asyncio.create_task(process_one_task(audio_id, provider_id, task))
+        task_queue.task_done()
 
-            if task == "transcribe":
-                # Transcribe the audio
-                transcription_record = await create_transcription_controller(audio_id, provider_id)
-                await send_message(f"Transcription for audio {audio_id} completed")
 
-            if task == "translate":
-                # Translate the transcription
-                translation_record = await create_translation_controller(audio_id, provider_id, 1)
-                await send_message(f"Translation for audio {audio_id} completed")
+async def process_one_task(audio_id: int, provider_id: int, task: str):
+    """
+    Processes a single task and sends messages as soon as important steps are completed.
+    """
+    try:
+        if task == "transcribe":
+            transcription_record = await create_transcription_controller(audio_id, provider_id)
+            response = {
+                "messaage": f"Transcription for audio {audio_id} completed",
+                "audio_id": audio_id,
+                "transcription_id": transcription_record.id,
+                "taks": task,
+            }
+            await send_message(json.dumps(response))
 
-            if task == "generate_audio":
-                # Generate tts audio
-                translation_audio_record = await create_translated_audio_controller(audio_id, provider_id)
-                await send_message(f"Audio processing for audio {audio_id} completed")
+            # When finished, put the next task in the queue
+            await task_queue.put((transcription_record.id, 1, "translate"))
 
-        except Exception as e:
-            print(f"Error processing audio tasks: {str(e)}")
-            await send_message(f"Error processing audio tasks: {str(e)}")
-        finally:
-            task_queue.task_done()
+        elif task == "translate":
+            translation_record = await create_translation_controller(audio_id, provider_id, 1)
+            response = {
+                "messaage": f"Translate for transcription {audio_id} completed",
+                "audio_id": translation_record.audio_id,
+                "translate_id": translation_record.id,
+                "taks": task,
+            }
+            await send_message(json.dumps(response))
+
+            await task_queue.put((translation_record.id, 1, "generate_audio"))
+
+        elif task == "generate_audio":
+            translation_audio_record = await create_translated_audio_controller(audio_id, provider_id)
+            response = {
+                "messaage": f"Audio generated for translation {audio_id} completed",
+                "audio_id": translation_audio_record.audio_id,
+                "transtaled_audio_id": translation_audio_record.id,
+                "taks": task,
+            }
+            await send_message(json.dumps(response))
+
+    except Exception as e:
+        error_msg = f"Error processing audio tasks: {str(e)}"
+        print(error_msg)
+        await send_message(error_msg)
