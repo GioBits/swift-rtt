@@ -33,7 +33,7 @@ class Transcriber:
 
         try:
             result = self.model.transcribe(file_path, fp16=False, language=language.lower())
-            print(f"Transcription result: {result}")
+            print(f"Transcription result: {result["text"]}")
             return result["text"]
         except Exception as e:
             print(f"Error during transcription: {str(e)}")

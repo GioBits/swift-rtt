@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+.blinking-circle {
+  width: 3rem;
+  height: 3rem;
+  background-color: red;
+  border-radius: 50%;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  100% { opacity: 0.3; }
+}

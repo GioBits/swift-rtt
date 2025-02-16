@@ -2,8 +2,7 @@ import { useState, useContext } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
 import { Button, CircularProgress } from '@mui/material';
-import { MediaContext } from '../contexts/MediaContext';
-import '../styles.css';
+import { MediaContext } from '../../contexts/MediaContext';
 
 const MediaUpload = () => {
   const { uploading } = useContext(MediaContext);
@@ -18,7 +17,12 @@ const MediaUpload = () => {
   };
 
   return (
-    <div className='flex flex-col w-full max-w-[410px] m-auto bg-white mt-0 rounded-b-lg p-10 pt-0'>
+    <div className='flex flex-col w-full max-w-[410px] m-auto bg-white rounded-b-lg p-10'>
+      <div className='flex flex-row justify-center items-center h-auto m-auto'>
+        <span className='text-2xl text-center text-gray-800'>
+          Real Time Translator
+        </span>
+      </div>
       <div className='w-full flex flex-row space-between h-auto m-auto'>
         <Button
           variant={isClicked && buttonSelected ? 'contained' : 'outlined'}

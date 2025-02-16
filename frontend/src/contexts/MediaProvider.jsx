@@ -1,16 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
 import { languageService }  from "../service/languageService";
+import WebSocketService  from "../service/websocketService";
 import PropTypes from "prop-types";
+
+const wsService = new WebSocketService();
 
 export const MediaProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
+  const [audioUrl, setAudioUrl] = useState("");
+  const [audioTranslation, setAudioTranslation] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
+  const [wsResponse, setWsResponse] = useState("");
   
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: "es",
@@ -20,6 +25,22 @@ export const MediaProvider = ({ children }) => {
     id: "",
     audio_data: "",
   })
+
+  const wsServiceRef = useRef(wsService);
+
+  useEffect(() => {
+    const handleMessage = (messageData) => {
+      setWsResponse(messageData);
+      console.log("Mensaje recibido:", messageData);
+    };
+
+    const wsServiceInstance = wsServiceRef.current;
+    wsServiceInstance.onMessage(handleMessage);
+
+    return () => {
+      wsServiceInstance.offMessage(handleMessage);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -45,6 +66,7 @@ export const MediaProvider = ({ children }) => {
   return (
     <MediaContext.Provider
       value={{
+        wsResponse,
         languages,
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
@@ -60,7 +82,9 @@ export const MediaProvider = ({ children }) => {
         transcription,
         setTranscription,
         translate,
-        setTranslate
+        setTranslate,
+        audioTranslation,
+        setAudioTranslation
       }}
     >
       {children}

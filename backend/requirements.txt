@@ -35,3 +35,6 @@ sentencepiece==0.2.0
 
 # Text to Speech library Coqui TTS
 coqui-tts==0.25.3
+
+#websockets
+websockets==14.0

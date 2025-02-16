@@ -22,7 +22,7 @@ async def upload_audio(file: UploadFile = File(...)):
         AudioResponseSchema: The response after processing the audio file.
     """
     user_id = 1
-    language_id = 1
+    language_id = 2
     return await create_audio_controller(user_id, language_id, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
