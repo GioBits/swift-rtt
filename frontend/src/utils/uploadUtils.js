@@ -1,4 +1,5 @@
 import { apiService } from '@service/api';
+import { toast } from 'react-hot-toast';
 
 /**
  * Function to handle file upload.
@@ -17,6 +18,7 @@ export const handleFileUpload = async (file, endpoint) => {
       },
     });
 
+    toast.success('Archivo de audio guardado!',  {duration: 5000});
     return response;
 
   } catch (error) {

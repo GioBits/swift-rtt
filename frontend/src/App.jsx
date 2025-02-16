@@ -3,10 +3,14 @@ import LanguageSelector from "./components/mediaUpload/LanguageSelector";
 import MediaUpload from "./components/mediaUpload/MediaUpload";
 import "./index.css";
 import MediaResponse from "./components/mediaResponse/MediaResponse";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <div className="bg-neutral-800 h-screen w-screen flex">
+      <div>
+        <Toaster/>
+      </div>
       <div className="w-[60vw] h-[80vh] lg:flex m-auto block overflow-auto">
         <MediaProvider>
           <div className="lg:w-1/2 w-full h-full flex flex-col m-auto p-4">

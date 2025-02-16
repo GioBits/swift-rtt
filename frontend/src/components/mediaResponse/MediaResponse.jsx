@@ -5,6 +5,7 @@ import { transcriptionService } from '../../service/transcribeService';
 import { translationService } from '../../service/translateService';
 import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
+import toast from "react-hot-toast";
 
 const MediaResponse = () => {
   const models = [];
@@ -66,6 +67,7 @@ const MediaResponse = () => {
     const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
     const transcriptionText = transcriptionResponse.transcription;
     setTranscription(transcriptionText);
+    toast.success('Transcripción completada!', {duration: 5000});
   };
 
   const fetchTranslationByAudioId = async (audioId) => {
@@ -74,6 +76,7 @@ const MediaResponse = () => {
     const translationResponse = await translationService.getTranslationByAudioId(audioId);
     const translationText = translationResponse.translation;
     setTranslate(translationText);
+    toast.success('Traducción completada!',  {duration: 5000});
   };
 
   const fetchTranslatedAudioByAudioId = async (audioId) => {
@@ -82,6 +85,7 @@ const MediaResponse = () => {
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
       setAudioTranslation(base64ToUrl(translatedAudio.audioData));
+      toast.success('Audio traducido completado!',  {duration: 5000});
     } catch (error) {
       console.error("Error fetching translated audio:", error);
     }
@@ -97,13 +101,13 @@ const MediaResponse = () => {
       <MediaText
         title="Transcripción"
         response={transcription || ""}
-        audio={audioUrl || null}
+        audio={audioUrl || ""}
         models={models}
         placeholder="Esperando audio transcrito..." />
       <MediaText
         title="Traducción"
         response={translate || ""}
-        audio={audioTranslation || null}
+        audio={audioTranslation || ""}
         models={models}
         placeholder="Esperando texto traducido..."/>
     </>
