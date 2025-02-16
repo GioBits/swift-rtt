@@ -28,7 +28,7 @@ const MediaResponse = () => {
         setAudioUrl(base64ToUrl(audioSelected.audioData));
         setTranscription("");
         setTranslate("");
-        setAudioTranslation(null );
+        setAudioTranslation("");
       }
     };
     handleResponse();
@@ -97,13 +97,13 @@ const MediaResponse = () => {
       <MediaText
         title="Transcripción"
         response={transcription || ""}
-        audio={audioUrl || ""}
+        audio={audioUrl || null}
         models={models}
         placeholder="Esperando audio transcrito..." />
       <MediaText
         title="Traducción"
         response={translate || ""}
-        audio={audioTranslation || ""}
+        audio={audioTranslation || null}
         models={models}
         placeholder="Esperando texto traducido..."/>
     </>

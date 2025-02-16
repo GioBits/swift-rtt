@@ -7,7 +7,7 @@ import Typewriter from "typewriter-effect";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
 
-const MediaText = ({ title, response, models, audio, placeholder }) => {
+const MediaText = ({ title, response, models, audio = null, placeholder }) => {
   const [selectedModel, setSelectedModel] = useState("");
   const [playing, setPlaying] = useState(false);
 
@@ -101,9 +101,9 @@ const MediaText = ({ title, response, models, audio, placeholder }) => {
         </div>
       </div>
       <div className="h-[50px] flex flex-row">
-        <div className="m-auto mr-5">
+        {audio && (<div className="m-auto mr-5">
           <IconButton onClick={togglePlayback}>
-          {audio && playing && (
+          {playing && (
             <ReactPlayer
               url={audio}
               playing={true}
@@ -118,7 +118,7 @@ const MediaText = ({ title, response, models, audio, placeholder }) => {
           <IconButton onClick={handleDownload}>
             <FileDownloadIcon sx={{ marginLeft: "10px" }} />
           </IconButton>
-        </div>
+        </div>)}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const wsService = new WebSocketService();
 
 export const MediaProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
+  const [audioUrl, setAudioUrl] = useState("");
   const [audioTranslation, setAudioTranslation] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
