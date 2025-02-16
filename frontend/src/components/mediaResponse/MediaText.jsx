@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-import { MediaContext } from "../../contexts/MediaContext";
+import { useState, useEffect } from "react";
 import { Box, MenuItem, FormControl, Select, IconButton } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -8,8 +7,7 @@ import Typewriter from "typewriter-effect";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
 
-const MediaText = ({ title, response, models }) => {
-  const { audioUrl } = useContext(MediaContext);
+const MediaText = ({ title, response, models, audio }) => {
   const [selectedModel, setSelectedModel] = useState("");
   const [playing, setPlaying] = useState(false);
 
@@ -28,9 +26,9 @@ const MediaText = ({ title, response, models }) => {
   };
 
   const handleDownload = () => {
-    if (!audioUrl) return;
+    if (!audio) return;
     const link = document.createElement("a");
-    link.href = audioUrl;
+    link.href = audio;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     link.setAttribute("download", `audio-${timestamp}.mp3`);
     document.body.appendChild(link);
@@ -44,7 +42,7 @@ const MediaText = ({ title, response, models }) => {
         <div className="bg-sky-600 flex w-full h-1/2 rounded">
           <div className="m-auto text-3xl text-white">{title}</div>
         </div>
-        <div className="flex flex-row w-full m-auto">
+        <div className="hidden w-full m-auto"> {/*change hidden by flex flex-row*/}
           <div className="flex w-full">
             <Box className="m-auto mr-0">
               <FormControl
@@ -101,9 +99,9 @@ const MediaText = ({ title, response, models }) => {
       <div className="h-[50px] flex flex-row">
         <div className="m-auto mr-5">
           <IconButton onClick={togglePlayback}>
-          {audioUrl && playing && (
+          {audio && playing && (
             <ReactPlayer
-              url={audioUrl}
+              url={audio}
               playing={true}
               controls={false}
               width="0"
@@ -128,4 +126,5 @@ MediaText.propTypes = {
   title: PropTypes.string.isRequired,
   response: PropTypes.string.isRequired,
   models: PropTypes.array.isRequired,
+  audio: PropTypes.string.isRequired
 };

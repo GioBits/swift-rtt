@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 export const MediaProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [audioTranslation, setAudioTranslation] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [transcription, setTranscription] = useState("");
@@ -60,7 +61,9 @@ export const MediaProvider = ({ children }) => {
         transcription,
         setTranscription,
         translate,
-        setTranslate
+        setTranslate,
+        audioTranslation,
+        setAudioTranslation
       }}
     >
       {children}
