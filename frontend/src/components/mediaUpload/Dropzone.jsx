@@ -27,8 +27,7 @@ const Dropzone = () => {
     setUploading(true);
     try {
       const response = await handleFileUpload(file, '/api/audio');
-      // setAudioSelected(response);
-      return response.audio_data;
+      setAudioSelected(response);
     } catch {
       // El error ya fue manejado por Redux en handleFileUpload
     } finally {

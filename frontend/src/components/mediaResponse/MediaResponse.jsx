@@ -14,6 +14,7 @@ const MediaResponse = () => {
   ];
 
   const {
+    wsResponse,
     transcription,
     setTranscription,
     translate,
@@ -21,66 +22,75 @@ const MediaResponse = () => {
     audioSelected,
     audioTranslation,
     setAudioTranslation,
-    audioUrl } = useContext(MediaContext)
+    audioUrl 
+  } = useContext(MediaContext)
 
-  // const fetchTranscriptionByAudioId = useCallback(async (audioId) => {
-  //   if (audioId === "") return;
+  useEffect(() => {
+    const handleResponse = async () => {
+      if (wsResponse) {
+        await handleWsResponse(wsResponse);
+      }
+    };
+    handleResponse();
+  }, [wsResponse]);
 
-  //   const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
-  //   const transcriptionText = transcriptionResponse.transcription;
-  //   setTranscription(transcriptionText);
-  // }, [setTranscription]);
+  const handleWsResponse = async (wsResponse) => {
+    let wsResponseData = JSON.parse(wsResponse);
+    let audioId = wsResponseData.audio_id;
+    let task = wsResponseData.task;
 
-  // useEffect(() => {
-  //   if (audioSelected?.id) {
-  //     fetchTranscriptionByAudioId(audioSelected.id);
-  //   }
-  // }, [audioSelected, fetchTranscriptionByAudioId]);
+    if (task === "transcribe") {
+      await fetchTranscriptionByAudioId(audioId);
+    }
 
-  // const fetchTranslationByAudioId = useCallback(async (audioId) => {
-  //   if (audioId === "") return;
+    if(task === "transcribe"){
+      await fetchTranslationByAudioId(audioId);
+    }
 
-  //   const translationResponse = await translationService.getTranslationByAudioId(audioId);
-  //   const translationText = translationResponse.translation;
-  //   setTranslate(translationText);
-  // }, [setTranslate]);
+    if(task === "generate_audio"){
+      await fetchTranslatedAudioById(audioId);
+    }
+  } 
 
-  // useEffect(() => {
-  //   if (audioSelected?.id) {
-  //     fetchTranslationByAudioId(audioSelected.id);
-  //   }
-  // }, [audioSelected, fetchTranslationByAudioId]);
+  const fetchTranscriptionByAudioId = async (audioId) => {
+    if (audioId === "") return;
 
+    const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
+    const transcriptionText = transcriptionResponse.transcription;
+    setTranscription(transcriptionText);
+  };
 
-  // const fetchTranslatedAudioById = useCallback(async (audioId) => {
-  //   if (!audioId) return;
+  const fetchTranslationByAudioId = async (audioId) => {
+    if (audioId === "") return;
 
-  //   try {
-  //     const translatedAudio = await translatedAudioService.getTranslatedAudioById(audioId);
-  //     const blob = b64toBlob(translatedAudio.audioData, 'audio/mp3');
-  //     const url = URL.createObjectURL(blob);
-  //     setAudioTranslation(url);
-  //   } catch (error) {
-  //     console.error("Error fetching translated audio:", error);
-  //   }
-  // }, [setAudioTranslation]);
+    const translationResponse = await translationService.getTranslationByAudioId(audioId);
+    const translationText = translationResponse.translation;
+    setTranslate(translationText);
+  };
 
-  // useEffect(() => {
-  //   if (audioSelected?.id) {
-  //     fetchTranslatedAudioById(audioSelected.id);
-  //   }
-  // }, [audioSelected, fetchTranslatedAudioById]);
+  const fetchTranslatedAudioById = async (audioId) => {
+    if (!audioId) return;
+
+    try {
+      const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
+      const blob = b64toBlob(translatedAudio.audioData, 'audio/mp3');
+      const url = URL.createObjectURL(blob);
+      setAudioTranslation(url);
+    } catch (error) {
+      console.error("Error fetching translated audio:", error);
+    }
+  };
 
   return (
     <>
       <MediaText
-        title="Traducción"
+        title="Transcripción"
         response={transcription || ""}
         audio={audioUrl || ""}
         models={models}
         placeholder="Esperando audio transcrito..." />
       <MediaText
-        title="Transcripción"
+        title="Traducción"
         response={translate || ""}
         audio={audioTranslation || ""}
         models={models}

@@ -15,6 +15,7 @@ export const MediaProvider = ({ children }) => {
   const [languages, setLanguages] = useState([]);
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
+  const [wsResponse, setWsResponse] = useState("");
   
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: "es",
@@ -29,6 +30,7 @@ export const MediaProvider = ({ children }) => {
 
   useEffect(() => {
     const handleMessage = (messageData) => {
+      setWsResponse(messageData);
       console.log("Mensaje recibido:", messageData);
     };
 
@@ -64,6 +66,7 @@ export const MediaProvider = ({ children }) => {
   return (
     <MediaContext.Provider
       value={{
+        wsResponse,
         languages,
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,

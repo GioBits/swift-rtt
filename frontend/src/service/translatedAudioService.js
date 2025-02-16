@@ -31,7 +31,6 @@ const translatedAudioService = {
     try {
       const path = `/api/translated_audios/audio/${audioId}`;
       const response = await apiService.get(path);
-      console.log('Respuesta recibida:', response);
       return parseTranslatedAudioResponse(response.pop());
     } catch (error) {
       console.error('Error fetching translated audio by audioId:', error);
