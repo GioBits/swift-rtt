@@ -15,7 +15,7 @@ const RecordAudio = () => {
   const { isRecording,
     setUploading,
     setAudioSelected,
-    setAudioUrl } = useContext(MediaContext);
+  } = useContext(MediaContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -57,10 +57,10 @@ const RecordAudio = () => {
       await ffmpeg.load();
       const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
       const response = await handleFileUpload(mp3File, '/api/audio');
-      setAudioSelected(response);
-      const blob = b64toBlob(response.audio_data, 'audio/mp3');
-      const url = URL.createObjectURL(blob);
-      setAudioUrl(url);
+      setAudioSelected({
+        audioData: response.audio_data,
+        audioId: response.id,
+      });
     } finally {
       setUploading(false);
     }

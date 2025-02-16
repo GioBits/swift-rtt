@@ -7,11 +7,7 @@ import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
 
 const MediaResponse = () => {
-  const models = [
-    { id: "1", name: "Modelo 1" },
-    { id: "2", name: "Modelo 2" },
-    { id: "3", name: "Modelo 3" },
-  ];
+  const models = [];
 
   const {
     wsResponse,
@@ -22,8 +18,20 @@ const MediaResponse = () => {
     audioSelected,
     audioTranslation,
     setAudioTranslation,
-    audioUrl 
+    setAudioUrl,
+    audioUrl,
   } = useContext(MediaContext)
+
+  useEffect(() => {
+    const handleResponse = async () => {
+      if (audioSelected) {
+        setAudioUrl(base64ToUrl(audioSelected.audioData));
+        console.log(audioSelected);
+        console.log(audioUrl);
+      }
+    };
+    handleResponse();
+  }, [audioSelected]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -73,13 +81,16 @@ const MediaResponse = () => {
 
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
-      const blob = b64toBlob(translatedAudio.audioData, 'audio/mp3');
-      const url = URL.createObjectURL(blob);
-      setAudioTranslation(url);
+      setAudioTranslation(base64ToUrl(translatedAudio.audioData));
     } catch (error) {
       console.error("Error fetching translated audio:", error);
     }
   };
+
+  const base64ToUrl = (base64) => {
+    const blob = b64toBlob(base64, 'audio/mp3');
+    return URL.createObjectURL(blob);
+  }
 
   return (
     <>
