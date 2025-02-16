@@ -14,24 +14,17 @@ const Dropzone = () => {
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
 
-    if (file) {
-      await uploadFile(file);
+    if (!file) {
+      return;
     }
-  };
 
-  const uploadFile = async (file) => {
     setUploading(true);
-    try {
-      const response = await handleFileUpload(file, '/api/audio');
-      setAudioSelected({
-        audioData: response.audio_data,
-        audioId: response.id,
-      });
-    } catch {
-      // El error ya fue manejado por Redux en handleFileUpload
-    } finally {
-      setUploading(false);
-    }
+    const response = await handleFileUpload(file, '/api/audio');
+    setAudioSelected({
+      audioData: response.audio_data,
+      audioId: response.id,
+    });
+    setUploading(false);
   };
 
   const { getRootProps, getInputProps } = useDropzone({

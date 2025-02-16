@@ -18,16 +18,17 @@ const MediaResponse = () => {
     audioSelected,
     audioTranslation,
     setAudioTranslation,
-    setAudioUrl,
     audioUrl,
+    setAudioUrl
   } = useContext(MediaContext)
 
   useEffect(() => {
     const handleResponse = async () => {
       if (audioSelected) {
         setAudioUrl(base64ToUrl(audioSelected.audioData));
-        console.log(audioSelected);
-        console.log(audioUrl);
+        setTranscription("");
+        setTranslate("");
+        setAudioTranslation(null );
       }
     };
     handleResponse();
