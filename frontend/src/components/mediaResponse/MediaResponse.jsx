@@ -23,53 +23,53 @@ const MediaResponse = () => {
     setAudioTranslation,
     audioUrl } = useContext(MediaContext)
 
-  const fetchTranscriptionByAudioId = useCallback(async (audioId) => {
-    if (audioId === "") return;
+  // const fetchTranscriptionByAudioId = useCallback(async (audioId) => {
+  //   if (audioId === "") return;
 
-    const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
-    const transcriptionText = transcriptionResponse.transcription;
-    setTranscription(transcriptionText);
-  }, [setTranscription]);
+  //   const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
+  //   const transcriptionText = transcriptionResponse.transcription;
+  //   setTranscription(transcriptionText);
+  // }, [setTranscription]);
 
-  useEffect(() => {
-    if (audioSelected?.id) {
-      fetchTranscriptionByAudioId(audioSelected.id);
-    }
-  }, [audioSelected, fetchTranscriptionByAudioId]);
+  // useEffect(() => {
+  //   if (audioSelected?.id) {
+  //     fetchTranscriptionByAudioId(audioSelected.id);
+  //   }
+  // }, [audioSelected, fetchTranscriptionByAudioId]);
 
-  const fetchTranslationByAudioId = useCallback(async (audioId) => {
-    if (audioId === "") return;
+  // const fetchTranslationByAudioId = useCallback(async (audioId) => {
+  //   if (audioId === "") return;
 
-    const translationResponse = await translationService.getTranslationByAudioId(audioId);
-    const translationText = translationResponse.translation;
-    setTranslate(translationText);
-  }, [setTranslate]);
+  //   const translationResponse = await translationService.getTranslationByAudioId(audioId);
+  //   const translationText = translationResponse.translation;
+  //   setTranslate(translationText);
+  // }, [setTranslate]);
 
-  useEffect(() => {
-    if (audioSelected?.id) {
-      fetchTranslationByAudioId(audioSelected.id);
-    }
-  }, [audioSelected, fetchTranslationByAudioId]);
+  // useEffect(() => {
+  //   if (audioSelected?.id) {
+  //     fetchTranslationByAudioId(audioSelected.id);
+  //   }
+  // }, [audioSelected, fetchTranslationByAudioId]);
 
 
-  const fetchTranslatedAudioById = useCallback(async (audioId) => {
-    if (!audioId) return;
+  // const fetchTranslatedAudioById = useCallback(async (audioId) => {
+  //   if (!audioId) return;
 
-    try {
-      const translatedAudio = await translatedAudioService.getTranslatedAudioById(audioId);
-      const blob = b64toBlob(translatedAudio.audioData, 'audio/mp3');
-      const url = URL.createObjectURL(blob);
-      setAudioTranslation(url);
-    } catch (error) {
-      console.error("Error fetching translated audio:", error);
-    }
-  }, [setAudioTranslation]);
+  //   try {
+  //     const translatedAudio = await translatedAudioService.getTranslatedAudioById(audioId);
+  //     const blob = b64toBlob(translatedAudio.audioData, 'audio/mp3');
+  //     const url = URL.createObjectURL(blob);
+  //     setAudioTranslation(url);
+  //   } catch (error) {
+  //     console.error("Error fetching translated audio:", error);
+  //   }
+  // }, [setAudioTranslation]);
 
-  useEffect(() => {
-    if (audioSelected?.id) {
-      fetchTranslatedAudioById(audioSelected.id);
-    }
-  }, [audioSelected, fetchTranslatedAudioById]);
+  // useEffect(() => {
+  //   if (audioSelected?.id) {
+  //     fetchTranslatedAudioById(audioSelected.id);
+  //   }
+  // }, [audioSelected, fetchTranslatedAudioById]);
 
   return (
     <>

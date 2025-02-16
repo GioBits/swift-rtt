@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
 import { languageService }  from "../service/languageService";
+import WebSocketService  from "../service/websocketService";
 import PropTypes from "prop-types";
+
+const wsService = new WebSocketService();
 
 export const MediaProvider = ({ children }) => {
   const [uploading, setUploading] = useState(false);
@@ -21,6 +24,21 @@ export const MediaProvider = ({ children }) => {
     id: "",
     audio_data: "",
   })
+
+  const wsServiceRef = useRef(wsService);
+
+  useEffect(() => {
+    const handleMessage = (messageData) => {
+      console.log("Mensaje recibido:", messageData);
+    };
+
+    const wsServiceInstance = wsServiceRef.current;
+    wsServiceInstance.onMessage(handleMessage);
+
+    return () => {
+      wsServiceInstance.offMessage(handleMessage);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchLanguages = async () => {

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Instancia de Axios con configuración predeterminada
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:5000',
+  baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000',
   timeout: 60000,  // Tiempo de espera de 60 segundos
 });
 
