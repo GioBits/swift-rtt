@@ -9,7 +9,7 @@ dotenv.config({ path: resolve(__dirname, '../.env') })
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(),],
+  plugins: [react(), tailwindcss()],
   optimizeDeps: {
     exclude: ['@ffmpeg/ffmpeg']
   },
@@ -20,6 +20,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': '/src',
+      '@components': resolve(__dirname, 'src/components'),
+      '@contexts': resolve(__dirname, 'src/contexts'),
+      '@hooks': resolve(__dirname, 'src/hooks'),
+      '@locales': resolve(__dirname, 'src/locales'),
+      '@service': resolve(__dirname, 'src/service'),
+      '@store': resolve(__dirname, 'src/store'),
+      '@styles': resolve(__dirname, 'src/styles'),
+      '@utils': resolve(__dirname, 'src/utils'),
     },
   },
   test: {

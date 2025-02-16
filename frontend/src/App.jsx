@@ -1,8 +1,8 @@
 import { MediaProvider } from "./contexts/MediaProvider";
-import LanguageSelector from "./components/LanguageSelector";
-import MediaUpload from "./components/MediaUpload";
+import LanguageSelector from "./components/mediaUpload/LanguageSelector";
+import MediaUpload from "./components/mediaUpload/MediaUpload";
 import "./index.css";
-import MediaResponse from "./components/MediaResponse";
+import MediaResponse from "./components/mediaResponse/MediaResponse";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import { fetchFile } from '@ffmpeg/util';
-import { getMessage } from "../utils/localeHelper";
+import { getMessage } from "@utils/localeHelper";
 
 /**
  * Convierte un archivo de audio WAV a MP3 usando FFmpeg.

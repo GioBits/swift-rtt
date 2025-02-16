@@ -1,4 +1,4 @@
-import { MediaContext } from '../contexts/MediaContext';
+import { MediaContext } from '@contexts/MediaContext';
 import { useRef, useContext } from 'react';
 import { setError } from '../store/slices/errorSlice';
 import { getMessage } from '../utils/localeHelper';

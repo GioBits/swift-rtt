@@ -1,13 +1,15 @@
 import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { handleFileUpload } from '../utils/uploadUtils';
-import { MediaContext } from '../contexts/MediaContext';
-import { b64toBlob } from '../utils/audioUtils';
+import { handleFileUpload } from '../../utils/uploadUtils';
+import { b64toBlob } from '../../utils/audioUtils';
+import { MediaContext } from '../../contexts/MediaContext';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import '../styles.css'
 
 const Dropzone = () => {
-  const { setUploading, setAudioUrl, setTranscription, setAudioSelected } = useContext(MediaContext);
+  const {
+    setUploading,
+    setAudioUrl,
+    setAudioSelected } = useContext(MediaContext);
 
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -20,13 +22,12 @@ const Dropzone = () => {
     }
   };
 
-  
+
   const uploadFile = async (file) => {
     setUploading(true);
     try {
       const response = await handleFileUpload(file, '/api/audio');
       setAudioSelected(response);
-      //TODO translate request and setTranslate, include setTranslate on MediaContext
       return response.audio_data;
     } catch {
       // El error ya fue manejado por Redux en handleFileUpload
@@ -34,6 +35,7 @@ const Dropzone = () => {
       setUploading(false);
     }
   };
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     accept: { 'audio/mpeg': ['.mp3'] },
@@ -44,7 +46,6 @@ const Dropzone = () => {
     <div
       {...getRootProps()}
       className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
-
     >
       <input {...getInputProps()} />
       <div>
@@ -56,17 +57,16 @@ const Dropzone = () => {
               fontSize: '40px'
             }}
           />
-
         </div>
-          <div>
+        <div>
           <p style={{ color: 'black', fontSize: '1rem' }}>
             Arrastra y suelta un archivo <br />o <b className="text-sky-600">haz click para subir uno</b>
           </p>
-          <span className='dropzone-span'>
+          <span className='leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs'>
             Admite solo formatos de audio mp3, hasta 10MB y 30 segundos de grabación.
           </span>
-          </div>
-        
+        </div>
+
       </div>
     </div>
   );

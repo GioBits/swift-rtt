@@ -1,4 +1,4 @@
-import messages from '../locales/messages.json';
+import messages from '@locales/messages.json';
 
 /**
  * Obtiene un mensaje desde el archivo de locales y reemplaza los placeholders si es necesario.
