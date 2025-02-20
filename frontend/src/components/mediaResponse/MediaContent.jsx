@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, MenuItem, FormControl, Select, IconButton } from "@mui/material";
+import { Box, MenuItem, FormControl, Select, IconButton, Tooltip } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -55,7 +55,7 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
         <div className="bg-sky-600 flex w-full h-1/2 rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
         </div>
-        <div className="hidden w-full m-auto"> {/*change hidden by flex flex-row*/}
+        <div className="hidden w-full m-auto"> {/* hidden by flex flex-row */}
           <div className="flex w-full">
             <Box className="m-auto mr-0">
               <FormControl
@@ -96,42 +96,53 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
           </div>
         </div>
       </div>
+
       <div className="h-[calc(100%-150px)]">
         <div className="w-full h-full p-4 border border-dashed border-gray-400 box-border rounded shadow-lg max-h-full overflow-y-auto">
           {contentText ? (
             <Typewriter
-            options={{
-              strings: contentText,
-              autoStart: true,
-              loop: false,
-              delay: 12,
-              cursor: "",
-            }}
-          />
+              options={{
+                strings: contentText,
+                autoStart: true,
+                loop: false,
+                delay: 12,
+                cursor: "",
+              }}
+            />
           ) : (
-            <div className=" text-slate-500 whitespace-pre-wrap text-4xl">{placeholder}</div>
+            <div className="text-slate-500 whitespace-pre-wrap text-4xl">
+              {placeholder}
+            </div>
           )}
         </div>
       </div>
+
       <div className="h-[50px] flex flex-row">
-        {audio && (<div className="m-auto mr-5">
-          <IconButton onClick={togglePlayback}>
-          {playing && (
-            <ReactPlayer
-              url={audio}
-              playing={true}
-              controls={false}
-              width="0"
-              height="0"
-              className="hidden"
-            />
-          )}
-            <VolumeUpIcon />
-          </IconButton>
-          <IconButton onClick={handleDownload}>
-            <FileDownloadIcon sx={{ marginLeft: "10px" }} />
-          </IconButton>
-        </div>)}
+        {audio && (
+          <div className="m-auto mr-5 flex gap-3">
+            <Tooltip title="Reproducir/Pausar audio" arrow>
+              <IconButton onClick={togglePlayback}>
+                {playing && (
+                  <ReactPlayer
+                    url={audio}
+                    playing={true}
+                    controls={false}
+                    width="0"
+                    height="0"
+                    className="hidden"
+                  />
+                )}
+                <VolumeUpIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Descargar audio" arrow>
+              <IconButton onClick={handleDownload}>
+                <FileDownloadIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -144,5 +155,5 @@ MediaContent.propTypes = {
   contentText: PropTypes.string.isRequired,
   models: PropTypes.array.isRequired,
   audio: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired
+  placeholder: PropTypes.string.isRequired,
 };

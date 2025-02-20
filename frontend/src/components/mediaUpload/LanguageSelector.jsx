@@ -36,18 +36,17 @@ export default function LanguageSelector() {
 
   const selectStyle = {
     fontSize: "14px",
-    height: "40px",
+    height: "50px",
     minWidth: "30px",
     maxwidth: "120px",
     width  : '100%',
-    margin: 'auto',
     borderRadius: '4px',
   }
 
   return (
-    <div className="flex flex-row w-full max-w-[410px] m-auto bg-white h-[70px] p-10 mb-0 rounded-t-lg">
-      <Box className="flex flex-row w-full">
-        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+    <div className="flex flex-row w-full min-w-[410px] m-auto box-border h-full">
+      <Box className="flex flex-row w-full gap-20 ml-5 mr-5">
+        <FormControl sx={{ minWidth: 30, width: '50%', margin: 'auto', display: 'flex' }}>
           <Select
             id="origin-language-select"
             value={validSourceLanguage}
@@ -61,7 +60,7 @@ export default function LanguageSelector() {
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+        <FormControl sx={{ minWidth: 30, width: '50%', margin: 'auto', display: 'flex' }}>
           <Select
             id="target-language-select"
             value={validTargetLanguage}

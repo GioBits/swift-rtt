@@ -18,13 +18,13 @@ const Dropzone = () => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     accept: { 'audio/mpeg': ['.mp3'] },
-    maxSize: 100 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
   });
 
   return (
     <div
       {...getRootProps()}
-      className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
+      className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full"
     >
       <input {...getInputProps()} />
       <div>
