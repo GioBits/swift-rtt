@@ -1,5 +1,5 @@
+import { useCallback, useRef, useContext } from 'react';
 import { MediaContext } from '@contexts/MediaContext';
-import { useRef, useContext } from 'react';
 import { setError } from '../store/slices/errorSlice';
 import { getMessage } from '../utils/localeHelper';
 
@@ -12,7 +12,7 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
 
-  const startRecording = () => {
+  const startRecording = useCallback(() => {
     audioChunksRef.current = [];
     startTimeRef.current = Date.now();
 
@@ -57,15 +57,15 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
           origin: "RecordAudio"
         }));
       });
-  };
+  }, [dispatch, setIsRecording, minRecordingTime, maxRecordingTime, uploadAudio]);
 
-  const stopRecording = () => {
+  const stopRecording = useCallback(() => {
     const mediaRecorder = mediaRecorderRef.current;
     if (mediaRecorder) {
       mediaRecorder.stop();
       setIsRecording(false);
     }
-  };
+  }, [setIsRecording]);
 
   return { startRecording, stopRecording };
 };
