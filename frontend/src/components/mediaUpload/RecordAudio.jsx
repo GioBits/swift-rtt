@@ -1,71 +1,36 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { IconButton } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import { useDispatch } from 'react-redux';
-import { handleFileUpload } from '../../utils/uploadUtils';
 import { clearError } from '../../store/slices/errorSlice';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../../utils/audioUtils';
 import { MediaContext } from '../../contexts/MediaContext';
-import '../../index.css'
+import { uploadMediaFile } from '../../service/mediaUploadService';
+import { useTimer } from '../../hooks/useTimer';
+import '../../index.css';
 
 const RecordAudio = () => {
-  const { isRecording,
+  const {
+    isRecording,
     setUploading,
-    setAudioSelected,
-  } = useContext(MediaContext);
+    setAudioSelected } = useContext(MediaContext);
   const dispatch = useDispatch();
   const ffmpeg = new FFmpeg();
-  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch, isRecording]);
 
-  useEffect(() => {
-    let timer;
-    if (isRecording) {
-      setElapsedTime(0);
-      timer = setInterval(() => {
-        setElapsedTime(prevTime => {
-          const newTime = prevTime + 1;
-          if (newTime >= 30) {
-            stopRecording();
-            return 30;
-          }
-          return newTime;
-        });
-      }, 1000);
-    } else {
-      clearInterval(timer);
-    }
-
-    return () => clearInterval(timer);
-  }, [isRecording]);
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const handleAudioRecorded = async (audioBlob) => {
+    await ffmpeg.load();
+    const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
+    await uploadMediaFile(mp3File, setUploading, setAudioSelected);
   };
 
-  const uploadAudio = async (audioBlob) => {
-    setUploading(true);
-    try {
-      await ffmpeg.load();
-      const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
-      const response = await handleFileUpload(mp3File, '/api/audio');
-      setAudioSelected({
-        audioData: response.audio_data,
-        audioId: response.id,
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const { startRecording, stopRecording } = useAudioRecorder(dispatch, uploadAudio);
+  const { startRecording, stopRecording } = useAudioRecorder(dispatch, handleAudioRecorded);
+  const { elapsedTime, formatTime } = useTimer(isRecording, stopRecording, 30);
 
   return (
     <div className="h-full w-full flex flex-col m-auto border border-dashed border-gray-400 rounded">
@@ -79,23 +44,22 @@ const RecordAudio = () => {
           width: '100%',
           '&:hover': {
             backgroundColor: 'transparent',
-            '& svg': {
-              opacity: 0.7
-            }
-          }
+            '& svg': { opacity: 0.7 },
+          },
         }}
         disableRipple
       >
-        {isRecording
-          ?
+        {isRecording ? (
           <div className="w-full flex justify-center items-center mx-auto gap-2 text-4xl">
             <div className="blinking-circle"></div>
-            <span className="timer" style={{ color: 'black' }}>{formatTime(elapsedTime)}</span>
+            <span className="timer" style={{ color: 'black' }}>
+              {formatTime(elapsedTime)}
+            </span>
           </div>
-          :
+        ) : (
           <MicIcon sx={{ fontSize: '60px', color: 'rgb(220 38 38)' }} />
-        }
-        <div className='text-black text-2xl'>
+        )}
+        <div className="text-black text-2xl">
           {isRecording ? <p>Detener grabación</p> : <p>Iniciar grabación</p>}
         </div>
       </IconButton>

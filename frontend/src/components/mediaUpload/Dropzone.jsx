@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { handleFileUpload } from '../../utils/uploadUtils';
 import { MediaContext } from '../../contexts/MediaContext';
+import { uploadMediaFile } from '../../service/mediaUploadService';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 const Dropzone = () => {
@@ -10,21 +10,10 @@ const Dropzone = () => {
     setAudioSelected
   } = useContext(MediaContext);
 
-  const handleDrop = async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-
-    if (!file) {
-      return;
-    }
-
-    setUploading(true);
-    const response = await handleFileUpload(file, '/api/audio');
-    setAudioSelected({
-      audioData: response.audio_data,
-      audioId: response.id,
-    });
-    setUploading(false);
-  };
+  const handleDrop = async (acceptFiles) => {
+    const file = acceptFiles[0];
+    await uploadMediaFile(file, setUploading, setAudioSelected);
+  }
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
