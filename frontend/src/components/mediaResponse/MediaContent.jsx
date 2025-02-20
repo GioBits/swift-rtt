@@ -120,7 +120,7 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
       <div className="h-[50px] flex flex-row">
         {audio && (
           <div className="m-auto mr-5 flex gap-3">
-            <Tooltip title="Reproducir/Pausar audio" arrow>
+            <Tooltip title="Reproducir/Detener audio" arrow>
               <IconButton onClick={togglePlayback}>
                 {playing && (
                   <ReactPlayer
