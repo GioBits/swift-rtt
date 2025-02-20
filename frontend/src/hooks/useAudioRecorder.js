@@ -3,6 +3,23 @@ import { MediaContext } from '@contexts/MediaContext';
 import { setError } from '../store/slices/errorSlice';
 import { getMessage } from '../utils/localeHelper';
 
+/**
+ * Custom hook to handle audio recording functionality.
+ * 
+ * This hook allows you to start and stop recording audio using the 
+ * MediaRecorder API. It handles recording duration limits, error management,
+ * and uploading the recorded audio after stopping the recording.
+ * 
+ * @param {Function} dispatch - The Redux `dispatch` function used to dispatch actions.
+ * @param {Function} uploadAudio - A function to upload the recorded audio (e.g., to a backend server).
+ * @param {Object} options - Configuration options for the recording behavior.
+ * @param {number} options.minRecordingTime - Minimum duration of the recording in milliseconds (default is 3000ms).
+ * @param {number} options.maxRecordingTime - Maximum duration of the recording in milliseconds (default is 30000ms).
+ * 
+ * @returns {Object} - An object containing the following methods:
+ *    - `startRecording`: Function to start recording audio.
+ *    - `stopRecording`: Function to stop the audio recording manually.
+ */
 export const useAudioRecorder = (dispatch, uploadAudio, {
   minRecordingTime = 3000,
   maxRecordingTime = 30000
@@ -39,7 +56,7 @@ export const useAudioRecorder = (dispatch, uploadAudio, {
             setIsRecording(false);
             return;
           }
-          
+
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
           await uploadAudio(audioBlob);
           audioChunksRef.current = [];

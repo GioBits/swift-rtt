@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 /**
- * Hook to manage a timer with a time limit.
+ * Custom Hook to manage a timer with a time limit.
  * @param {boolean} isRunning - Indicates whether the timer is active.
  * @param {function} onLimitReached - Callback triggered when the time limit is reached.
  * @param {number} timeLimit - Time limit in seconds (default: 30).
