@@ -13,14 +13,14 @@ import ReactPlayer from "react-player";
  * 
  * @param {Object} props - The component props.
  * @param {string} props.title - The title to display at the top of the component.
- * @param {string} props.content - The textual content (transcription or translation) to display.
+ * @param {string} props.contentText - The textual content (transcription or translation) to display.
  * @param {Array} props.models - List of available models. Each model has an `id` and `name`.
  * @param {string|null} props.audio - The URL of the audio file to play. If `null`, no audio controls will be shown.
  * @param {string} props.placeholder - Placeholder text to show when there is no content available or while it's loading.
  * 
  * @returns {JSX.Element} The component rendering interactive multimedia content.
  */
-const MediaContent = ({ title, content, models, audio = null, placeholder }) => {
+const MediaContent = ({ title, contentText, models, audio = null, placeholder }) => {
   const [selectedModel, setSelectedModel] = useState("");
   const [playing, setPlaying] = useState(false);
 
@@ -98,10 +98,10 @@ const MediaContent = ({ title, content, models, audio = null, placeholder }) => 
       </div>
       <div className="h-[calc(100%-150px)]">
         <div className="w-full h-full p-4 border border-dashed border-gray-400 box-border rounded shadow-lg max-h-full overflow-y-auto">
-          {content ? (
+          {contentText ? (
             <Typewriter
             options={{
-              strings: content,
+              strings: contentText,
               autoStart: true,
               loop: false,
               delay: 12,
@@ -141,7 +141,7 @@ export default MediaContent;
 
 MediaContent.propTypes = {
   title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
+  contentText: PropTypes.string.isRequired,
   models: PropTypes.array.isRequired,
   audio: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired

@@ -100,13 +100,13 @@ const MediaResponse = () => {
     <>
       <MediaContent
         title="Transcripción"
-        content={transcription || ""}
+        contentText={transcription || ""}
         audio={audioUrl || ""}
         models={models}
         placeholder="Esperando audio transcrito..." />
       <MediaContent
         title="Traducción"
-        content={translate || ""}
+        contentText={translate || ""}
         audio={audioTranslation || ""}
         models={models}
         placeholder="Esperando texto traducido..." />
