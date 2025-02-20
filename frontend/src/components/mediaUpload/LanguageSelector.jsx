@@ -75,7 +75,6 @@ export default function LanguageSelector() {
           </Select>
         </FormControl>
 
-        {/* Tooltip agregado al botón */}
         <Tooltip title="Intercambiar idiomas" arrow>
           <IconButton
             color="primary"
