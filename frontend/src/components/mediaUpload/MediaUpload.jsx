@@ -1,8 +1,9 @@
 import { useState, useContext } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
-import { Button, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { MediaContext } from '../../contexts/MediaContext';
+import MediaUploadSelector from './MediaUploadSelector';
 
 const MediaUpload = () => {
   const { uploading } = useContext(MediaContext);
@@ -16,45 +17,16 @@ const MediaUpload = () => {
     }
   };
 
-  return (
-    <div className='flex flex-col w-full max-w-[410px] m-auto bg-white rounded-b-lg p-10'>
-      <div className='flex flex-row justify-center items-center h-auto m-auto'>
-        <span className='text-2xl text-center text-gray-800'>
-          Real Time Translator
-        </span>
-      </div>
-      <div className='w-full flex flex-row space-between h-auto m-auto'>
-        <Button
-          variant={isClicked && buttonSelected ? 'contained' : 'outlined'}
-          onClick={() => handleButtonClick(true)}
-          sx={{
-            textTransform: 'none',
-            pointerEvents: isClicked && buttonSelected ? 'none' : 'auto',
-            width: '50%',
-            height: '50px',
-            margin: '10px',
-            backgroundColor: isClicked && buttonSelected ? 'rgb(2 132 199)' : 'white'
-          }}
-        >
-          Subir archivo
-        </Button>
-        <Button
-          variant={isClicked && buttonSelected ? 'outlined' : 'contained'}
-          onClick={() => handleButtonClick(false)}
-          sx={{
-            textTransform: 'none',
-            pointerEvents: isClicked && buttonSelected === false ? 'none' : 'auto',
-            width: '50%',
-            height: '50px',
-            margin: '10px',
-            backgroundColor: isClicked && buttonSelected ? 'white' : 'rgb(2 132 199)'
-          }}
-        >
-          Grabar
-        </Button>
-      </div>
+  const props = {
+    isClicked: isClicked,
+    buttonSelected: buttonSelected,
+    handleButtonClick: handleButtonClick
+  }
 
-      <div className='box-border w-full bg-white h-[260px] p-2 flex items-center justify-center'>
+  return (
+    <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto rounded-b-lg'>
+      <MediaUploadSelector {...props} />
+      <div className='box-border w-full bg-white h-[calc(100%-80px)] p-5 flex items-center justify-center'>
         {uploading ? (
           <CircularProgress />
         ) : buttonSelected ? (

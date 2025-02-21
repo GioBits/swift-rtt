@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { handleFileUpload } from '../../utils/uploadUtils';
 import { MediaContext } from '../../contexts/MediaContext';
+import { uploadMediaFile } from '../../service/mediaUploadService';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 const Dropzone = () => {
@@ -10,32 +10,21 @@ const Dropzone = () => {
     setAudioSelected
   } = useContext(MediaContext);
 
-  const handleDrop = async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-
-    if (!file) {
-      return;
-    }
-
-    setUploading(true);
-    const response = await handleFileUpload(file, '/api/audio');
-    setAudioSelected({
-      audioData: response.audio_data,
-      audioId: response.id,
-    });
-    setUploading(false);
-  };
+  const handleDrop = async (acceptFiles) => {
+    const file = acceptFiles[0];
+    await uploadMediaFile(file, setUploading, setAudioSelected);
+  }
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     accept: { 'audio/mpeg': ['.mp3'] },
-    maxSize: 100 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
   });
 
   return (
     <div
       {...getRootProps()}
-      className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full h-[240px] flex justify-center items-center box-border"
+      className="border border-dashed border-gray-400 p-2 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full"
     >
       <input {...getInputProps()} />
       <div>

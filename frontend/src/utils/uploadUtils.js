@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
  * @param {string} endpoint - The API endpoint where the file will be sent.
 */
 
-export const handleFileUpload = async (file, endpoint) => {
+export const handleMediaUpload = async (file, endpoint) => {
   const formData = new FormData();
   formData.append("file", file); 
 
