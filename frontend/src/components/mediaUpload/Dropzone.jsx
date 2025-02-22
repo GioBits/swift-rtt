@@ -21,21 +21,21 @@ const Dropzone = () => {
   return (
     <div
       {...getRootProps()}
-      className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full"
+      className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8"
     >
       <input {...getInputProps()} />
       <div>
         <img
           src={addFileIllustration}
           alt="Agregar archivo"
-          className="w-[30%] h-[30%] xl:w-[45%] xl:h-[45%] mx-auto mb-4 opacity-90"
+          className="hidden sm:block w-1/3 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto mx-auto mb-4 opacity-90 object-contain max-w-[200px]"
         />
         <div>
-          <p className='text-xl'>
-            Arrastra y suelta un archivo <br />
-            o <b className="text-primary font-extrabold">haz click para subir uno</b>
+          <p className="text-base sm:text-md md:text-lg">
+            Arrastra y suelta un archivo o <br />
+            <b className="text-primary font-extrabold">haz click para subir uno</b>
           </p>
-          <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-md">
+          <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs">
             Admite solo formatos de audio mp3, hasta 10MB y 30 segundos de grabación.
           </span>
         </div>
