@@ -26,25 +26,28 @@ export const useAudioRecorder = (
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
+  const isRecordingRef = useRef(false);
 
   const startRecording = useCallback(() => {
+    if (isRecordingRef.current) return;
+    isRecordingRef.current = true;
     audioChunksRef.current = [];
     startTimeRef.current = Date.now();
+    setIsRecording(true);
 
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
         mediaRecorder.start();
-        setIsRecording(true);
 
         mediaRecorder.ondataavailable = (e) => {
           audioChunksRef.current.push(e.data);
         };
 
         mediaRecorder.onstop = async () => {
-          const endTime = Date.now();
-          const duration = endTime - startTimeRef.current;
+          const duration = Date.now() - startTimeRef.current;
+          isRecordingRef.current = false;
 
           if (duration < minRecordingTime) {
             console.error(getMessage("RecordAudio", "min_duration_error"));
@@ -72,12 +75,14 @@ export const useAudioRecorder = (
         console.error(
           getMessage("RecordAudio", "mic_access_error", { error: error.message })
         );
+        isRecordingRef.current = false;
+        setIsRecording(false);
       });
   }, [setIsRecording, minRecordingTime, maxRecordingTime, uploadAudio]);
 
   const stopRecording = useCallback(() => {
     const mediaRecorder = mediaRecorderRef.current;
-    if (mediaRecorder) {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop();
       setIsRecording(false);
     }
