@@ -6,8 +6,10 @@ from api.service.translationService import (
     get_translations_by_audio_id
 )
 
-from api.service.transcriptionService import get_transcription_by_id
+from api.service.transcriptionService import TranscriptionService
 from utils.translate import translate
+
+transcription_service = TranscriptionService()
 
 async def retrieve_all_translations_controller():
     """
@@ -61,7 +63,7 @@ async def create_translation_controller(transcription_id: int, provider_id: int,
     """
     try:
         # Retrieve the transcription by ID
-        transcription = get_transcription_by_id(transcription_id)
+        transcription = transcription_service.get_transcription_by_id(transcription_id)
         if transcription is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

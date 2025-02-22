@@ -1,9 +1,11 @@
 import asyncio
 import logging
-from api.controller.transcriptionController import create_transcription_controller
+from api.controller.transcriptionController import TranscriptionController
 from api.controller.translationController import create_translation_controller
 from api.controller.translatedAudioController import create_translated_audio_controller
 import json
+
+transcription_controller = TranscriptionController()
 
 # Configuración básica de logging
 logging.basicConfig(level=logging.INFO)
@@ -41,7 +43,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
     """
     try:
         if task == "transcribe":
-            transcription_record = await create_transcription_controller(audio_id, provider_id)
+            transcription_record = await transcription_controller.create_transcription(audio_id, provider_id)
             response = {
                 "messaage": f"Transcription for audio {audio_id} completed",
                 "audio_id": audio_id,
