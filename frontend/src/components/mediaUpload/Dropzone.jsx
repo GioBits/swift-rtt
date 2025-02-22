@@ -28,7 +28,7 @@ const Dropzone = () => {
         <img
           src={addFileIllustration}
           alt="Agregar archivo"
-          className="hidden sm:block w-1/3 sm:w-1/4 md:w-1/4 lg:w-1/4 h-auto mx-auto mb-4 opacity-90 object-contain max-w-[200px]"
+          className="hidden sm:block w-1/3 sm:w-1/3 md:w-1/4 lg:w-1/4 h-auto mx-auto mb-4 opacity-90 object-contain max-w-[200px]"
         />
         <div>
           <p className="text-base sm:text-md md:text-lg">
