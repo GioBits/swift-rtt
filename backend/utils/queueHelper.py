@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from api.controller.transcriptionController import TranscriptionController
-from api.controller.translationController import create_translation_controller
+from api.routes.translationRoute import translation_controller
 from api.controller.translatedAudioController import TranslatedAudioController
 import json
 
@@ -57,7 +57,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
             await task_queue.put((transcription_record.id, 1, "translate"))
 
         elif task == "translate":
-            translation_record = await create_translation_controller(audio_id, provider_id, 1)
+            translation_record = await translation_controller.create_translation(audio_id, provider_id, 1)
             response = {
                 "messaage": f"Translate for transcription {audio_id} completed",
                 "audio_id": translation_record.audio_id,

@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from api.service.translatedAudioService import TranslatedAudioService
-from api.service.translationService import get_translation_by_id
+from api.service.translationService import TranslationService
 from models.translated_audios import TranslatedAudioRecordSchema, TranslatedAudioResponseSchema
 from pybase64 import b64encode
 from utils.text_to_speech import text2speech
@@ -8,6 +8,7 @@ from utils.text_to_speech import text2speech
 class TranslatedAudioController:
     def __init__(self):
         self.translated_audio_service = TranslatedAudioService()
+        self.translation_service = TranslationService()
 
     def parse_audio_response(self, audio_record: TranslatedAudioRecordSchema) -> TranslatedAudioResponseSchema:
         """
@@ -83,7 +84,7 @@ class TranslatedAudioController:
         """
         try:
             # Retrieve the translation record using the translation_id
-            translation_record = get_translation_by_id(translation_id)
+            translation_record = self.translation_service.get_translation_by_id(translation_id)
             if translation_record is None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
