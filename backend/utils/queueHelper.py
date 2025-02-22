@@ -2,10 +2,11 @@ import asyncio
 import logging
 from api.controller.transcriptionController import TranscriptionController
 from api.controller.translationController import create_translation_controller
-from api.controller.translatedAudioController import create_translated_audio_controller
+from api.controller.translatedAudioController import TranslatedAudioController
 import json
 
 transcription_controller = TranscriptionController()
+translated_audio_controller = TranslatedAudioController()
 
 # Configuración básica de logging
 logging.basicConfig(level=logging.INFO)
@@ -68,7 +69,7 @@ async def process_one_task(audio_id: int, provider_id: int, task: str):
             await task_queue.put((translation_record.id, 1, "generate_audio"))
 
         elif task == "generate_audio":
-            translation_audio_record = await create_translated_audio_controller(audio_id, provider_id)
+            translation_audio_record = await translated_audio_controller.create_translated_audio(audio_id, provider_id)
             response = {
                 "messaage": f"Audio generated for translation {audio_id} completed",
                 "audio_id": translation_audio_record.audio_id,
