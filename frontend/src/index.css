@@ -6,8 +6,8 @@
 }
 
 .blinking-circle {
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
   background-color: red;
   border-radius: 50%;
   animation: blink 1s infinite alternate;
