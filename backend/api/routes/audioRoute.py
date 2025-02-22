@@ -1,14 +1,10 @@
 from fastapi import APIRouter, File, UploadFile, Query, HTTPException
-from api.controller.audioController import (
-    create_audio_controller,
-    retrieve_all_audios_controller,
-    retrieve_audio_by_id_controller,
-    retrieve_audios_by_user_id_controller
-)
+from api.controller.audioController import AudioController
 from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
 router = APIRouter()
+audio_controller = AudioController()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
@@ -23,7 +19,7 @@ async def upload_audio(file: UploadFile = File(...)):
     """
     user_id = 1
     language_id = 2
-    return await create_audio_controller(user_id, language_id, file)
+    return await audio_controller.create_audio(user_id, language_id, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])
@@ -43,7 +39,7 @@ async def retrieve_audios_list(
         if page < 1 or size < 1:
             raise HTTPException(status_code=400, detail="Page y size deben ser números positivos.")
         
-        return await retrieve_all_audios_controller(page, size)
+        return await audio_controller.retrieve_all_audios(page, size)
     except HTTPException as e:
         raise e
 
@@ -57,7 +53,7 @@ async def retrieve_audio_by_id(id: int):
     Returns:
         AudioResponseSchema: The audio file object.
     """
-    return await retrieve_audio_by_id_controller(id)
+    return await audio_controller.retrieve_audio_by_id(id)
 
 # Endpoint "/audio/user/{user_id}", recupera todos los audios de un usuario
 @router.get("/audio/user/{user_id}", response_model=List[AudioResponseSchema], tags=["Audio"])
@@ -69,4 +65,4 @@ async def retrieve_audios_by_user_id(user_id: int):
     Returns:
         list: A list of AudioResponseSchema objects.
     """
-    return await retrieve_audios_by_user_id_controller(user_id)
+    return await audio_controller.retrieve_audios_by_user_id(user_id)

@@ -6,8 +6,10 @@ from api.service.transcriptionService import (
     get_transcriptions_by_audio_id
 )
 
-from api.service.audioService import get_audio_by_id
+from api.service.audioService import AudioService
 from utils.transcribe import transcriber
+
+audio_service = AudioService()
 
 async def retrieve_all_transcriptions_controller():
     """
@@ -60,7 +62,7 @@ async def create_transcription_controller(audio_id: int, provider_id: int):
     """
     try:
         # Retrieve audio information
-        audio_info = get_audio_by_id(audio_id)
+        audio_info = audio_service.get_audio_by_id(audio_id)
         if audio_info is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

@@ -7,7 +7,6 @@ from api.service.translatedAudioService import (
 )
 from pybase64 import b64encode
 from api.service.translationService import get_translation_by_id
-from api.service.audioService import get_audio_by_id
 from models.translated_audios import TranslatedAudioRecordSchema, TranslatedAudioResponseSchema
 from utils.text_to_speech import text2speech
 
