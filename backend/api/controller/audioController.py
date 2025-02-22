@@ -3,7 +3,7 @@ from api.service.audioService import AudioService
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
-from utils.queueHelper import add_audio_task
+from ws.brokerDispatcher import add_audio_task
 
 class AudioController:
     def __init__(self):
