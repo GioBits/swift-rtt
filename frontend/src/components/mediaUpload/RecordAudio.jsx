@@ -1,8 +1,6 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { IconButton } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
-import { useDispatch } from 'react-redux';
-import { clearError } from '../../store/slices/errorSlice';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../../utils/audioUtils';
@@ -12,16 +10,8 @@ import { useTimer } from '../../hooks/useTimer';
 import '../../index.css';
 
 const RecordAudio = () => {
-  const {
-    isRecording,
-    setUploading,
-    setAudioSelected } = useContext(MediaContext);
-  const dispatch = useDispatch();
+  const { isRecording, setUploading, setAudioSelected } = useContext(MediaContext);
   const ffmpeg = new FFmpeg();
-
-  useEffect(() => {
-    dispatch(clearError());
-  }, [dispatch, isRecording]);
 
   const handleAudioRecorded = async (audioBlob) => {
     await ffmpeg.load();
@@ -29,7 +19,7 @@ const RecordAudio = () => {
     await uploadMediaFile(mp3File, setUploading, setAudioSelected);
   };
 
-  const { startRecording, stopRecording } = useAudioRecorder(dispatch, handleAudioRecorded);
+  const { startRecording, stopRecording } = useAudioRecorder(handleAudioRecorded);
   const { elapsedTime, formatTime } = useTimer(isRecording, stopRecording, 30);
 
   return (
