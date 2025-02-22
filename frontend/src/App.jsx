@@ -22,9 +22,9 @@ function App() {
             {/* Upload Section */}
             <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-md">
               {/* Carrusel de proveedores */}
-              <div className="box-border flex items-center justify-center gap-2 h-[80px] text-3xl text-black font-semibold">
+              {/* <div className="box-border flex items-center justify-center gap-2 h-[80px] text-3xl text-black font-semibold">
                 Tu voz, en cualquier idioma
-              </div>
+              </div> */}
               <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
                 CARRUSEL PROVEEDORES
               </div>
