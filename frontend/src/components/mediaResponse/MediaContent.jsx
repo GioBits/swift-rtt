@@ -50,11 +50,12 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
   };
 
   return (
-    <div className="bg-white w-full h-1/2 border p-5 rounded-lg">
-      <div className="w-full flex flex-col h-[120px] box-border">
-        <div className="bg-sky-600 flex w-full h-1/2 rounded m-auto">
+    <div className="bg-white w-full h-1/2 p-5 rounded-lg">
+      <div className="w-full flex flex-col h-[80px] box-border">
+        <div className="bg-primary flex w-full h-[60px] rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
         </div>
+        {/* MODELS */}
         <div className="hidden w-full m-auto"> {/* hidden by flex flex-row */}
           <div className="flex w-full">
             <Box className="m-auto mr-0">
@@ -97,8 +98,8 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
         </div>
       </div>
 
-      <div className="h-[calc(100%-150px)]">
-        <div className="w-full h-full p-4 border border-dashed border-gray-400 box-border rounded shadow-lg max-h-full overflow-y-auto">
+      <div className="h-[calc(100%-120px)] box-border">
+        <div className="w-full h-full p-4 border border-dashed border-gray-600 box-border rounded shadow-lg max-h-full overflow-y-auto">
           {contentText ? (
             <Typewriter
               options={{
@@ -110,7 +111,7 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
               }}
             />
           ) : (
-            <div className="text-slate-500 whitespace-pre-wrap text-4xl">
+            <div className="text-slate-500 whitespace-pre-wrap text-3xl">
               {placeholder}
             </div>
           )}
@@ -118,11 +119,18 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
       </div>
 
       <div className="h-[50px] flex flex-row">
-        {audio && (
-          <div className="m-auto mr-5 flex gap-3">
-            <Tooltip title="Reproducir/Detener audio" arrow>
-              <IconButton onClick={togglePlayback}>
-                {playing && (
+        <div className="m-auto mr-5 flex gap-3">
+          <Tooltip title="Reproducir/Detener audio" arrow>
+            <span> {/* Contenedor para que Tooltip funcione con botones deshabilitados */}
+              <IconButton
+                onClick={togglePlayback}
+                disabled={!audio}
+                sx={{
+                  opacity: audio ? 1 : 0.5,
+                  cursor: audio ? 'pointer' : 'not-allowed',
+                }}
+              >
+                {playing && audio && (
                   <ReactPlayer
                     url={audio}
                     playing={true}
@@ -134,16 +142,26 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
                 )}
                 <VolumeUpIcon />
               </IconButton>
-            </Tooltip>
+            </span>
+          </Tooltip>
 
-            <Tooltip title="Descargar audio" arrow>
-              <IconButton onClick={handleDownload}>
+          <Tooltip title="Descargar audio" arrow>
+            <span>
+              <IconButton
+                onClick={handleDownload}
+                disabled={!audio}
+                sx={{
+                  opacity: audio ? 1 : 0.5,
+                  cursor: audio ? 'pointer' : 'not-allowed',
+                }}
+              >
                 <FileDownloadIcon />
               </IconButton>
-            </Tooltip>
-          </div>
-        )}
+            </span>
+          </Tooltip>
+        </div>
       </div>
+
     </div>
   );
 };
