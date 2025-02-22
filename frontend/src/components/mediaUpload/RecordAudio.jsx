@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo, useCallback } from 'react';
 import { IconButton } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
@@ -11,13 +11,13 @@ import '../../index.css';
 
 const RecordAudio = () => {
   const { isRecording, setUploading, setAudioSelected } = useContext(MediaContext);
-  const ffmpeg = new FFmpeg();
+  const ffmpeg = useMemo(() => new FFmpeg(), []);
 
-  const handleAudioRecorded = async (audioBlob) => {
+  const handleAudioRecorded = useCallback(async (audioBlob) => {
     await ffmpeg.load();
     const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
     await uploadMediaFile(mp3File, setUploading, setAudioSelected);
-  };
+  }, [ffmpeg, setUploading, setAudioSelected]);
 
   const { startRecording, stopRecording } = useAudioRecorder(handleAudioRecorded);
   const { elapsedTime, formatTime } = useTimer(isRecording, stopRecording, 30);
