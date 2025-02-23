@@ -69,7 +69,7 @@ class Text2Speech:
             else:
                 print(f"Other Models : {model}")
 
-    async def t2s(self, text: str, language_id: int) -> bytes:
+    async def t2s(self, text: str, audio_id: int, language_id: int) -> bytes:
         '''
         Generate speech audio from text based on the specified language.
 
@@ -87,7 +87,8 @@ class Text2Speech:
         TypeError: If the provided parameters are not of the expected type.
         Exception: Any other unexpected error that may occur during the execution of the method.
         '''
-        print("Creating audio from text")
+        # print("Creating audio from text")
+        print(f"Initiating text to speach for audio_id: {audio_id}")
         
         loop = asyncio.get_running_loop()
         try:

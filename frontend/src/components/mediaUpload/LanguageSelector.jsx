@@ -1,6 +1,7 @@
-import { useContext } from "react";
-import { Box, FormControl, Select, MenuItem } from "@mui/material";
+import { useContext, useState } from "react";
+import { Box, FormControl, Select, MenuItem, IconButton, Tooltip } from "@mui/material";
 import { MediaContext } from "../../contexts/MediaContext";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
 export default function LanguageSelector() {
   const {
@@ -10,11 +11,17 @@ export default function LanguageSelector() {
     setTargetLanguage,
   } = useContext(MediaContext);
 
-  const validSourceLanguage = languages.some(lang => lang.code === selectedLanguages.sourceLanguage)
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const validSourceLanguage = languages.some(
+    (lang) => lang.id === selectedLanguages.sourceLanguage
+  )
     ? selectedLanguages.sourceLanguage
     : "";
 
-  const validTargetLanguage = languages.some(lang => lang.code === selectedLanguages.targetLanguage)
+  const validTargetLanguage = languages.some(
+    (lang) => lang.id === selectedLanguages.targetLanguage
+  )
     ? selectedLanguages.targetLanguage
     : "";
 
@@ -34,20 +41,26 @@ export default function LanguageSelector() {
     setTargetLanguage(selectedLanguage);
   };
 
+  const handleSwapLanguages = () => {
+    const sourceLang = selectedLanguages.sourceLanguage;
+    setSourceLanguage(selectedLanguages.targetLanguage);
+    setTargetLanguage(sourceLang);
+    setIsFlipped((prev) => !prev);
+  };
+
   const selectStyle = {
     fontSize: "14px",
-    height: "40px",
+    height: "50px",
     minWidth: "30px",
     maxwidth: "120px",
-    width  : '100%',
-    margin: 'auto',
-    borderRadius: '4px',
-  }
+    width: "100%",
+    borderRadius: "4px",
+  };
 
   return (
-    <div className="flex flex-row w-full max-w-[410px] m-auto bg-white h-[70px] p-10 mb-0 rounded-t-lg">
-      <Box className="flex flex-row w-full">
-        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+    <div className="flex flex-row w-full min-w-[410px] m-auto box-border h-full">
+      <Box className="flex flex-row w-full gap-5 ml-5 mr-5 items-center justify-center">
+        <FormControl sx={{ minWidth: 30, width: "45%", display: "flex" }}>
           <Select
             id="origin-language-select"
             value={validSourceLanguage}
@@ -55,13 +68,30 @@ export default function LanguageSelector() {
             sx={selectStyle}
           >
             {languages.map((lang) => (
-              <MenuItem key={lang.code} value={lang.code}>
+              <MenuItem key={lang.code} value={lang.id}>
                 {lang.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ minWidth: 30, width: '50%', maxWidth: 145, margin: 'auto', display: 'flex' }}>
+
+        <Tooltip title="Intercambiar idiomas" arrow>
+          <IconButton
+            color="primary"
+            size="medium"
+            onClick={handleSwapLanguages}
+            sx={{
+              border: "1px solid #e0e0e0",
+              borderRadius: "50%",
+              transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              transition: "transform 0.4s ease-in-out",
+            }}
+          >
+            <SwapHorizIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
+
+        <FormControl sx={{ minWidth: 30, width: "45%", display: "flex" }}>
           <Select
             id="target-language-select"
             value={validTargetLanguage}
@@ -69,7 +99,7 @@ export default function LanguageSelector() {
             sx={selectStyle}
           >
             {languages.map((lang) => (
-              <MenuItem key={lang.code} value={lang.code}>
+              <MenuItem key={lang.code} value={lang.id}>
                 {lang.name}
               </MenuItem>
             ))}

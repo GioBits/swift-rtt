@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: rgb(137,129,250);
+  --color-mint: #214e34;
+  --color-loto: rgb(255,116,144);
+}
+
 .blinking-circle {
-  width: 3rem;
-  height: 3rem;
-  background-color: red;
+  width: 4rem;
+  height: 4rem;
+  background-color: rgb(255,116,144);
   border-radius: 50%;
   animation: blink 1s infinite alternate;
 }
@@ -11,4 +17,17 @@
 @keyframes blink {
   0% { opacity: 1; }
   100% { opacity: 0.3; }
+}
+
+@keyframes flipHorizontal {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(180deg);
+  }
+}
+
+.flip-horizontal {
+  animation: flipHorizontal 0.5s ease-in-out forwards;
 }
