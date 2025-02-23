@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
-import { languageService }  from "../service/languageService";
-import WebSocketService  from "../service/websocketService";
+import { languageService } from "../service/languageService";
+import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
 
 const wsService = new WebSocketService();
 
 export const MediaProvider = ({ children }) => {
-  const [uploading, setUploading] = useState(false);
   const [audioUrl, setAudioUrl] = useState("");
   const [audioTranslation, setAudioTranslation] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -16,7 +15,13 @@ export const MediaProvider = ({ children }) => {
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
-  
+  const uploadingRef = useRef(false);
+
+  const getUploading = () => uploadingRef.current;
+  const setUploading = (value) => {
+    uploadingRef.current = value;
+  };
+
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: "es",
     targetLanguage: "en",
@@ -55,7 +60,7 @@ export const MediaProvider = ({ children }) => {
     fetchLanguages();
   }, []);
 
-  const handleSetSourceLanguage = (languageCode) => { 
+  const handleSetSourceLanguage = (languageCode) => {
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
   };
 
@@ -71,7 +76,7 @@ export const MediaProvider = ({ children }) => {
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
         setTargetLanguage: handleSetTargetLanguage,
-        uploading,
+        getUploading,
         setUploading,
         audioUrl,
         setAudioUrl,

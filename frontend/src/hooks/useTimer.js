@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * Custom Hook to manage a timer with a time limit.
@@ -9,15 +9,16 @@ import { useState, useEffect, useCallback } from 'react';
  */
 export const useTimer = (isRunning, onLimitReached, timeLimit = 30) => {
   const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef(null);
 
   useEffect(() => {
-    let timer;
     if (isRunning) {
       setElapsedTime(0);
-      timer = setInterval(() => {
+      timerRef.current = setInterval(() => {
         setElapsedTime((prevTime) => {
           const newTime = prevTime + 1;
           if (newTime >= timeLimit) {
+            clearInterval(timerRef.current);
             onLimitReached();
             return timeLimit;
           }
@@ -25,16 +26,11 @@ export const useTimer = (isRunning, onLimitReached, timeLimit = 30) => {
         });
       }, 1000);
     } else {
-      clearInterval(timer);
+      clearInterval(timerRef.current);
     }
-    return () => clearInterval(timer);
+    return () => clearInterval(timerRef.current);
   }, [isRunning, onLimitReached, timeLimit]);
 
-  /**
-   * Formats the time in mm:ss format.
-   * @param {number} seconds - Total elapsed time in seconds.
-   * @returns {string} - Formatted time string.
-   */
   const formatTime = useCallback((seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;

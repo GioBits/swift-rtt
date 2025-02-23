@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { Box, MenuItem, FormControl, Select, IconButton, Tooltip } from "@mui/material";
+import { useState } from "react";
+import { IconButton, Tooltip } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import RefreshIcon from "@mui/icons-material/Refresh";
+
 import Typewriter from "typewriter-effect";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
@@ -20,19 +20,9 @@ import ReactPlayer from "react-player";
  * 
  * @returns {JSX.Element} The component rendering interactive multimedia content.
  */
-const MediaContent = ({ title, contentText, models, audio = null, placeholder }) => {
-  const [selectedModel, setSelectedModel] = useState("");
+const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
+  
   const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    if (models.length > 0) {
-      setSelectedModel(models[0].id);
-    }
-  }, [models]);
-
-  const handleModelChange = (event) => {
-    setSelectedModel(event.target.value);
-  };
 
   const togglePlayback = () => {
     setPlaying((prev) => !prev);
@@ -50,55 +40,15 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
   };
 
   return (
-    <div className="bg-white w-full h-1/2 border p-5 rounded-lg">
-      <div className="w-full flex flex-col h-[120px] box-border">
-        <div className="bg-sky-600 flex w-full h-1/2 rounded m-auto">
+    <div className="bg-white w-full h-1/2 p-5 rounded-lg">
+      <div className="w-full flex flex-col h-[80px] box-border">
+        <div className="bg-primary flex w-full h-[60px] rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
-        </div>
-        <div className="hidden w-full m-auto"> {/* hidden by flex flex-row */}
-          <div className="flex w-full">
-            <Box className="m-auto mr-0">
-              <FormControl
-                sx={{
-                  minWidth: 120,
-                  width: "200px",
-                  margin: "auto",
-                  display: "flex",
-                }}
-              >
-                <Select
-                  id="model-select"
-                  value={selectedModel}
-                  onChange={handleModelChange}
-                  displayEmpty
-                  sx={{
-                    fontSize: "14px",
-                    height: "50px",
-                    width: "200px",
-                    margin: "auto",
-                    border: "none",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      border: "none",
-                    },
-                  }}
-                >
-                  {models.map((model) => (
-                    <MenuItem key={model.id} value={model.id}>
-                      {model.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          </div>
-          <div className="w-[40px] m-auto">
-            <RefreshIcon sx={{ fontSize: "42px" }} />
-          </div>
         </div>
       </div>
 
-      <div className="h-[calc(100%-150px)]">
-        <div className="w-full h-full p-4 border border-dashed border-gray-400 box-border rounded shadow-lg max-h-full overflow-y-auto">
+      <div className="h-[calc(100%-120px)] box-border">
+        <div className="w-full h-full p-4 border border-dashed border-gray-600 box-border rounded shadow-lg max-h-full overflow-y-auto">
           {contentText ? (
             <Typewriter
               options={{
@@ -110,7 +60,7 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
               }}
             />
           ) : (
-            <div className="text-slate-500 whitespace-pre-wrap text-4xl">
+            <div className="text-slate-500 whitespace-pre-wrap text-3xl">
               {placeholder}
             </div>
           )}
@@ -118,31 +68,48 @@ const MediaContent = ({ title, contentText, models, audio = null, placeholder })
       </div>
 
       <div className="h-[50px] flex flex-row">
-        {audio && (
-          <div className="m-auto mr-5 flex gap-3">
-            <Tooltip title="Reproducir/Detener audio" arrow>
-              <IconButton onClick={togglePlayback}>
-                {playing && (
+        <div className="m-auto mr-5 flex gap-3">
+          <Tooltip title="Reproducir/Detener audio" arrow>
+            <span>
+              <IconButton
+                onClick={togglePlayback}
+                disabled={!audio}
+                sx={{
+                  opacity: audio ? 1 : 0.5,
+                  cursor: audio ? 'pointer' : 'not-allowed',
+                }}
+              >
+                {audio && (
                   <ReactPlayer
                     url={audio}
-                    playing={true}
+                    playing={playing}
                     controls={false}
                     width="0"
                     height="0"
                     className="hidden"
+                    onEnded={() => setPlaying(false)}
                   />
                 )}
                 <VolumeUpIcon />
               </IconButton>
-            </Tooltip>
+            </span>
+          </Tooltip>
 
-            <Tooltip title="Descargar audio" arrow>
-              <IconButton onClick={handleDownload}>
+          <Tooltip title="Descargar audio" arrow>
+            <span>
+              <IconButton
+                onClick={handleDownload}
+                disabled={!audio}
+                sx={{
+                  opacity: audio ? 1 : 0.5,
+                  cursor: audio ? 'pointer' : 'not-allowed',
+                }}
+              >
                 <FileDownloadIcon />
               </IconButton>
-            </Tooltip>
-          </div>
-        )}
+            </span>
+          </Tooltip>
+        </div>
       </div>
     </div>
   );
