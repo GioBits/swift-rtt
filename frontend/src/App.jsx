@@ -22,9 +22,9 @@ function App() {
               {/* <div className="box-border flex items-center justify-center gap-2 h-[80px] text-3xl text-black font-semibold">
                 Tu voz, en cualquier idioma
               </div> */}
-              <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
+              {/* <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
                 CARRUSEL PROVEEDORES
-              </div>
+              </div> */}
 
               {/* LanguageSelector */}
               <div className="box-border flex h-[80px] w-full m-auto">
