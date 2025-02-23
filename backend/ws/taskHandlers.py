@@ -1,4 +1,5 @@
 import json
+from ws.queueSetup import send_message, add_audio_task
 from api.controller.transcriptionController import TranscriptionController
 from api.routes.translationRoute import translation_controller
 from api.controller.translatedAudioController import TranslatedAudioController
@@ -6,7 +7,7 @@ from api.controller.translatedAudioController import TranslatedAudioController
 transcription_controller = TranscriptionController()
 translated_audio_controller = TranslatedAudioController()
 
-async def handle_transcription(audio_id: int, provider_id: int, send_message, add_audio_task):
+async def handle_transcription(audio_id: int, provider_id: int):
     transcription_record = await transcription_controller.create_transcription(audio_id, provider_id)
     response = {
         "message": f"Transcription for audio {audio_id} completed",
@@ -17,7 +18,7 @@ async def handle_transcription(audio_id: int, provider_id: int, send_message, ad
     await send_message(json.dumps(response))
     await add_audio_task(transcription_record.id, 1, "translate")
 
-async def handle_translation(audio_id: int, provider_id: int, send_message, add_audio_task):
+async def handle_translation(audio_id: int, provider_id: int):
     translation_record = await translation_controller.create_translation(audio_id, provider_id, 1)
     response = {
         "message": f"Translate for transcription {audio_id} completed",
@@ -28,7 +29,7 @@ async def handle_translation(audio_id: int, provider_id: int, send_message, add_
     await send_message(json.dumps(response))
     await add_audio_task(translation_record.id, 1, "generate_audio")
 
-async def handle_audio_generation(audio_id: int, provider_id: int, send_message):
+async def handle_audio_generation(audio_id: int, provider_id: int):
     translation_audio_record = await translated_audio_controller.create_translated_audio(audio_id, provider_id)
     response = {
         "message": f"Audio generated for translation {audio_id} completed",
