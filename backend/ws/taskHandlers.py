@@ -65,7 +65,7 @@ async def handle_translation(config: dict):
     
     # Send message and add task to the queue
     await send_message(json.dumps(response))
-    await add_audio_task(cofig, "generate_audio")
+    await add_audio_task(config, "generate_audio")
 
 async def handle_audio_generation(config: dict):
     # Extract necessary values from the configuration dictionary

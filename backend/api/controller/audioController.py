@@ -61,7 +61,21 @@ class AudioController:
             )
 
             # Add the audio processing task to the queue
-            await add_audio_task(audio_record.id, 1, "transcribe")
+
+            config = {
+                "record_id": audio_record.id,
+                "providers": {
+                    "transcription": 1,
+                    "translation": 2,
+                    "audio_generation": 3
+                },
+                "languages": {
+                    "from": 2,
+                    "to": 1
+                }
+            }
+
+            await add_audio_task(config, "transcribe")
 
             return self.parse_audio_response(audio_record, True)
 
