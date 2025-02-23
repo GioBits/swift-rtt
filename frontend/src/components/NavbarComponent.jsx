@@ -56,11 +56,12 @@ function NavbarComponent() {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              fontWeight: 500,
+              fontSize: '20px',
+              letterSpacing: '.1rem',
             }}
           >
             Real Time Translation
