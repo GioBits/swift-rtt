@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import json
+import time
+from utils.taskMetrics import update_task_metrics
 from ws.queueSetup import get_message_queue, get_task_queue, send_message, add_audio_task
 from ws.taskHandlers import handle_transcription, handle_translation, handle_audio_generation
 
@@ -45,19 +47,7 @@ task_handlers = {
 }
 
 async def handle_task(record_id: int, provider_id: int, task: str):
-    """
-    Asynchronously handles a task by invoking the appropriate handler based on the task type.
-    Args:
-        record_id (int): The ID of the record to process.
-        provider_id (int): The ID of the provider associated with the task.
-        task (str): The type of task to be handled.
-    Raises:
-        Exception: If an error occurs while processing the task.
-    Logs:
-        Logs an error message if the task type is unknown or if an exception occurs during task processing.
-    Sends:
-        Sends an error message if the task type is unknown or if an exception occurs during task processing.
-    """
+    start_time = time.time()
     handler = task_handlers.get(task)
     if not handler:
         error_msg = f"Unknown task type: {task}"
@@ -68,6 +58,12 @@ async def handle_task(record_id: int, provider_id: int, task: str):
     try:
         await handler(record_id, provider_id)
     except Exception as e:
-        error_msg = f"Error processing task {task} for audio {record_id}: {str(e)}"
+        error_msg = f"Error processing task {task} : {str(e)}"
         logger.error(error_msg)
         await send_message(error_msg)
+    finally:
+        elapsed_time = time.time() - start_time
+        logger.info(f"Task {task} completed in {elapsed_time:.2f} seconds")
+
+        # Update task metrics
+        update_task_metrics(task, elapsed_time)
