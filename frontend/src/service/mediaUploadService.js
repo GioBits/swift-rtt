@@ -6,10 +6,11 @@ import { handleMediaUpload } from '../utils/uploadUtils';
  * @param {Function} setUploading - Function to update the upload state.
  * @param {Function} setAudioSelected - Function to update the selected audio.
  */
-export const uploadMediaFile = async (file, setUploading, setAudioSelected) => {
+export const uploadMediaFile = async (file, setUploading, setAudioSelected, selectedLanguages) => {
   if (!file) return;
 
   setUploading(true);
+  console.log('selectedLanguages', selectedLanguages);
   try {
     const response = await handleMediaUpload(file, '/api/audio');
     setAudioSelected({

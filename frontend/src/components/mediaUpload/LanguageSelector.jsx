@@ -14,13 +14,13 @@ export default function LanguageSelector() {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const validSourceLanguage = languages.some(
-    (lang) => lang.code === selectedLanguages.sourceLanguage
+    (lang) => lang.id === selectedLanguages.sourceLanguage
   )
     ? selectedLanguages.sourceLanguage
     : "";
 
   const validTargetLanguage = languages.some(
-    (lang) => lang.code === selectedLanguages.targetLanguage
+    (lang) => lang.id === selectedLanguages.targetLanguage
   )
     ? selectedLanguages.targetLanguage
     : "";
@@ -68,7 +68,7 @@ export default function LanguageSelector() {
             sx={selectStyle}
           >
             {languages.map((lang) => (
-              <MenuItem key={lang.code} value={lang.code}>
+              <MenuItem key={lang.code} value={lang.id}>
                 {lang.name}
               </MenuItem>
             ))}
@@ -99,7 +99,7 @@ export default function LanguageSelector() {
             sx={selectStyle}
           >
             {languages.map((lang) => (
-              <MenuItem key={lang.code} value={lang.code}>
+              <MenuItem key={lang.code} value={lang.id}>
                 {lang.name}
               </MenuItem>
             ))}

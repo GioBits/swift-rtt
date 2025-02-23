@@ -6,8 +6,8 @@ function NavbarComponent() {
 
   return (
     <div className='h-[60px] bg-primary flex'>
-        <div className='w-[20%] h-full border-r border-gray-500'>
-            <div className='w-auto h-[40px] m-auto flex mr-[20px] '>
+        <div className='w-[30%] h-full border-r border-gray-500 flex'>
+            <div className='w-auto h-[40px] m-auto flex'>
                 <div className='flex' >
                     <img
                     src="/src/assets/logo.png"  // Asegúrate de que el archivo esté en la carpeta public
@@ -22,7 +22,7 @@ function NavbarComponent() {
                 </div>
             </div>
         </div>
-        <div className='w-[80%] h-full flex'>
+        <div className='w-[70%] h-full flex'>
             <div className='w-auto h-[40px] m-auto flex ml-[20px]'> 
                 <div className='mr-[10px] flex'>
                     <div className='m-auto text-2xl m-auto font-semibold text-white'>
