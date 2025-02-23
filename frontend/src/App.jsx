@@ -2,6 +2,7 @@ import { MediaProvider } from "./contexts/MediaProvider";
 import LanguageSelector from "./components/mediaUpload/LanguageSelector";
 import MediaUpload from "./components/mediaUpload/MediaUpload";
 import MediaResponse from "./components/mediaResponse/MediaResponse";
+import NavbarComponent from "./components/NavbarComponent"
 import { Toaster } from 'react-hot-toast';
 import "./index.css";
 import { ThemeProvider } from '@mui/material/styles';
@@ -11,11 +12,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className="bg-[#EFF1F3] h-screen w-screen flex flex-col">
-        {/* Navbar */}
-        <div className="w-full bg-[#011638] text-white flex items-center justify-between p-4 shadow-lg">
-          <div className="text-3xl font-bold">Real Time Translator</div>
-        </div>
-
+        <NavbarComponent />
         {/* Main Content */}
         <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex m-auto block">
           <MediaProvider>
