@@ -22,7 +22,7 @@ class Translate:
             model_info["model"] = MarianMTModel.from_pretrained(model_info["model_name"])
             print(f"Model and tokenizer for language {language} loaded.")
     
-    async def translate_text(self, text: str, language_id: int) -> str:
+    async def translate_text(self, text: str, audio_id: int, language_id: int) -> str:
         """Translate text using the model corresponding to the language ID."""
 
         if language_id == 1:
@@ -35,7 +35,8 @@ class Translate:
         # Load the model and tokenizer if not already loaded
         self.load_model_and_tokenizer(language)
         
-        print(f"Translating text: {text}")
+        print(f"Initiating translation for audio_id: {audio_id} ")
+        # print(f"Translating text: {text}")
         
         loop = asyncio.get_running_loop()
         try:
@@ -43,7 +44,7 @@ class Translate:
                 None,
                 lambda: self._translate(text, language)
             )
-            print(f"Translation result: {translated_text}")
+            # print(f"Translation result: {translated_text}")
             return translated_text
         except Exception as e:
             print(f"Error during translation: {str(e)}")

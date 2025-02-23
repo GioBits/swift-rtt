@@ -39,7 +39,7 @@ class Transcriber:
             print(f"Error during transcription: {str(e)}")
             raise
 
-    async def transcription_handler(self, file_data: bytes, language_id: int)-> str:
+    async def transcription_handler(self, file_data: bytes, audio_id:int, language_id: int)-> str:
         """
         Controlador para manejar la transcripción de un archivo de audio.
 
@@ -50,6 +50,7 @@ class Transcriber:
             str: Transcripción del audio.
         """
         try:
+            print(f"Initiating transcription for audio_id: {audio_id}")
 
             if language_id ==1:
                 language = "english"

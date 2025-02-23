@@ -71,7 +71,7 @@ class TranslationController:
             audio_id = transcription.audio_id
             
             # Translate the transcribed text
-            translated_text = await translate.translate_text(transcription.transcription_text, language_id)
+            translated_text = await translate.translate_text(transcription.transcription_text, audio_id, language_id)
             
             # Create the new translation
             new_translation = self.translation_service.create_translation(audio_id, transcription_id, provider_id, language_id, translated_text)

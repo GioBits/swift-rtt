@@ -70,7 +70,7 @@ class TranscriptionController:
             file_data = audio_info.audio_data
 
             # Transcribe the audio
-            transcription = await transcriber.transcription_handler(file_data, language_id)
+            transcription = await transcriber.transcription_handler(file_data, audio_id, language_id)
 
             new_transcription = self.transcription_service.create_transcription(audio_id, provider_id, language_id, transcription)
 
