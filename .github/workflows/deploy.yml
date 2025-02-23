@@ -26,6 +26,6 @@ jobs:
         run: |
           echo "${{ secrets.DOT_ENV }}" | sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cat > ${{ secrets.REMOTE_PATH }}/.env"
 
-      - name: Run docker-compose commands
+      - name: Run docker compose commands
         run: |
-          sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_PATH }} && docker-compose down || true && docker-compose up -d --build"
+          sshpass -p "${{ secrets.REMOTE_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.REMOTE_HOST }} "cd ${{ secrets.REMOTE_PATH }} && docker compose down || true && docker compose up -d --build"
