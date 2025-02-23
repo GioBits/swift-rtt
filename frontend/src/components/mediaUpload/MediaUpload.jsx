@@ -6,7 +6,7 @@ import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
 
 const MediaUpload = () => {
-  const { uploading } = useContext(MediaContext);
+  const { getUploading } = useContext(MediaContext);
   const [buttonSelected, setButtonSelected] = useState(true);
   const [isClicked, setIsClicked] = useState(true);
 
@@ -27,7 +27,7 @@ const MediaUpload = () => {
     <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto rounded-b-lg'>
       <MediaUploadSelector {...props} />
       <div className='box-border w-full bg-white h-[calc(100%-80px)] p-5 flex items-center justify-center'>
-        {uploading ? (
+        {!getUploading ? (
           <CircularProgress />
         ) : buttonSelected ? (
           <Dropzone />
