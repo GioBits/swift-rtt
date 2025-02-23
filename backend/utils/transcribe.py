@@ -39,7 +39,7 @@ class Transcriber:
             print(f"Error during transcription: {str(e)}")
             raise
 
-    async def transcription_handler(self, file_data: bytes)-> str:
+    async def transcription_handler(self, file_data: bytes, language_id: int)-> str:
         """
         Controlador para manejar la transcripción de un archivo de audio.
 
@@ -50,6 +50,14 @@ class Transcriber:
             str: Transcripción del audio.
         """
         try:
+
+            if language_id ==1:
+                language = "english"
+            elif language_id ==2:
+                language = "spanish"
+            else:
+                raise ValueError(f"Language'{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
+
             # Crear un archivo temporal para almacenar el contenido del archivo subido
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file_data)
@@ -61,7 +69,7 @@ class Transcriber:
             # Ejecutar la transcripción en un ejecutor (hilo separado)
             transcription = await loop.run_in_executor(
                 None,
-                lambda: self.transcribe_audio(temp_path, "spanish")
+                lambda: self.transcribe_audio(temp_path, language)
             )
 
             # Eliminar el archivo temporal
