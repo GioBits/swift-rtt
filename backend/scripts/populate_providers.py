@@ -6,8 +6,8 @@ def populate_providers():
     
     providers = [
         {"name": "Whisper", "type": "TRANSCRIPTION"},
-        {"name": "Google Translate", "type": "TRANSLATION"},
-        {"name": "Google TTS", "type": "TTS"}
+        {"name": "Helsinki", "type": "TRANSLATION"},
+        {"name": "Coqui TTS", "type": "TTS"}
     ]
 
     existing_providers = provider_service.get_all_providers()
