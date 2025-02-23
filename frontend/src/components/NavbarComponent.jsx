@@ -1,139 +1,42 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
-//const pages = ['Products', 'Pricing', 'Blog'];
-//const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const pages = ['Traducir', 'Historial'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 function NavbarComponent() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   return (
-    <AppBar position="static">
-
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-            <div className='flex w-auto h-auto' >
-                <img
-                src="/src/assets/logo.png"  // Asegúrate de que el archivo esté en la carpeta public
-                alt="Logo"
-                style={{ width: 70, height: 45 }}
-            />
+    <div className='h-[60px] bg-primary flex'>
+        <div className='w-[20%] h-full border-r border-gray-500'>
+            <div className='w-auto h-[40px] m-auto flex mr-[20px] '>
+                <div className='flex' >
+                    <img
+                    src="/src/assets/logo.png"  // Asegúrate de que el archivo esté en la carpeta public
+                    alt="Logo"
+                    style={{ width: 70, height: 40 }}
+                    />
+                </div>
+                <div className='flex'>
+                    <div className='text-2xl m-auto font-semibold text-white'>
+                        Real Time Translation
+                    </div>
+                </div>
             </div>
-            
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-              fontWeight: 500,
-              fontSize: '20px',
-              letterSpacing: '.1rem',
-            }}
-          >
-            Real Time Translation
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+        </div>
+        <div className='w-[80%] h-full flex'>
+            <div className='w-auto h-[40px] m-auto flex ml-[20px]'> 
+                <div className='mr-[10px] flex'>
+                    <div className='m-auto text-2xl m-auto font-semibold text-white'>
+                        Traducir
+                    </div>
+                </div>
+                <div className='flex'>
+                    <div className='m-auto text-2xl m-auto font-semibold text-white'>
+                        Historial
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   );
 }
 export default NavbarComponent;
