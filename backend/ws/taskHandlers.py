@@ -51,7 +51,11 @@ async def handle_translation(config: dict):
     to_language = config["languages"]["to"]
     
     # Create the translation record
-    translation_record = await translation_controller.create_translation(transcription_id, provider_id, to_language)
+    translation_record = await translation_controller.create_translation(
+        transcription_id,
+        provider_id, 
+        to_language
+    )
     
     # Build the response
     response = {

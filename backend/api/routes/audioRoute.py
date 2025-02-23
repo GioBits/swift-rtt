@@ -21,8 +21,7 @@ async def upload_audio(file: UploadFile = File(...),
         AudioResponseSchema: The response after processing the audio file.
     """
     user_id = 1
-    language_id = language_id_from
-    return await audio_controller.create_audio(user_id, language_id, file)
+    return await audio_controller.create_audio(user_id, language_id_from, language_id_to, file)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])

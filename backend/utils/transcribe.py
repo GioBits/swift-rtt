@@ -21,7 +21,7 @@ class Transcriber:
         return model
     
     def transcribe_audio(self, file_path: str, language: str) -> str:
-        print(f"Transcribing file at: {file_path}")
+        # print(f"Transcribing file at: {file_path}")
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -29,11 +29,11 @@ class Transcriber:
         if language.lower() not in self.allowed_languages:
             raise ValueError(f"Language '{language}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
 
-        print(f"Starting transcription in '{language}' for file: {file_path}")
+        # print(f"Starting transcription in '{language}' for file: {file_path}")
 
         try:
             result = self.model.transcribe(file_path, fp16=False, language=language.lower())
-            print(f"Transcription result: {result["text"]}")
+            # print(f"Transcription result: {result["text"]}")
             return result["text"]
         except Exception as e:
             print(f"Error during transcription: {str(e)}")

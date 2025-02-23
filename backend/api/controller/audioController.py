@@ -36,7 +36,7 @@ class AudioController:
         else:
             return AudioResponseSchema(**base_response)
 
-    async def create_audio(self, user_id: int, language_id: int, file: UploadFile) -> AudioResponseSchema:
+    async def create_audio(self, user_id: int, language_id_from: int, language_id_to, file: UploadFile) -> AudioResponseSchema:
         """
         Controller function to handle the upload of an audio file.
 
@@ -57,7 +57,7 @@ class AudioController:
                 audio_data=file_data,
                 content_type=file.content_type,
                 file_size=len(file_data),
-                language_id=language_id
+                language_id=language_id_from
             )
 
             # Add the audio processing task to the queue
@@ -70,8 +70,8 @@ class AudioController:
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": 2,
-                    "to": 1
+                    "from": language_id_from,
+                    "to": language_id_to
                 }
             }
 
