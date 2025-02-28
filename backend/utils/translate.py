@@ -1,6 +1,7 @@
 from transformers import MarianMTModel, MarianTokenizer
 import asyncio
 import warnings
+import os
 
 warnings.filterwarnings("ignore", message="Recommended: pip install sacremoses.")
 
@@ -11,17 +12,26 @@ class Translate:
             "english": {"model": None, "tokenizer": None, "model_name": "Helsinki-NLP/opus-mt-es-en"},
             "spanish": {"model": None, "tokenizer": None, "model_name": "Helsinki-NLP/opus-mt-en-es"}
         }
-    
+
+        # Load the model and tokenizer for english and spanish
+        self.load_model_and_tokenizer("english")
+        self.load_model_and_tokenizer("spanish")
+
     def load_model_and_tokenizer(self, language: str):
         """Load the model and tokenizer for the specified language."""
         
         model_info = self.models[language]
+        model_path = f"../static/text2text/{model_info['model_name'].replace('/', '-')}"
+        
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+
         if model_info["model"] is None or model_info["tokenizer"] is None:
             print(f"Loading model and tokenizer for language {language}...")
-            model_info["tokenizer"] = MarianTokenizer.from_pretrained(model_info["model_name"])
-            model_info["model"] = MarianMTModel.from_pretrained(model_info["model_name"])
+            model_info["tokenizer"] = MarianTokenizer.from_pretrained(model_info["model_name"], cache_dir=model_path)
+            model_info["model"] = MarianMTModel.from_pretrained(model_info["model_name"], cache_dir=model_path)
             print(f"Model and tokenizer for language {language} loaded.")
-    
+        
     async def translate_text(self, text: str, audio_id: int, language_id: int) -> str:
         """Translate text using the model corresponding to the language ID."""
 
