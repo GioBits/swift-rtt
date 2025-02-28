@@ -1,10 +1,14 @@
-// src/pages/Home.jsx
+import { useEffect } from 'react'
 import { MediaProvider } from "../contexts/MediaProvider";
 import LanguageSelector from "../components/mediaUpload/LanguageSelector";
 import MediaUpload from "../components/mediaUpload/MediaUpload";
 import MediaResponse from "../components/mediaResponse/MediaResponse";
 
 const Home = () => {
+  useEffect(() => {
+      document.title = 'Media Upload'
+    }, [])
+
   return (
     <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex mt-10 m-auto block">
       <MediaProvider>
