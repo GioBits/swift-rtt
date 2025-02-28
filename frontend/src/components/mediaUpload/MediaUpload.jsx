@@ -7,7 +7,7 @@ import MediaUploadSelector from './MediaUploadSelector';
 
 const MediaUpload = () => {
   const { getUploading } = useContext(MediaContext);
-  const [buttonSelected, setButtonSelected] = useState(false);
+  const [buttonSelected, setButtonSelected] = useState(true);
   const [isClicked, setIsClicked] = useState(true);
 
   const handleButtonClick = (selected) => {
