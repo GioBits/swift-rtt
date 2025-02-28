@@ -40,7 +40,7 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
   };
 
   return (
-    <div className="bg-white w-full h-1/2 p-5 rounded-lg">
+    <div className="bg-white w-full h-1/2 p-5 rounded-lg shadow">
       <div className="w-full flex flex-col h-[80px] box-border">
         <div className="bg-primary flex w-full h-[60px] rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
