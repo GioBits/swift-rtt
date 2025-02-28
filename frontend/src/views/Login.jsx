@@ -6,7 +6,7 @@ import logoColibri from '../assets/logo_colibri.png'
 
 const Login = () => {
   useEffect(() => {
-    document.title = 'Iniciar sesión en ColibriTalk '
+    document.title = 'Iniciar sesión en SwiftVoice'
   }, [])
 
   return (
