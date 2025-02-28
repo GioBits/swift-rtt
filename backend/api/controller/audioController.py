@@ -79,6 +79,9 @@ class AudioController:
 
             return self.parse_audio_response(audio_record, True)
 
+        except ValueError as e:
+            print(f"Validation error: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
         except HTTPException as e:
             print(f"HTTPException captured: {e.detail}")
             raise e
