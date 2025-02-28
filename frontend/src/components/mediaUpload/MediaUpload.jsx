@@ -24,9 +24,9 @@ const MediaUpload = () => {
   }
 
   return (
-    <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto rounded-b-lg'>
+    <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto'>
       <MediaUploadSelector {...props} />
-      <div className='box-border w-full bg-white h-[calc(100%-80px)] p-5 flex items-center justify-center'>
+      <div className='box-border w-full h-[calc(100%-80px)] p-5 flex items-center justify-center'>
         {!getUploading ? (
           <CircularProgress />
         ) : buttonSelected ? (
