@@ -14,30 +14,35 @@ class Text2Speech:
         Initialize any necessary attributes here.
         Currently, this method does not initialize any attributes.
         '''
+        #tts_models/en/ljspeech/tacotron2-DDC
+        #tts_models/en/ljspeech/glow-tts
         self.models = {
-            "1": {"language": "english", "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
-            "2": {"language": "spanish", "model_name": "tts_models/es/css10/vits"}
+            1: {"language": "english", "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
+            2: {"language": "spanish", "model_name": "tts_models/es/css10/vits"}
         }
-        pass
+
     
     def generate_audio_bytes(self, text: str, language_id: int) -> np.ndarray:
         '''
-        Generate speech audio from text in English.
+        Generate speech audio from text.
 
         Parameters:
         text (str): The text to convert to speech.
-        emotion (str, optional): The emotion to apply to the speech. Default is None.
-        voice (str, optional): The voice to use for the speech. Default is None.
-        speed (float, optional): The speed of the speech. Default is None.
+        language_id (int): The language ID (1 for English, 2 for Spanish).
 
         Returns:
         np.ndarray: The generated audio as a NumPy array.
         '''
-        if language_id not in self.models.keys():
+
+        if language_id not in self.models :
             raise ValueError(f"Language '{language_id}' not supported. Supported languages are: 'es', 'en'")
-        # Load the English text-to-speech model
         
-        tts = TTS(self.models.get(language_id).get("model_name"), gpu=False)  # Force CPU usage
+        # Load the English text-to-speech model
+        model_path = f"../static/text2speech/"      
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+
+        tts = TTS(self.models.get(language_id).get("model_name"), gpu=False, model_path=model_path)  # Force CPU usage
         # Generate the audio output
         audio = tts.tts(text=text)
         return np.array(audio, dtype=np.float32)  # Ensure correct data type
@@ -121,21 +126,3 @@ class Text2Speech:
 
 # Global instance of the Text2Speech class
 text2speech = Text2Speech()
-    
-# Example usage of the text2speech module
-def example_usage():
-    #print(TTS().list_models())
-    text = "Hello, this is a test."
-    audio_id = 1
-    language_id = 1  # 1 for English, 2 for Spanish
-
-    try:
-        audio_bytes = asyncio.run(text2speech.text_2_speech(text, audio_id, language_id))
-        with open("output.wav", "wb") as f:
-            f.write(audio_bytes)
-        print("Audio file 'output.wav' created successfully.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-# Call the example usage function
-example_usage()
