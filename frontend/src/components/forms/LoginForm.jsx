@@ -11,53 +11,72 @@ export const LoginForm = () => {
   const { error } = useSelector((state) => state.auth);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [valuesForm, handleInputChange] = useForm({
-    user: "",
+    email: "",
     password: "",
   });
 
-  const { user, password } = valuesForm;
+  const { email, password } = valuesForm;
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    handleInputChange(e);
+    const email = e.target.value;
+    if (!validateEmail(email) && email.length > 0) {
+      setEmailError("Correo electrónico no válido");
+    } else {
+      setEmailError("");
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Intentando iniciar sesión con:", user, password);
-  
-    if (!user || !password) {
+    console.log("Intentando iniciar sesión con:", email, password);
+
+    if (!email || !password) {
       Swal.fire({
         title: "Error",
-        text: "Usuario y contraseña son obligatorios",
+        text: "Email y contraseña son obligatorios",
         icon: "error",
       });
       return;
     }
-  
+
+    if (!validateEmail(email)) {
+      setEmailError("Correo electrónico no válido");
+      return;
+    }
+
     try {
-      const result = await dispatch(loginUser({ user, password })).unwrap();
-      navigate("/media-upload")
-      console.log("Respuesta del login:", result); // <-- Esto te dirá si el login es exitoso
+      const result = await dispatch(loginUser({ email, password })).unwrap();
+      navigate("/media-upload");
+      console.log("Respuesta del login:", result);
     } catch (err) {
       console.error("Error en el login:", err);
     }
-    
   };
-  
 
   return (
-    <div className="w-72 bg-white p-5 flex flex-col items-center justify-center sm:rounded-l-sm">
+    <div className="w-72 bg-white p-5 flex flex-col items-center justify-center rounded-l-xl">
       <h3 className="titleForm">Iniciar sesión</h3>
       <form onSubmit={handleLogin}>
         <input
           autoComplete="off"
           className="inputForm"
-          name="user"
-          onChange={handleInputChange}
-          placeholder="Usuario"
-          type="text"
-          value={user}
+          name="email"
+          onChange={handleEmailChange}
+          placeholder="Email"
+          type="email"
+          value={email}
         />
         <input
           autoComplete="off"
@@ -71,7 +90,7 @@ export const LoginForm = () => {
         <label className="flex mb-5">
           <input
             type="checkbox"
-            className="mr-2 focus:bg-indigo-700"
+            className="mr-2 focus:bg-blueMetal"
             checked={isPasswordVisible}
             onChange={togglePasswordVisibility}
           />
@@ -85,6 +104,7 @@ export const LoginForm = () => {
         </button>
 
         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+        {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
       </form>
     </div>
   );
