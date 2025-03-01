@@ -1,11 +1,11 @@
 from fastapi import HTTPException, UploadFile, status
-from api.service.userCreateService import UserCreateService
+from api.service.userService import userService
 from models.users import Users, UsersSchema
 
-class UserCreateController:
+class userController:
 
     def __init__(self):
-        self.user_create_service = UserCreateService()
+        self.user_create_service = userService()
 
     async def create_user(self, email:str, password_hash:str, first_name:str, last_name:str):
         """
@@ -18,10 +18,11 @@ class UserCreateController:
         Returns:
             UsersSchema: Dates of the user stored in the database.
         """
+
         try:
             new_user = self.user_create_service.create_user(
                 email=email,
-                password_hash=password_hash,
+                password=password_hash,
                 first_name=first_name,
                 last_name=last_name
             )

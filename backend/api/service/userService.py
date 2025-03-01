@@ -1,15 +1,16 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.users import Users, UsersSchema
+import bcrypt
 
-class UserCreateService:
+class userService:
     def __init__(self):
         self.db = SessionLocal()
 
     def __del__(self):
         self.db.close()
 
-    def create_user(self, email:str, password_hash:str, first_name:str, last_name:str):
+    def create_user(self, email:str, password:str, first_name:str, last_name:str):
         """
         Create a new user entry in the database.
         Args:
@@ -20,6 +21,10 @@ class UserCreateService:
         Returns:
             UserRecordSchema: The newly created user object if successful.
         """
+
+        salt = bcrypt.gensalt()
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+
         try:
             new_user = Users(
                 email=email,

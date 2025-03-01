@@ -1,10 +1,10 @@
 from fastapi import APIRouter, File, UploadFile, Query, HTTPException
-from api.controller.userCreateController import UserCreateController
+from api.controller.userController import userController
 from models.users import Users, UsersSchema
 from typing import List
 
 router = APIRouter()
-user = UserCreateController()
+user = userController()
 
 # Endpoint "/users", recibe datos de usuario para crear un nuevo usuario
 @router.post("/users", tags=["Users"])
