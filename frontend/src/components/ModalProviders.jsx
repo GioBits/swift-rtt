@@ -20,7 +20,7 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '1px solid #000',
+  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -28,7 +28,6 @@ const modalStyle = {
 const ModalProviders = () => {
   const { providers } = useContext(MediaContext);
   
-  // Renombramos el estado para reflejar que almacena el modelo seleccionado para cada funcionalidad.
   const [selectedModels, setSelectedModels] = useState({
     transcriptor: '',
     traductor: '',
@@ -36,25 +35,21 @@ const ModalProviders = () => {
   });
   const [open, setOpen] = useState(false);
 
-  // Las claves descriptivas de cada selector se nombran de acuerdo a su funcionalidad.
   const modelKeys = useMemo(
     () => ['transcriptor', 'traductor', 'speechToText'],
     []
   );
   
-  // Array con las etiquetas que se muestran para cada selector.
   const functionalities = useMemo(
     () => ['Transcriptor', 'Traductor', 'Speech-to-Text'],
     []
   );
   
-  // Se obtienen los tipos de proveedores únicos.
   const providerTypes = useMemo(
     () => [...new Set(providers?.map((p) => p.type) || [])],
     [providers]
   );
 
-  // Actualiza el modelo seleccionado para la funcionalidad indicada.
   const handleSelect = useCallback((event, key) => {
     setSelectedModels((prev) => ({ ...prev, [key]: event.target.value }));
   }, []);
@@ -63,8 +58,8 @@ const ModalProviders = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', my: 2 }}>
-      <Button variant="contained" onClick={handleOpen}>
+    <Box className="w-full ml-5 mr-5 my-2">
+      <Button variant="contained" onClick={handleOpen} fullWidth>
         Seleccionar Modelos
       </Button>
       <Modal
@@ -105,7 +100,7 @@ const ModalProviders = () => {
                 );
               })}
             </Box>
-            <Button variant="outlined" onClick={handleClose} sx={{ mt: 2 }}>
+            <Button variant="outlined" onClick={handleClose} sx={{ mt: 2 }} >
               Cerrar
             </Button>
           </Box>
