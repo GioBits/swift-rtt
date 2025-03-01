@@ -35,5 +35,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Modelos
 # Caché de archivos
 static/*

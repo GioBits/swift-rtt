@@ -18,7 +18,6 @@ class Users(Base):
 
 class UsersBase(BaseModel):
     email: EmailStr
-    password_hash: str
     first_name: str
     last_name: str
     last_login: Optional[datetime] = None

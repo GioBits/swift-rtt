@@ -21,7 +21,6 @@ const Home = () => {
           <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
             <ModalProviders />
           </div>
-
           
           {/* LanguageSelector */}
           <div className="box-border flex h-[80px] w-full m-auto">
