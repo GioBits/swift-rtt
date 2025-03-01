@@ -5,11 +5,25 @@ import { uploadMediaFile } from '../../service/mediaUploadService';
 import addFileIllustration from '../../assets/add_files.svg';
 
 const Dropzone = () => {
+  const { setUploading, setAudioSelected, selectedLanguages} = useContext(MediaContext);
+
+  const handleDrop = async (acceptFiles) => {
+    const file = acceptFiles[0];
+    await uploadMediaFile(file, setUploading, setAudioSelected, selectedLanguages);
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: handleDrop,
+    accept: { 'audio/mpeg': ['.mp3'] },
+    maxSize: 10 * 1024 * 1024,
+  });
 
   return (
     <div
+      {...getRootProps()}
       className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8"
     >
+      <input {...getInputProps()} />
       <div>
         <img
           src={addFileIllustration}

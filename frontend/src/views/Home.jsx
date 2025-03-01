@@ -3,6 +3,7 @@ import { MediaProvider } from "../contexts/MediaProvider";
 import LanguageSelector from "../components/mediaUpload/LanguageSelector";
 import MediaUpload from "../components/mediaUpload/MediaUpload";
 import MediaResponse from "../components/mediaResponse/MediaResponse";
+import ModalProviders from "../components/ModalProviders";
 
 const Home = () => {
   useEffect(() => {
@@ -12,8 +13,16 @@ const Home = () => {
   return (
     <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex mt-10 m-auto block">
       <MediaProvider>
+
         {/* Upload Section */}
         <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-md">
+          
+          {/* Modal Providers */}
+          <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
+            <ModalProviders />
+          </div>
+
+          
           {/* LanguageSelector */}
           <div className="box-border flex h-[80px] w-full m-auto">
             <LanguageSelector />

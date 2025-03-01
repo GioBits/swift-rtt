@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { MediaContext } from "./MediaContext";
 import { setLanguage } from "../utils/languageUtils";
 import { languageService } from "../service/languageService";
+import { providerService } from "../service/providerService";
 import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
 
@@ -12,6 +13,7 @@ export const MediaProvider = ({ children }) => {
   const [audioTranslation, setAudioTranslation] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
+  const [providers, setProvider] = useState([]);
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
@@ -60,6 +62,19 @@ export const MediaProvider = ({ children }) => {
     fetchLanguages();
   }, []);
 
+  useEffect(() => {
+    const fetchProvider = async () => {
+      try {
+        const data = await providerService.getProviders();
+        setProvider(data);
+      } catch (error) {
+        console.error("Error fetching providers:", error);
+      }
+    };
+
+    fetchProvider();
+  }, []);
+
   const handleSetSourceLanguage = (languageCode) => {
     setLanguage(setSelectedLanguages, "sourceLanguage", languageCode);
   };
@@ -89,7 +104,8 @@ export const MediaProvider = ({ children }) => {
         translate,
         setTranslate,
         audioTranslation,
-        setAudioTranslation
+        setAudioTranslation,
+        providers
       }}
     >
       {children}
