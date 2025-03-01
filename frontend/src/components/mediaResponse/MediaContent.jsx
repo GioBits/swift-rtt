@@ -24,6 +24,16 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
   
   const [playing, setPlaying] = useState(false);
 
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  const formatTime = (time) => {
+    if (isNaN(time)) {return "00:00";}
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
   const togglePlayback = () => {
     setPlaying((prev) => !prev);
   };
@@ -88,6 +98,9 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
                     height="0"
                     className="hidden"
                     onEnded={() => setPlaying(false)}
+                    onProgress={({currentTime}) => setCurrentTime(currentTime)}
+                    onDuration={setDuration}
+
                   />
                 )}
                 <VolumeUpIcon />
@@ -109,6 +122,13 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
               </IconButton>
             </span>
           </Tooltip>
+          
+          {/*Mostrar tiempo de reproduccion*/}
+          <div className="ml-4 flex items-center text-gray-600">
+            <span className="font-mono">
+              {formatTime(playedSeconds)} / {formatTime(duration)}
+            </span>
+          </div>
         </div>
       </div>
     </div>
