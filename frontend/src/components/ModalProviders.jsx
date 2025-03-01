@@ -29,9 +29,9 @@ const ModalProviders = () => {
   const { providers } = useContext(MediaContext);
   
   const [selectedModels, setSelectedModels] = useState({
-    transcriptor: '',
-    traductor: '',
-    speechToText: '',
+    transcriptor: '1',
+    traductor: '2',
+    speechToText: '3',
   });
   const [open, setOpen] = useState(false);
 
@@ -58,10 +58,13 @@ const ModalProviders = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box className="w-full ml-5 mr-5 my-2">
-      <Button variant="contained" onClick={handleOpen} fullWidth>
+    <Box className="w-full ml-5 mr-5 flex">
+      <Button 
+      sx={{ height: '50px' }}
+      variant="contained" onClick={handleOpen} fullWidth>
         Seleccionar Modelos
       </Button>
+
       <Modal
         aria-labelledby="modal-providers-title"
         aria-describedby="modal-providers-description"
