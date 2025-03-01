@@ -11,7 +11,7 @@ import { useTimer } from '../../hooks/useTimer';
 import '../../index.css';
 
 const RecordAudio = () => {
-  const { isRecording, setUploading, setAudioSelected } = useContext(MediaContext);
+  const { isRecording, setUploading, setAudioSelected, selectedLanguages} = useContext(MediaContext);
   const ffmpeg = useMemo(() => new FFmpeg(), []);
   const [isPreparing, setIsPreparing] = useState(false);
   const [prepCountdown, setPrepCountdown] = useState(3);
@@ -20,7 +20,7 @@ const RecordAudio = () => {
     async (audioBlob) => {
       await ffmpeg.load();
       const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
-      await uploadMediaFile(mp3File, setUploading, setAudioSelected);
+      await uploadMediaFile(mp3File, setUploading, setAudioSelected, selectedLanguages);
     },
     [ffmpeg, setUploading, setAudioSelected]
   );

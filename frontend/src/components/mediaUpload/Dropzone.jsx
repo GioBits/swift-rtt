@@ -5,11 +5,11 @@ import { uploadMediaFile } from '../../service/mediaUploadService';
 import addFileIllustration from '../../assets/add_files.svg';
 
 const Dropzone = () => {
-  const { setUploading, setAudioSelected } = useContext(MediaContext);
+  const { setUploading, setAudioSelected, selectedLanguages} = useContext(MediaContext);
 
   const handleDrop = async (acceptFiles) => {
     const file = acceptFiles[0];
-    await uploadMediaFile(file, setUploading, setAudioSelected);
+    await uploadMediaFile(file, setUploading, setAudioSelected, selectedLanguages);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
