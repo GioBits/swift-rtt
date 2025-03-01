@@ -65,7 +65,7 @@ const RecordAudio = () => {
           <>
             <p className="text-base sm:text-md md:text-lg text-center mx-2">
               Presiona el botón <b className='font-bold'>iniciar</b> para <br />
-              <b className="text-primary font-extrabold">grabar audio</b>
+              <b className="text-blueMetal font-extrabold">grabar audio</b>
             </p>
             <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs">
               El tiempo máximo de grabación es de 30 segundos.

@@ -18,7 +18,7 @@ function NavbarComponent() {
       <div className="w-[30%] h-full border-r border-gray-500 flex items-center px-4">
         <img src="src/assets/logo_colibri.png" alt="Logo" className="w-[70px] h-[40px]" />
         <span className="text-2xl font-semibold text-white ml-3">
-          Real Time Translation
+          SwiftVoice
         </span>
       </div>
 
