@@ -26,10 +26,28 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def sign_token(payload: dict):
-    pass
+    expiration = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    payload.update({"exp": expiration})
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 def decode_token(token:str):
-    pass
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expirado")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
 
 def validate_token(token:str):
-    pass
+    try:
+        decoded_payload = decode_token(token)
+        return True if decoded_payload else False
+    except HTTPException:
+        return False
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifica si una contraseña coincide con su hash."""
+    return pwd_context.verify(plain_password, hashed_password)
