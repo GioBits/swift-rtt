@@ -17,12 +17,12 @@ class Transcriber:
     def load_model(self):
         if not os.path.exists(self.model_path):
             os.makedirs(self.model_path)
-            print("Downloading and saving Whisper model locally...")
+            print("Tracriber: Downloading and saving Whisper model locally...")
             model = whisper.load_model(self.model_size, download_root=self.model_path)
         else:
-            print("Loading Whisper model...")
+            print("Transcriber: Loading Whisper model...")
             model = whisper.load_model(self.model_size, download_root=self.model_path)
-        print("Model loaded.")
+        print("Transcriber: Model loaded.")
         return model
     
     def transcribe_audio(self, file_path: str, language: str) -> str:
