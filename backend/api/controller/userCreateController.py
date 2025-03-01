@@ -1,9 +1,6 @@
 from fastapi import HTTPException, UploadFile, status
 from api.service.userCreateService import UserCreateService
-#from models. import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
-#from pybase64 import b64encode
-#from api.validators.audioValidations import validate_upload
-#from ws.brokerDispatcher import add_audio_task
+from models.users import Users, UsersSchema
 
 class UserCreateController:
 

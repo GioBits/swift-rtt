@@ -44,7 +44,8 @@ tags_metadata = [
     {"name": "Transcriptions", "description": "Operations related to transcriptions"},
     {"name": "Translated text", "description": "Operations related to translations"},
     {"name": "Translated Audios", "description": "Operations related to translated audio files"},
-    {"name": "Utils", "description": "Utility endpoints"}
+    {"name": "Utils", "description": "Utility endpoints"},
+    {"name": "Users", "description": "Operations related to users"}
 ]
 
 @asynccontextmanager

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, Query, HTTPException
 from api.controller.userCreateController import UserCreateController
-#from models.users import Users, UsersSchema
+from models.users import Users, UsersSchema
 from typing import List
 
 router = APIRouter()

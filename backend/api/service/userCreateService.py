@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
-#from models.users import Users, UsersSchema
+from models.users import Users, UsersSchema
 
 class UserCreateService:
     def __init__(self):
@@ -30,7 +30,7 @@ class UserCreateService:
             self.db.add(new_user)
             self.db.commit()
             self.db.refresh(new_user)
-            return UserSchema.from_orm(new_user)
+            return UsersSchema.from_orm(new_user)
         except Exception as e:
             self.db.rollback()
             return str(e)
