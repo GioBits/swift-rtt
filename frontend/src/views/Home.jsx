@@ -1,0 +1,37 @@
+import { useEffect } from 'react'
+import { MediaProvider } from "../contexts/MediaProvider";
+import LanguageSelector from "../components/mediaUpload/LanguageSelector";
+import MediaUpload from "../components/mediaUpload/MediaUpload";
+import MediaResponse from "../components/mediaResponse/MediaResponse";
+
+const Home = () => {
+  useEffect(() => {
+      document.title = 'Media Upload'
+    }, [])
+
+  return (
+    <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex mt-10 m-auto block">
+      <MediaProvider>
+        {/* Upload Section */}
+        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-md">
+          {/* LanguageSelector */}
+          <div className="box-border flex h-[80px] w-full m-auto">
+            <LanguageSelector />
+          </div>
+
+          {/* Dropfile and RecordAudio Upload */}
+          <div className="h-[calc(100%-160px)] flex flex-col items-center justify-center">
+            <MediaUpload />
+          </div>
+        </div>
+
+        {/* App Response */}
+        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto rounded gap-4">
+          <MediaResponse />
+        </div>
+      </MediaProvider>
+    </div>
+  );
+};
+
+export default Home;
