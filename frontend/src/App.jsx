@@ -2,11 +2,11 @@ import { MediaProvider } from "./contexts/MediaProvider";
 import LanguageSelector from "./components/mediaUpload/LanguageSelector";
 import MediaUpload from "./components/mediaUpload/MediaUpload";
 import MediaResponse from "./components/mediaResponse/MediaResponse";
-import AccordionProviders from "./components/AccordionProviders";
 import { Toaster } from 'react-hot-toast';
 import "./index.css";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import ModalProviders from "./components/ModalProviders";
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
                 Tu voz, en cualquier idioma
               </div> */}
               <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
-                <AccordionProviders />
+                <ModalProviders />
               </div>
 
               {/* LanguageSelector */}
