@@ -48,7 +48,7 @@ class UserCreateService:
             user = self.db.query(Users).filter_by(email=email).first()
             if user is None:
                 return None
-            return UserSchema.from_orm(user)
+            return UsersSchema.from_orm(user)
         except Exception as e:
             return str(e)
         
@@ -65,6 +65,6 @@ class UserCreateService:
             user = self.db.query(Users).filter_by(id=id).first()
             if user is None:
                 return None
-            return UserSchema.from_orm(user)
+            return UsersSchema.from_orm(user)
         except Exception as e:
             return str(e)
