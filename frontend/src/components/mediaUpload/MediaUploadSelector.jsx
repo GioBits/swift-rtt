@@ -22,7 +22,6 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
           marginLeft: '20px',
           marginY: 'auto'
         }}
-        disabled
         startIcon={<CloudUploadIcon />}
       >
         Subir archivo

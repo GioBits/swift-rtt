@@ -93,7 +93,7 @@ class TranslatedAudioController:
             language_id = translation_record.language_id
             audio_id = translation_record.audio_id
             
-            audio_data = await text2speech.t2s(translation_record.translation_text, audio_id, translation_record.language_id)
+            audio_data = await text2speech.text_2_speech(translation_record.translation_text, audio_id, translation_record.language_id)
 
             new_translated_audio = self.translated_audio_service.create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, len(audio_data))
             if new_translated_audio is None:
