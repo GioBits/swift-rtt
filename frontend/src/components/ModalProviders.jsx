@@ -41,7 +41,7 @@ const ModalProviders = () => {
   );
   
   const functionalities = useMemo(
-    () => ['Transcriptor', 'Traductor', 'Speech-to-Text'],
+    () => ['Transcriptor', 'Traductor', 'Texto a Voz'],
     []
   );
   
@@ -86,7 +86,7 @@ const ModalProviders = () => {
                 const type = providerTypes[index % providerTypes.length] || '';
                 const options = providers?.filter((p) => p.type === type) || [];
                 return (
-                  <FormControl key={key} fullWidth sx={{ my: 2 }}>
+                  <FormControl variant='standard' key={key} fullWidth sx={{ my: 2 }}>
                     <InputLabel>{functionalities[index]}</InputLabel>
                     <Select
                       value={selectedModels[key]}
