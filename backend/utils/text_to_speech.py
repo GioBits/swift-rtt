@@ -43,12 +43,12 @@ class Text2Speech:
         model_obj = self.models.get(language_id)
 
         # Load the English text-to-speech model
-        model_path = f"../static/text2speech/{model_obj.get('model_name')}"   
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
+        # model_path = f"../static/text2speech/{model_obj.get('model_name')}"   
+        # if not os.path.exists(model_path):
+        #     os.makedirs(model_path)
 
         print(f"TextToSpeech: Loading model text to speech for language: {model_obj.get('language')}")
-        tts = TTS(model_obj.get('model_name'), gpu=False) # Force CPU usage
+        model_obj["model"] = TTS(model_obj.get('model_name'), gpu=False) # Force CPU usage
   
     
     def generate_audio_bytes(self, text: str, language_id: int) -> np.ndarray:
