@@ -36,4 +36,5 @@ __pycache__/
 *$py.class
 
 # Modelos
+# Caché de archivos
 static/*
