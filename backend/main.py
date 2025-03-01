@@ -26,7 +26,8 @@ from scripts.populate import populate as populate_tables
 from api.routes.utilsRoute import router as utilsRouter
 
 #Import queue helper
-from utils.queueHelper import message_queue, start_background_process
+from ws.queueSetup import get_message_queue
+from ws.brokerDispatcher import start_background_process
 
 #Template html
 from utils.html_template import html
@@ -95,7 +96,7 @@ async def websocket_endpoint(websocket: WebSocket):
     active_connections.append(websocket)
     try:
         while True:
-            message = await message_queue.get()
+            message = await get_message_queue().get()
             await send_message(message)
     except WebSocketDisconnect:
         active_connections.remove(websocket)

@@ -25,8 +25,8 @@ export const MediaProvider = ({ children }) => {
   };
 
   const [selectedLanguages, setSelectedLanguages] = useState({
-    sourceLanguage: "es",
-    targetLanguage: "en",
+    sourceLanguage: 2,
+    targetLanguage: 1,
   });
   const [audioSelected, setAudioSelected] = useState({
     id: "",

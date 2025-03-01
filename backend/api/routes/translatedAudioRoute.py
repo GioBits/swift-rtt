@@ -1,14 +1,10 @@
-from fastapi import APIRouter, UploadFile, File
-from api.controller.translatedAudioController import (
-    retrieve_all_translated_audios_controller,
-    create_translated_audio_controller,
-    retrieve_translated_audio_by_id_controller,
-    retrieve_translated_audios_by_audio_id_controller
-)
+from fastapi import APIRouter
+from api.controller.translatedAudioController import TranslatedAudioController
 from models.translated_audios import TranslatedAudioRecordSchema
 from typing import List
 
 router = APIRouter()
+translated_audio_controller = TranslatedAudioController()
 
 @router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
 async def get_translated_audios():
@@ -17,7 +13,7 @@ async def get_translated_audios():
     Returns:
         list: A list of TranslatedAudioRecordSchema objects.
     """
-    return await retrieve_all_translated_audios_controller()
+    return await translated_audio_controller.retrieve_all_translated_audios()
 
 @router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def add_translated_audio(translation_id: int, provider_id: int):
@@ -29,7 +25,7 @@ async def add_translated_audio(translation_id: int, provider_id: int):
     Returns:
         TranslatedAudioRecordSchema: The newly created translated audio object.
     """
-    return await create_translated_audio_controller(translation_id, provider_id)
+    return await translated_audio_controller.create_translated_audio(translation_id, provider_id)
 
 @router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def get_translated_audio_by_id(translated_audio_id: int):
@@ -40,7 +36,7 @@ async def get_translated_audio_by_id(translated_audio_id: int):
     Returns:
         TranslatedAudioRecordSchema: The translated audio object.
     """
-    return await retrieve_translated_audio_by_id_controller(translated_audio_id)
+    return await translated_audio_controller.retrieve_translated_audio_by_id(translated_audio_id)
 
 @router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
 async def get_translated_audios_by_audio_id(audio_id: int):
@@ -51,4 +47,4 @@ async def get_translated_audios_by_audio_id(audio_id: int):
     Returns:
         list: A list of TranslatedAudioRecordSchema objects.
     """
-    return await retrieve_translated_audios_by_audio_id_controller(audio_id)
+    return await translated_audio_controller.retrieve_translated_audios_by_audio_id(audio_id)
