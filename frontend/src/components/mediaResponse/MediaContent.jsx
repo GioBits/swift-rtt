@@ -126,7 +126,7 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
           {/*Mostrar tiempo de reproduccion*/}
           <div className="ml-4 flex items-center text-gray-600">
             <span className="font-mono">
-              {formatTime(playedSeconds)} / {formatTime(duration)}
+              {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
         </div>
