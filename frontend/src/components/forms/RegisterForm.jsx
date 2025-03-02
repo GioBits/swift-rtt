@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/slices/authActions";
 import Swal from "sweetalert2";
 import registerImg from '../../assets/sign_up_pana.svg';
+import userService from "../../service/userService";
 
 export const RegisterForm = () => {
   const dispatch = useDispatch();
@@ -77,7 +78,7 @@ export const RegisterForm = () => {
 
     try {
       const result = await dispatch(
-        registerUser({ name, lastname, email, password })
+        userService.registerUser({ name, lastname, email, password })
       ).unwrap();
       navigate("/media-upload");
       console.log("Usuario registrado:", result);

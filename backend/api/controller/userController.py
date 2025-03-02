@@ -7,7 +7,7 @@ class userController:
     def __init__(self):
         self.user_create_service = userService()
 
-    async def create_user(self, email:str, password_hash:str, first_name:str, last_name:str):
+    async def create_user(self, email:str, password:str, first_name:str, last_name:str):
         """
         Create a new user entry in the database.
         Args:
@@ -22,7 +22,7 @@ class userController:
         try:
             new_user = self.user_create_service.create_user(
                 email=email,
-                password=password_hash,
+                password=password,
                 first_name=first_name,
                 last_name=last_name
             )

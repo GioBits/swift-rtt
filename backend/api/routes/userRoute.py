@@ -8,7 +8,7 @@ user = userController()
 
 # Endpoint "/users", recibe datos de usuario para crear un nuevo usuario
 @router.post("/users", tags=["Users"])
-async def create_user(email:str, password_hash:str, first_name:str, last_name:str):
+async def create_user(email:str, password:str, first_name:str, last_name:str):
     """
     Create a new user entry in the database.
     Args:
@@ -19,7 +19,7 @@ async def create_user(email:str, password_hash:str, first_name:str, last_name:st
     Returns:
         UsersSchema: Dates of the user stored in the database.
     """
-    return await user.create_user(email, password_hash, first_name, last_name)
+    return await user.create_user(email, password, first_name, last_name)
 
 # Endpoint "/users/email/{email}", recupera un usuario por su correo electrónico
 @router.get("/users/email/{email}", tags=["Users"])
