@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { LoginForm } from '../components/forms/LoginForm';
 import { RegisterForm } from '../components/forms/RegisterForm'
 import { useLocation } from 'react-router-dom';
-// import ParticleBg from '../components/ParticleBg';
+import ParticleBg from '../components/ParticleBg';
 import logoColibri from '../assets/logo_colibri.png';
 
 const Login = () => {
@@ -33,7 +33,7 @@ const Login = () => {
         </footer>
       </div>
 
-      {/* <ParticleBg className='z-0' /> */}
+      <ParticleBg className='z-0' />
     </>
   );
 };
