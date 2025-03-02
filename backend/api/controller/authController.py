@@ -6,11 +6,30 @@ from models.users import UsersSchema
 router = APIRouter()
 
 class AuthController:
+    """
+    Authentication controller that handles login requests.
+    Methods:
+        __init__(): Initializes the AuthController with an instance of AuthService.
+        login(email: str, password: str): Handles user login logic.
+    """
     def __init__(self):
-        self.auth_service= AuthService()
+        """
+        Initializes a new instance of AuthController.
+        """
+        self.auth_service = AuthService()
 
-    async def login(self, email:str, password:str):    
-        
+    async def login(self, email: str, password: str):
+        """
+        Handles a user's login request.
+        Args:
+            email (str): The user's email address.
+            password (str): The user's password.
+        Returns:
+            dict: A dictionary with the user's authentication details if login is successful.
+        Raises:
+            HTTPException: If an HTTP error occurs during login.
+            HTTPException: If an internal server error occurs.
+        """  
         try:
             return await self.auth_service.login(email, password)
         except HTTPException as e:
