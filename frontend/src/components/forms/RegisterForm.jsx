@@ -77,10 +77,10 @@ export const RegisterForm = () => {
     }
 
     try {
-      const result = await dispatch(
-        userService.registerUser({ name, lastname, email, password })
-      ).unwrap();
-      navigate("/media-upload");
+      const result = await userService.registerUser({ name, lastname, email, password })
+      if (result) {
+        navigate("/login");
+      }
       console.log("Usuario registrado:", result);
     } catch (err) {
       console.error("Error en el registro:", err);

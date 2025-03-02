@@ -19,6 +19,13 @@ class userController:
             UsersSchema: Dates of the user stored in the database.
         """
 
+        existing_user = self.user_create_service.get_user_by_email(email)
+        if existing_user is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="User with this email already exists"
+            )
+
         try:
             new_user = self.user_create_service.create_user(
                 email=email,
