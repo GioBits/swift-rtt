@@ -50,7 +50,7 @@ const RecordAudio = () => {
         {isPreparing ? (
           <div className="p-5 text-center text-base sm:text-md md:text-lg text-black animate-pulse">
             <p>
-              <b className="text-primary font-extrabold">Por favor, acércate al micrófono</b>
+              <b className="text-mintDark font-extrabold">Por favor, acércate al micrófono</b>
             </p>
             <p className="text-4xl mt-4 text-black">{prepCountdown}</p>
           </div>
