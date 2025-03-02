@@ -64,7 +64,7 @@ const RecordAudio = () => {
         ) : (
           <>
             <p className="text-base sm:text-md md:text-lg text-center mx-2">
-              Presiona el botón <b className='font-bold'>iniciar</b> para <br />
+              Presiona el botón <b className='font-bold text-mintDark'>iniciar</b> para <br />
               <b className="text-blueMetal font-extrabold">grabar audio</b>
             </p>
             <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs">
