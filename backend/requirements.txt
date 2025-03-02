@@ -39,4 +39,9 @@ coqui-tts==0.25.3
 #websockets
 websockets==14.0
 
+# Security and Tokens
+
+passlib==1.7.4
+PyJWT==2.10.1
 bcrypt==4.3.0
+
