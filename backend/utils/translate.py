@@ -27,10 +27,10 @@ class Translate:
             os.makedirs(model_path)
 
         if model_info["model"] is None or model_info["tokenizer"] is None:
-            print(f"Loading model and tokenizer for language {language}...")
+            # print(f"Loading model and tokenizer for language {language}...")
             model_info["tokenizer"] = MarianTokenizer.from_pretrained(model_info["model_name"], cache_dir=model_path)
             model_info["model"] = MarianMTModel.from_pretrained(model_info["model_name"], cache_dir=model_path)
-            print(f"Model and tokenizer for language {language} loaded.")
+            print(f"Translator: Model and tokenizer for language {language} loaded.")
         
     async def translate_text(self, text: str, audio_id: int, language_id: int) -> str:
         """Translate text using the model corresponding to the language ID."""

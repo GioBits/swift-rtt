@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Box, FormControl, Select, MenuItem, IconButton, Tooltip } from "@mui/material";
+import { Box, FormControl, Select, MenuItem, IconButton, Tooltip, InputLabel } from "@mui/material";
 import { MediaContext } from "../../contexts/MediaContext";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
@@ -50,7 +50,7 @@ export default function LanguageSelector() {
 
   const selectStyle = {
     fontSize: "14px",
-    height: "50px",
+    height: "40px",
     minWidth: "30px",
     maxwidth: "120px",
     width: "100%",
@@ -60,7 +60,10 @@ export default function LanguageSelector() {
   return (
     <div className="flex flex-row w-full min-w-[410px] m-auto box-border h-full">
       <Box className="flex flex-row w-full gap-5 ml-5 mr-5 items-center justify-center">
-        <FormControl sx={{ minWidth: 30, width: "45%", display: "flex" }}>
+        <FormControl variant="standard" sx={{ minWidth: 30, width: "45%", display: "flex" }}>
+          <InputLabel id="origin-language-select" shrink>
+            Idioma Origen
+          </InputLabel>
           <Select
             id="origin-language-select"
             value={validSourceLanguage}
@@ -91,7 +94,10 @@ export default function LanguageSelector() {
           </IconButton>
         </Tooltip>
 
-        <FormControl sx={{ minWidth: 30, width: "45%", display: "flex" }}>
+        <FormControl variant="standard" sx={{ minWidth: 30, width: "45%", display: "flex" }}>
+          <InputLabel id="target-language-select" shrink>
+            Idioma Destino
+          </InputLabel>
           <Select
             id="target-language-select"
             value={validTargetLanguage}

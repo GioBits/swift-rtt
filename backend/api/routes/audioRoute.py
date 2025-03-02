@@ -8,7 +8,7 @@ audio_controller = AudioController()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
-async def create_audio(file: UploadFile = File(...), 
+async def create_audio(user_id: int , file: UploadFile = File(...), 
     language_id_from :int = Query(1, ge=1, le=2, description="Idioma del audio"),
     language_id_to :int = Query(1, ge=1, le=2, description="Idioma al que se traducirá el audio")
     ):
@@ -20,7 +20,6 @@ async def create_audio(file: UploadFile = File(...),
     Returns:
         AudioResponseSchema: The response after processing the audio file.
     """
-    user_id = 1
     return await audio_controller.create_audio(user_id, language_id_from, language_id_to, file)
 
 @router.post("/process-media", tags=["Audio"])

@@ -29,9 +29,9 @@ const ModalProviders = () => {
   const { providers } = useContext(MediaContext);
   
   const [selectedModels, setSelectedModels] = useState({
-    transcriptor: '',
-    traductor: '',
-    speechToText: '',
+    transcriptor: '1',
+    traductor: '2',
+    speechToText: '3',
   });
   const [open, setOpen] = useState(false);
 
@@ -41,7 +41,7 @@ const ModalProviders = () => {
   );
   
   const functionalities = useMemo(
-    () => ['Transcriptor', 'Traductor', 'Speech-to-Text'],
+    () => ['Transcriptor', 'Traductor', 'Texto a Voz'],
     []
   );
   
@@ -58,10 +58,13 @@ const ModalProviders = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box className="w-full ml-5 mr-5 my-2">
-      <Button variant="contained" onClick={handleOpen} fullWidth>
+    <Box className="w-full ml-5 mr-5 flex">
+      <Button 
+      sx={{ height: '50px' }}
+      variant="contained" onClick={handleOpen} fullWidth>
         Seleccionar Modelos
       </Button>
+
       <Modal
         aria-labelledby="modal-providers-title"
         aria-describedby="modal-providers-description"
@@ -83,7 +86,7 @@ const ModalProviders = () => {
                 const type = providerTypes[index % providerTypes.length] || '';
                 const options = providers?.filter((p) => p.type === type) || [];
                 return (
-                  <FormControl key={key} fullWidth sx={{ my: 2 }}>
+                  <FormControl variant='standard' key={key} fullWidth sx={{ my: 2 }}>
                     <InputLabel>{functionalities[index]}</InputLabel>
                     <Select
                       value={selectedModels[key]}

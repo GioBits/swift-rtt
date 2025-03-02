@@ -38,3 +38,5 @@ coqui-tts==0.25.3
 
 #websockets
 websockets==14.0
+
+bcrypt==4.3.0

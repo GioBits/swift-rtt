@@ -3,11 +3,14 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: 'rgb(137,129,250)',
+      main: '#011638',
     },
     secondary: {
-      main: 'rgb(255,116,144)',
+      main: '#0B6E4F',
     },
+    blueMetal: {
+      main: '#011638',
+    }
   },
 });
 
