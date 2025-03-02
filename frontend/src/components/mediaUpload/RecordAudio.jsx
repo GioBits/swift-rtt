@@ -6,12 +6,11 @@ import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../../utils/audioUtils';
 import { MediaContext } from '../../contexts/MediaContext';
-import { uploadMediaFile } from '../../service/mediaUploadService';
 import { useTimer } from '../../hooks/useTimer';
 import '../../index.css';
 
-const RecordAudio = () => {
-  const { isRecording, setUploading, setAudioSelected, selectedLanguages} = useContext(MediaContext);
+const RecordAudio = ({ onFileSelected }) => {
+  const { isRecording } = useContext(MediaContext);
   const ffmpeg = useMemo(() => new FFmpeg(), []);
   const [isPreparing, setIsPreparing] = useState(false);
   const [prepCountdown, setPrepCountdown] = useState(3);
@@ -20,9 +19,12 @@ const RecordAudio = () => {
     async (audioBlob) => {
       await ffmpeg.load();
       const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
-      await uploadMediaFile(mp3File, setUploading, setAudioSelected, selectedLanguages);
+
+      if (onFileSelected) {
+        onFileSelected(mp3File);
+      }
     },
-    [ffmpeg, setUploading, setAudioSelected]
+    [ffmpeg, onFileSelected]
   );
 
   const { startRecording, stopRecording } = useAudioRecorder(handleAudioRecorded);
