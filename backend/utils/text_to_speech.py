@@ -4,6 +4,7 @@ import asyncio
 import logging
 from scipy.io.wavfile import write
 from TTS.api import TTS, ModelManager
+from TTS.utils.synthesizer import Synthesizer
 import os
 
 # Set up logging configuration to suppress TTS logs
@@ -17,10 +18,38 @@ class Text2Speech:
         #tts_models/en/ljspeech/tacotron2-DDC
         #tts_models/en/ljspeech/glow-tts
         self.models = {
-            1: {"language": "english", "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
-            2: {"language": "spanish", "model_name": "tts_models/es/css10/vits"}
-        }
+            1: {"language": "english", "model": None, "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
+            2: {"language": "spanish", "model": None, "model_name": "tts_models/es/css10/vits"}
+        }   
 
+        for language_id in self.models:
+            self.initialize_model(language_id)
+            print("termine de cargar el modelo")
+
+    def initialize_model(self, language_id):
+        '''
+        Initialize the text-to-speech model based on the specified language.
+
+        Parameters:
+        language (str): The language of the speech ('es' for Spanish, 'en' for English).
+
+        Raises:
+        ValueError: If the specified language is not supported.
+        TTS.api.TTS related errors: If there is a problem loading the TTS model.
+        '''
+        if language_id not in self.models:
+            raise ValueError(f"TextToSpeech: Language '{language_id}' not supported. Supported languages are: 'es', 'en'")
+        
+        model_obj = self.models.get(language_id)
+
+        # Load the English text-to-speech model
+        # model_path = f"../static/text2speech/{model_obj.get('model_name')}"   
+        # if not os.path.exists(model_path):
+        #     os.makedirs(model_path)
+
+        print(f"TextToSpeech: Loading model text to speech for language: {model_obj.get('language')}")
+        model_obj["model"] = TTS(model_obj.get('model_name'), gpu=False) # Force CPU usage
+  
     
     def generate_audio_bytes(self, text: str, language_id: int) -> np.ndarray:
         '''
@@ -36,13 +65,8 @@ class Text2Speech:
 
         if language_id not in self.models :
             raise ValueError(f"Language '{language_id}' not supported. Supported languages are: 'es', 'en'")
-        
-        # Load the English text-to-speech model
-        model_path = f"../static/text2speech/"      
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
-
-        tts = TTS(self.models.get(language_id).get("model_name"), gpu=False, model_path=model_path)  # Force CPU usage
+    
+        tts = self.models.get(language_id).get("model")
         # Generate the audio output
         audio = tts.tts(text=text)
         return np.array(audio, dtype=np.float32)  # Ensure correct data type

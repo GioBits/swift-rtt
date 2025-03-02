@@ -6,7 +6,7 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000',
   timeout: 60000,  // Tiempo de espera de 60 segundos
 });
-
+console.log(import.meta.env)
 
 // Interceptor para manejar las solicitudes antes de enviarlas
 apiClient.interceptors.request.use(

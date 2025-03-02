@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -20,9 +20,24 @@ import ReactPlayer from "react-player";
  * 
  * @returns {JSX.Element} The component rendering interactive multimedia content.
  */
-const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
+const MediaContent = ({ title, contentText, audio = null, placeholder, resetTimers, tooltipTitle, tooltipDownload}) => {
   
   const [playing, setPlaying] = useState(false);
+
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    setDuration(0);
+    setCurrentTime(0);
+    }, [resetTimers]);
+
+  const formatTime = (time) => {
+    if (isNaN(time)) {return "00:00";}
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
 
   const togglePlayback = () => {
     setPlaying((prev) => !prev);
@@ -40,9 +55,9 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
   };
 
   return (
-    <div className="bg-white w-full h-1/2 p-5 rounded-lg">
+    <div className="bg-white w-full h-1/2 p-5 rounded-lg shadow">
       <div className="w-full flex flex-col h-[80px] box-border">
-        <div className="bg-primary flex w-full h-[60px] rounded m-auto">
+        <div className="bg-blueMetal flex w-full h-[60px] rounded m-auto">
           <div className="m-auto text-3xl text-white">{title}</div>
         </div>
       </div>
@@ -68,8 +83,8 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
       </div>
 
       <div className="h-[50px] flex flex-row">
-        <div className="m-auto mr-5 flex gap-3">
-          <Tooltip title="Reproducir/Detener audio" arrow>
+        <div className="m-auto ml-0 flex gap-3">
+          <Tooltip title={tooltipTitle} arrow>
             <span>
               <IconButton
                 onClick={togglePlayback}
@@ -88,6 +103,8 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
                     height="0"
                     className="hidden"
                     onEnded={() => setPlaying(false)}
+                    onProgress={(progress) => {setCurrentTime(progress.playedSeconds);}}
+                    onDuration={setDuration}
                   />
                 )}
                 <VolumeUpIcon />
@@ -95,7 +112,14 @@ const MediaContent = ({ title, contentText, audio = null, placeholder }) => {
             </span>
           </Tooltip>
 
-          <Tooltip title="Descargar audio" arrow>
+          {/*Mostrar tiempo de reproduccion*/}
+          <div className={`flex items-center text-gray-600 ${audio ? 'opacity-100' : 'opacity-50'}`}>
+            <span className="font-mono">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+
+          <Tooltip title={tooltipDownload} arrow>
             <span>
               <IconButton
                 onClick={handleDownload}

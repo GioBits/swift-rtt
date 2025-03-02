@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { MediaContext } from '../../contexts/MediaContext'
 import MediaContent from "./MediaContent"
 import { transcriptionService } from '../../service/transcribeService';
@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 const MediaResponse = () => {
   const models = [];
 
+  const [resetTimers, setResetTimers] = useState(false);
+
   const {
     wsResponse,
     transcription,
@@ -20,7 +22,7 @@ const MediaResponse = () => {
     audioTranslation,
     setAudioTranslation,
     audioUrl,
-    setAudioUrl
+    setAudioUrl,
   } = useContext(MediaContext)
 
   useEffect(() => {
@@ -30,6 +32,7 @@ const MediaResponse = () => {
         setTranscription("");
         setTranslate("");
         setAudioTranslation("");
+        setResetTimers(!resetTimers);
       }
     };
     handleResponse();
@@ -103,13 +106,21 @@ const MediaResponse = () => {
         contentText={transcription || ""}
         audio={audioUrl || ""}
         models={models}
-        placeholder="Esperando audio transcrito..." />
+        placeholder="Esperando audio transcrito..." 
+        resetTimers={resetTimers}
+        tooltipTitle="Reproducir/Detener audio original"
+        tooltipDownload="Descargar audio original"
+        />
       <MediaContent
         title="Traducción"
         contentText={translate || ""}
         audio={audioTranslation || ""}
         models={models}
-        placeholder="Esperando texto traducido..." />
+        placeholder="Esperando texto traducido..." 
+        resetTimers={resetTimers}
+        tooltipTitle="Reproducir/Detener audio traducido"
+        tooltipDownload="Descargar audio traducido"
+        />
     </>
   )
 }
