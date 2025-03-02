@@ -1,17 +1,21 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from db.database import SessionLocal
 from sqlalchemy.orm import Session
-from utils.auth import sign_token, verify_password, get_current_user
-from models.users import UsersSchema
+from models.users import Users, UsersSchema
+from utils.auth import AuthUtils
 
-router = APIRouter()
-
-class AuthController:
+class AuthService:
     def __init__(self):
-        pass
+        self.auth_utils = AuthUtils()
+        self.db = SessionLocal()
 
-    async def login(self, email:str, password:str):    
-        if not user or not verify_password(user_credentials.password, user.hashed_password):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
+    def __del__(self):
+        self.db.close()
 
-        access_token = sign_token({"sub": user.username})
-        return {"access_token": access_token, "token_type": "bearer"}
+    def login(self, email:str, password:str):
+        try:
+            user = self.db.query(Users).filter(Users.email == email).first()
+            if email and self.auth_utils.verify_password(password, user.password):
+                access_token = self.sign_token({"email": user.email, "password": user.password_hash})
+            return {"access_token": access_token}
+        except Exception as e:
+            return str(e)
