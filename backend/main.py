@@ -43,13 +43,13 @@ tags_metadata = [
     {"name": "Health", "description": "Health check endpoint"},
     {"name": "Languages", "description": "Operations related to languages"},
     {"name": "Providers", "description": "Operations related to providers"},
+    {"name": "Auth", "description": "Operations related login and sign-in"},
     {"name": "Users", "description": "Operations related to users"},
     {"name": "Audio", "description": "Operations related to audio files"},
     {"name": "Transcriptions", "description": "Operations related to transcriptions"},
     {"name": "Translated text", "description": "Operations related to translations"},
     {"name": "Translated Audios", "description": "Operations related to translated audio files"},
-    {"name": "Utils", "description": "Utility endpoints"},
-    {"name": "Auth", "description": "Operations related login and sign-in"}
+    {"name": "Utils", "description": "Utility endpoints"}
 ]
 
 @asynccontextmanager

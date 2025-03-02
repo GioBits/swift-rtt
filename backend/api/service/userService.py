@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.users import Users, UsersSchema
+from utils.auth import AuthUtils
 import bcrypt
 
 class userService:
     def __init__(self):
         self.db = SessionLocal()
+        self.auth = AuthUtils()
 
     def __del__(self):
         self.db.close()
@@ -22,9 +24,7 @@ class userService:
             UserRecordSchema: The newly created user object if successful.
         """
 
-        salt = bcrypt.gensalt()
-        password_hash = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-
+        password_hash = self.auth.hash_password(password)
         try:
             new_user = Users(
                 email=email,
@@ -71,5 +71,22 @@ class userService:
             if user is None:
                 return None
             return UsersSchema.from_orm(user)
+        except Exception as e:
+            return str(e)
+    
+    def get_user_by_email_with_pass(self, email: str):
+        """
+        Retrieve a user record by its email.
+        Args:
+            email (str): The email of the user.
+        Returns:
+            UserRecordSchema: The user object if found.
+            None: If the user with the given email does not exist.
+        """
+        try:
+            user = self.db.query(Users).filter_by(email=email).first()
+            if user is None:
+                return None
+            return user
         except Exception as e:
             return str(e)

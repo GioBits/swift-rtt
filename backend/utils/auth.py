@@ -7,13 +7,14 @@ from fastapi import HTTPException, status
 class AuthUtils:
     def __init__(self):
         #SECRET and TOKEN
-        self.SECRET_KEY = os.getenv("SECRET_KEY")
-        self.ALGORITHM= os.getenv("ALGORITHM")
-        self.ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+        self.SECRET_KEY = os.getenv("SECRET_KEY") or "secret"
+        self.ALGORITHM= os.getenv("ALGORITHM") or "HS256"
+        self.ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES") or 2
 
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     def sign_token(self, payload: dict):
+        print(payload)
         expiration = datetime.utcnow() + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
         payload.update({"exp": expiration})
         return jwt.encode(payload, self.SECRET_KEY, algorithm=self.ALGORITHM)

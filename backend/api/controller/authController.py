@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from service.authService import AuthService
+from api.service.authService import AuthService
 from models.users import UsersSchema
 
 router = APIRouter()
@@ -31,12 +31,24 @@ class AuthController:
             HTTPException: If an internal server error occurs.
         """  
         try:
-            return await self.auth_service.login(email, password)
-        except HTTPException as e:
-            print(f"HTTPException captured: {e.detail}")
-            raise e
+            return self.auth_service.login(email, password)
+
         except Exception as e:  # Capture general exceptions
+
             print(f"Error: {str(e)}")
+
+            if str(e) == "User not found":
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="invalid email or password"
+                )
+
+            if str(e) == "Invalid password":
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="invalid email or password"
+                )
+
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
