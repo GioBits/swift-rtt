@@ -17,6 +17,9 @@ from api.routes.languageRoute import router as languageRouter
 from api.routes.transcriptionRoute import router as transcriptionRouter
 from api.routes.translationRoute import router as translationRouter
 from api.routes.providerRoute import router as providerRouter
+from api.routes.userRoute import router as userRouter
+from api.routes.authRoute import router as auhtRouter
+
 from contextlib import asynccontextmanager
 
 # Import the populate script
@@ -40,6 +43,8 @@ tags_metadata = [
     {"name": "Health", "description": "Health check endpoint"},
     {"name": "Languages", "description": "Operations related to languages"},
     {"name": "Providers", "description": "Operations related to providers"},
+    {"name": "Auth", "description": "Operations related login and sign-in"},
+    {"name": "Users", "description": "Operations related to users"},
     {"name": "Audio", "description": "Operations related to audio files"},
     {"name": "Transcriptions", "description": "Operations related to transcriptions"},
     {"name": "Translated text", "description": "Operations related to translations"},
@@ -60,10 +65,12 @@ app = FastAPI(
 # Routes
 app.include_router(languageRouter, prefix=("/api"))
 app.include_router(providerRouter, prefix=("/api"))
+app.include_router(userRouter, prefix=("/api"))
 app.include_router(audioRouter, prefix=("/api"))
 app.include_router(transcriptionRouter, prefix=("/api"))
 app.include_router(translationRouter, prefix=("/api"))
 app.include_router(translatedAudioRouter, prefix=("/api"))
+app.include_router(auhtRouter, prefix=("/api"))
 
 #Test endpoints
 app.include_router(utilsRouter, prefix=("/utils"))

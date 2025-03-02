@@ -10,6 +10,7 @@ dotenv.config({ path: resolve(__dirname, '../.env') })
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  assetsInclude: ['**/*.png'],
   optimizeDeps: {
     exclude: ['@ffmpeg/ffmpeg']
   },

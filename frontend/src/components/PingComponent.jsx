@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiService } from '../../service/api';
+import { apiService } from '../service/api';
 
 const PingComponent = () => {
   const [online, setOnline] = useState(null);
@@ -18,7 +18,7 @@ const PingComponent = () => {
 
     const pingInterval = setInterval(() => {
       pingServer();
-    }, 30000);
+    }, 120000);
 
     return () => clearInterval(pingInterval);
   }, []);
@@ -26,7 +26,6 @@ const PingComponent = () => {
   return (
     <>
       <div style={{
-        position: 'fixed',
         top: '20px',
         right: '20px',
         backgroundColor: online ? 'green' : 'red',

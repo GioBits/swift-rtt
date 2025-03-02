@@ -1,15 +1,14 @@
-import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { MediaContext } from '../../contexts/MediaContext';
-import { uploadMediaFile } from '../../service/mediaUploadService';
 import addFileIllustration from '../../assets/add_files.svg';
 
-const Dropzone = () => {
-  const { setUploading, setAudioSelected, selectedLanguages} = useContext(MediaContext);
-
-  const handleDrop = async (acceptFiles) => {
-    const file = acceptFiles[0];
-    await uploadMediaFile(file, setUploading, setAudioSelected, selectedLanguages);
+const Dropzone = ({ onFileSelected }) => {
+  const handleDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      onFileSelected(file);
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Revisar si es necesario
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -2,8 +2,10 @@
 
 @theme {
   --color-primary: rgb(137,129,250);
-  --color-mint: #214e34;
+  --color-mintDark: #0B6E4F;
   --color-loto: rgb(255,116,144);
+  --color-blueMetal: #011638;
+  --color-bg: #EFF1F3
 }
 
 .blinking-circle {
@@ -31,3 +33,19 @@
 .flip-horizontal {
   animation: flipHorizontal 0.5s ease-in-out forwards;
 }
+
+.titleForm {
+  @apply font-semibold text-blueMetal mb-5 text-2xl
+}
+
+.inputForm {
+  @apply w-full mb-2 border-b outline-none focus:border-blueMetal text-base h-9 text-gray-600 transition ease-in delay-300 duration-300
+}
+
+.buttonForm {
+  @apply w-full py-1 bg-blueMetal rounded-sm text-base text-white shadow-md 
+         transition-colors duration-300 cursor-pointer 
+         hover:bg-primary active:bg-primary;
+}
+
+
