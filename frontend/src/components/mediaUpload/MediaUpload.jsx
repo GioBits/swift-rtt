@@ -4,16 +4,32 @@ import Dropzone from './Dropzone';
 import { CircularProgress } from '@mui/material';
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
+import AudioService from '../../service/audioService';
 
 const MediaUpload = () => {
-  const { getUploading } = useContext(MediaContext);
-  const [buttonSelected, setButtonSelected] = useState(false);
+  const { getUploading, setUploading, setAudioSelected, selectedLanguages } = useContext(MediaContext);
+  const [buttonSelected, setButtonSelected] = useState(true);
   const [isClicked, setIsClicked] = useState(true);
 
   const handleButtonClick = (selected) => {
     if (buttonSelected !== selected) {
       setIsClicked(true);
       setButtonSelected(selected);
+    }
+  };
+
+  const handleFileUpload = async (file) => {
+    setUploading(true);
+    try {
+      const response = await AudioService.uploadAudio(file, selectedLanguages);
+      setAudioSelected({
+        audioData: response.audio_data,
+        audioId: response.id,
+      });
+    } catch (error) {
+      console.error("Error al subir el audio: ", error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -30,9 +46,9 @@ const MediaUpload = () => {
         {!getUploading ? (
           <CircularProgress />
         ) : buttonSelected ? (
-          <Dropzone />
+          <Dropzone onFileSelected={handleFileUpload} />
         ) : (
-          <RecordAudio />
+          <RecordAudio onFileSelected={handleFileUpload} />
         )}
       </div>
     </div>

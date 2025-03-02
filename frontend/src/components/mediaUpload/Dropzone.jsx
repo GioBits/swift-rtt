@@ -1,15 +1,28 @@
-import { useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { MediaContext } from '../../contexts/MediaContext';
-import { uploadMediaFile } from '../../service/mediaUploadService';
 import addFileIllustration from '../../assets/add_files.svg';
 
-const Dropzone = () => {
+const Dropzone = ({ onFileSelected }) => {
+  const handleDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (file) {
+      onFileSelected(file);
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Revisar si es necesario
+    }
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: handleDrop,
+    accept: { 'audio/mpeg': ['.mp3'] },
+    maxSize: 10 * 1024 * 1024,
+  });
 
   return (
     <div
+      {...getRootProps()}
       className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8"
     >
+      <input {...getInputProps()} />
       <div>
         <img
           src={addFileIllustration}
