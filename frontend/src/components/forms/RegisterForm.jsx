@@ -49,7 +49,7 @@ export const RegisterForm = () => {
       setPasswordError("Las contraseñas no coinciden");
       return false;
     } else if (!passwordRegex.test(password)) {
-      setPasswordError("La contraseña debe tener entre 8 y 12 caracteres, incluir al menos una mayúscula, una minúscula, un número y un carácter especial.");
+      setPasswordError("La contraseña debe tener entre 8 y 12 caracteres, incluir al menos una mayúscula, una minúscula, un número y un carácter especial !@#$%^&*.");
       return false;
     } else {
       setPasswordError("");
