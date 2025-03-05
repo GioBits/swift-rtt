@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useForm } from "../../hooks/useForm";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../store/slices/authActions";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import registerImg from '../../assets/sign_up_pana.svg';
 import userService from "../../service/userService";
 
 export const RegisterForm = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error } = useSelector((state) => state.auth);
 
@@ -45,8 +43,13 @@ export const RegisterForm = () => {
   };
 
   const validatePassword = (password, confirmPassword) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,12}$/;
+
     if (password !== confirmPassword) {
       setPasswordError("Las contraseñas no coinciden");
+      return false;
+    } else if (!passwordRegex.test(password)) {
+      setPasswordError("La contraseña debe tener entre 8 y 12 caracteres, incluir al menos una mayúscula, una minúscula, un número y un carácter especial.");
       return false;
     } else {
       setPasswordError("");
@@ -77,7 +80,7 @@ export const RegisterForm = () => {
     }
 
     try {
-      const result = await userService.registerUser({ name, lastname, email, password })
+      const result = await userService.registerUser({ name, lastname, email, password });
       if (result) {
         navigate("/login");
       }
