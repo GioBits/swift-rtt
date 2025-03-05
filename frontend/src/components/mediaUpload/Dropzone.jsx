@@ -1,19 +1,39 @@
-import { useDropzone } from 'react-dropzone';
-import addFileIllustration from '../../assets/add_files.svg';
+import { useDropzone } from "react-dropzone";
+import { useState } from "react";
+import addFileIllustration from "../../assets/add_files.svg";
 
 const Dropzone = ({ onFileSelected }) => {
+  const [error, setError] = useState("");
+
   const handleDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file) {
-      onFileSelected(file);
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Revisar si es necesario
-    }
+    if (!file) return;
+
+    setError("");
+
+    const audio = new Audio(URL.createObjectURL(file));
+    
+    audio.onloadedmetadata = () => {
+      const duration = audio.duration;
+
+      if (duration < 3) {
+        setError("El audio debe durar al menos 3 segundos.");
+      } else if (duration > 30) {
+        setError("El audio no puede durar más de 30 segundos.");
+      } else {
+        onFileSelected(file);
+      }
+      URL.revokeObjectURL(audio.src);
+    };
+
+    audio.onerror = () => {
+      setError("No se pudo leer la duración del archivo.");
+    };
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
-    accept: { 'audio/mpeg': ['.mp3'] },
+    accept: { "audio/mpeg": [".mp3"] },
     maxSize: 10 * 1024 * 1024,
   });
 
@@ -35,8 +55,11 @@ const Dropzone = ({ onFileSelected }) => {
             <b className="text-primary font-extrabold">haz click para subir uno</b>
           </p>
           <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs">
-            Admite solo formatos de audio mp3, hasta 10MB y 30 segundos de grabación.
+            Admite solo formatos de audio mp3, hasta 10MB y entre 3 y 30 segundos de grabación.
           </span>
+          {error && (
+            <p className="text-red-500 mt-2 text-sm font-medium">{error}</p>
+          )}
         </div>
       </div>
     </div>
