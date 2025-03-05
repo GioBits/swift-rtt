@@ -12,53 +12,32 @@ export const LoginForm = () => {
   const { error } = useSelector((state) => state.auth);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailError, setEmailError] = useState("");
   const [valuesForm, handleInputChange] = useForm({
-    email: "",
+    username: "",
     password: "",
   });
 
-  const { email, password } = valuesForm;
+  const { username, password } = valuesForm;
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleEmailChange = (e) => {
-    handleInputChange(e);
-    const email = e.target.value;
-    if (!validateEmail(email) && email.length > 0) {
-      setEmailError("Correo electrónico no válido");
-    } else {
-      setEmailError("");
-    }
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Intentando iniciar sesión con:", email, password);
+    console.log("Intentando iniciar sesión con:", username, password);
 
-    if (!email || !password) {
+    if (!username || !password) {
       Swal.fire({
         title: "Error",
-        text: "Email y contraseña son obligatorios",
+        text: "Nombre de usuario y contraseña son obligatorios",
         icon: "error",
       });
       return;
     }
 
-    if (!validateEmail(email)) {
-      setEmailError("Correo electrónico no válido");
-      return;
-    }
-
     try {
-      const result = await dispatch(loginUser({ email, password })).unwrap();
+      const result = await dispatch(loginUser({ username, password })).unwrap(); // Send username instead of email
       navigate("/media-upload");
       console.log("Respuesta del login:", result);
     } catch (err) {
@@ -75,11 +54,11 @@ export const LoginForm = () => {
             <input
               autoComplete="off"
               className="inputForm"
-              name="email"
-              onChange={handleEmailChange}
-              placeholder="Email"
-              type="email"
-              value={email}
+              name="username"
+              onChange={handleInputChange}
+              placeholder="Nombre de usuario"
+              type="text"
+              value={username}
             />
             <input
               autoComplete="off"
@@ -107,7 +86,6 @@ export const LoginForm = () => {
             </button>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </form>
         </div>
         <p className="mb-5 m-auto">

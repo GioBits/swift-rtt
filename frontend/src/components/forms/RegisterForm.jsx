@@ -11,34 +11,29 @@ export const RegisterForm = () => {
   const { error } = useSelector((state) => state.auth);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailError, setEmailError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [valuesForm, handleInputChange] = useForm({
     name: "",
     lastname: "",
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
 
-  const { name, lastname, email, password, confirmPassword } = valuesForm;
+  const { name, lastname, username, password, confirmPassword } = valuesForm;
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleEmailChange = (e) => {
-    handleInputChange(e);
-    const email = e.target.value;
-    if (!validateEmail(email) && email.length > 0) {
-      setEmailError("Correo electrónico no válido");
+  const validateUsername = (username) => {
+    if (username.length < 3) {
+      setUsernameError("El nombre de usuario debe tener al menos 3 caracteres.");
+      return false;
     } else {
-      setEmailError("");
+      setUsernameError("");
+      return true;
     }
   };
 
@@ -59,9 +54,8 @@ export const RegisterForm = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    console.log("Intentando registrarse con:", name, lastname, email, password);
 
-    if (!name || !lastname || !email || !password || !confirmPassword) {
+    if (!name || !lastname || !username || !password || !confirmPassword) {
       Swal.fire({
         title: "Error",
         text: "Todos los campos son obligatorios",
@@ -70,8 +64,7 @@ export const RegisterForm = () => {
       return;
     }
 
-    if (!validateEmail(email)) {
-      setEmailError("Correo electrónico no válido");
+    if (!validateUsername(username)) {
       return;
     }
 
@@ -80,7 +73,7 @@ export const RegisterForm = () => {
     }
 
     try {
-      const result = await userService.registerUser({ name, lastname, email, password });
+      const result = await userService.registerUser({ name, lastname, username, password });
       if (result) {
         navigate("/login");
       }
@@ -119,11 +112,11 @@ export const RegisterForm = () => {
             <input
               autoComplete="off"
               className="inputForm"
-              name="email"
-              onChange={handleEmailChange}
-              placeholder="Email"
-              type="email"
-              value={email}
+              name="username"
+              onChange={handleInputChange}
+              placeholder="Nombre de usuario"
+              type="text"
+              value={username}
             />
             <input
               autoComplete="off"
@@ -160,7 +153,7 @@ export const RegisterForm = () => {
             </button>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
+            {usernameError && <p className="text-red-500 text-sm">{usernameError}</p>}
             {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
           </form>
         </div>
