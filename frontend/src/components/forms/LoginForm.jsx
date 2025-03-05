@@ -37,7 +37,7 @@ export const LoginForm = () => {
     }
 
     try {
-      const result = await dispatch(loginUser({ username, password })).unwrap(); // Send username instead of email
+      const result = await dispatch(loginUser({ username, password })).unwrap();
       navigate("/media-upload");
       console.log("Respuesta del login:", result);
     } catch (err) {
