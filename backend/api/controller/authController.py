@@ -10,7 +10,7 @@ class AuthController:
     Authentication controller that handles login requests.
     Methods:
         __init__(): Initializes the AuthController with an instance of AuthService.
-        login(email: str, password: str): Handles user login logic.
+        login(username: str, password: str): Handles user login logic.
     """
     def __init__(self):
         """
@@ -18,11 +18,11 @@ class AuthController:
         """
         self.auth_service = AuthService()
 
-    async def login(self, email: str, password: str):
+    async def login(self, username: str, password: str):
         """
         Handles a user's login request.
         Args:
-            email (str): The user's email address.
+            username (str): The user's username.
             password (str): The user's password.
         Returns:
             dict: A dictionary with the user's authentication details if login is successful.
@@ -31,7 +31,7 @@ class AuthController:
             HTTPException: If an internal server error occurs.
         """  
         try:
-            return self.auth_service.login(email, password)
+            return self.auth_service.login(username, password)
 
         except Exception as e:  # Capture general exceptions
 
@@ -40,13 +40,13 @@ class AuthController:
             if str(e) == "User not found":
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="invalid email or password"
+                    detail="invalid username or password"
                 )
 
             if str(e) == "Invalid password":
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="invalid email or password"
+                    detail="invalid username or password"
                 )
 
             raise HTTPException(

@@ -1,6 +1,5 @@
 from db.database import SessionLocal
 from sqlalchemy.orm import Session
-from models.users import Users, UsersSchema
 from utils.auth import AuthUtils
 from api.service.userService import userService
 
@@ -27,12 +26,12 @@ class AuthService:
         """
         self.db.close()
 
-    def login(self, email: str, password: str):
+    def login(self, username: str, password: str):
         """
-        Authenticates a user by their email and password.
+        Authenticates a user by their username and password.
 
         Args:
-            email (str): The user's email address.
+            username (str): The user's username.
             password (str): The user's password.
 
         Returns:
@@ -40,7 +39,7 @@ class AuthService:
             str: An error message if authentication fails.
         """
 
-        user = self.user_service.get_user_by_email_with_pass(email)
+        user = self.user_service.get_user_by_username_with_pass(username)
         if not user:
             raise Exception("User not found")
 
@@ -48,6 +47,6 @@ class AuthService:
         if  not verify_password:
             raise Exception("Invalid password")
 
-        access_token = self.auth_utils.sign_token({"email": user.email, "id": user.id})
+        access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
 
         return {"access_token": access_token}

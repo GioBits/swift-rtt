@@ -24,7 +24,7 @@ class Text2Speech:
 
         for language_id in self.models:
             self.initialize_model(language_id)
-            print("termine de cargar el modelo")
+            # print("termine de cargar el modelo")
 
     def initialize_model(self, language_id):
         '''

@@ -5,7 +5,7 @@ const UserService = {
   /**
    * Creates a new user.
    * @param {Object} userData - Object containing user data.
-   * @param {string} userData.email - The email of the user.
+   * @param {string} userData.username - The username of the user.
    * @param {string} userData.password - The password hash of the user.
    * @param {string} userData.firstName - The first name of the user.
    * @param {string} userData.lastName - The last name of the user.
@@ -13,7 +13,7 @@ const UserService = {
    */
   registerUser: async (userData) => {
     const queryParams = new URLSearchParams({
-      email: userData.email,
+      username: userData.username,
       password: userData.password,
       first_name: userData.name,
       last_name: userData.lastname,
@@ -35,13 +35,13 @@ const UserService = {
   /**
    * Logs in a user.
    * @param {Object} loginData - Object containing login data.
-   * @param {string} loginData.email - The email of the user.
+   * @param {string} loginData.username - The username of the user.
    * @param {string} loginData.password - The password of the user.
    * @returns {Promise<Object>} - Promise object representing the response.
    */
   login: async (loginData) => {
     const queryParams = new URLSearchParams({
-      email: loginData.email,
+      username: loginData.username,
       password: loginData.password,
     }).toString();
 
