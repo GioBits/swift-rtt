@@ -5,19 +5,21 @@ from sqlalchemy.orm import relationship
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 
-class Users(Base):
+class UserRecord(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(256), unique= True, nullable=False)
-    password_hash = Column(Text, nullable=False) 
-    first_name = Column(String(256), nullable=False)  
-    last_name = Column(String(256),nullable=False) 
-    last_login = Column(DateTime, default=datetime.utcnow, nullable=False) 
-    is_activate = Column(Boolean, default=True, nullable=False)  
+    username = Column(String(256), unique= True, nullable=False)
+    password_hash = Column(Text, nullable=False)
+    first_name = Column(String(256), nullable=False)
+    last_name = Column(String(256),nullable=False)
+    last_login = Column(DateTime, default=datetime.utcnow, nullable=False)
+    is_activate = Column(Boolean, default=True, nullable=False)
+
+    audio = relationship("AudioRecord", back_populates="user", cascade="all, delete-orphan")
 
 class UsersBase(BaseModel):
-    email: EmailStr
+    username: str
     first_name: str
     last_name: str
     last_login: Optional[datetime] = None
