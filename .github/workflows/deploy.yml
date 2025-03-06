@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - "SPRINT-SEMANA*"
+      - "SPRINT-SEMANA*" # Deploy on sprint branches
 
 jobs:
   deploy:
