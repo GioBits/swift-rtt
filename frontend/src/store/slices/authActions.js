@@ -17,7 +17,7 @@ export const loginUser = createAsyncThunk(
 
       const userData = {
         id: decoded.id,
-        email: decoded.email,
+        username: decoded.username,
       };
 
       localStorage.setItem("token", token);
@@ -45,7 +45,7 @@ export const registerUser = createAsyncThunk(
     const newUser = {
       id: decoded.id,
       name: userData.name,
-      email: userData.email,
+      username: userData.username,
     };
 
     localStorage.setItem("token", fakeToken);
