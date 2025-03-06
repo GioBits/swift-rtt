@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
-from models.users import Users, UsersSchema
+from models.users import UserRecord, UsersSchema
 from utils.auth import AuthUtils
 import bcrypt
 
@@ -12,11 +12,11 @@ class userService:
     def __del__(self):
         self.db.close()
 
-    def create_user(self, email:str, password:str, first_name:str, last_name:str):
+    def create_user(self, username:str, password:str, first_name:str, last_name:str):
         """
         Create a new user entry in the database.
         Args:
-            email (str): The email of the user.
+            username (str): The username of the user.
             password_hash (str): The password hash of the user.
             first_name (str): The first name of the user.
             last_name (str): The last name of the user.
@@ -26,8 +26,8 @@ class userService:
 
         password_hash = self.auth.hash_password(password)
         try:
-            new_user = Users(
-                email=email,
+            new_user = UserRecord(
+                username=username,
                 password_hash=password_hash,
                 first_name=first_name,
                 last_name=last_name
@@ -40,17 +40,17 @@ class userService:
             self.db.rollback()
             return str(e)
         
-    def get_user_by_email(self, email: str):
+    def get_user_by_username(self, username: str):
         """
-        Retrieve a user record by its email.
+        Retrieve a user record by its username.
         Args:
-            email (str): The email of the user.
+            username (str): The username of the user.
         Returns:
             UserRecordSchema: The user object if found.
-            None: If the user with the given email does not exist.
+            None: If the user with the given username does not exist.
         """
         try:
-            user = self.db.query(Users).filter_by(email=email).first()
+            user = self.db.query(UserRecord).filter_by(username=username).first()
             if user is None:
                 return None
             return UsersSchema.from_orm(user)
@@ -64,27 +64,27 @@ class userService:
             id (int): The id of the user.
         Returns:
             UserRecordSchema: The user object if found.
-            None: If the user with the given email does not exist.
+            None: If the user with the given username does not exist.
         """
         try:
-            user = self.db.query(Users).filter_by(id=id).first()
+            user = self.db.query(UserRecord).filter_by(id=id).first()
             if user is None:
                 return None
             return UsersSchema.from_orm(user)
         except Exception as e:
             return str(e)
     
-    def get_user_by_email_with_pass(self, email: str):
+    def get_user_by_username_with_pass(self, username: str):
         """
-        Retrieve a user record by its email.
+        Retrieve a user record by its username.
         Args:
-            email (str): The email of the user.
+            username (str): The username of the user.
         Returns:
             UserRecordSchema: The user object if found.
-            None: If the user with the given email does not exist.
+            None: If the user with the given username does not exist.
         """
         try:
-            user = self.db.query(Users).filter_by(email=email).first()
+            user = self.db.query(UserRecord).filter_by(username=username).first()
             if user is None:
                 return None
             return user

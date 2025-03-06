@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Integer, DateTime, Text, Boolean
 from datetime import datetime
 from db.database import Base
 from sqlalchemy.orm import relationship
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 
 class UserRecord(Base):
