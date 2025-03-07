@@ -3,6 +3,7 @@ from api.service.audioService import AudioService
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
+from api.DTO.audio.audioRequestDTO import create_audioDTO
 from ws.brokerDispatcher import add_audio_task
 
 class AudioController:
@@ -36,7 +37,7 @@ class AudioController:
         else:
             return AudioResponseSchema(**base_response)
 
-    async def create_audio(self, user_id: int, language_id_from: int, language_id_to, file: UploadFile) -> AudioResponseSchema:
+    async def create_audio(self, audioDTO: create_audioDTO) -> AudioResponseSchema:
         """
         Controller function to handle the upload of an audio file.
 
@@ -48,16 +49,16 @@ class AudioController:
             AudioRecordSchema: Record of the audio stored in the database.
         """
         try:
-            file_data = await validate_upload(file)
+            file_data = await validate_upload(audioDTO.file)
 
             # Call the service layer to create the audio
             audio_record = self.audio_service.create_audio(
-                user_id=user_id,
-                filename=file.filename,
-                audio_data=file_data,
-                content_type=file.content_type,
+                user_id=audioDTO.user_id,
+                filename=audioDTO.file.filename,
+                audio_data=audioDTO.file_data,
+                content_type=audioDTO.file.content_type,
                 file_size=len(file_data),
-                language_id=language_id_from
+                language_id=audioDTO.language_id_from
             )
 
             # Add the audio processing task to the queue
@@ -70,8 +71,8 @@ class AudioController:
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": language_id_from,
-                    "to": language_id_to
+                    "from": audioDTO.language_id_from,
+                    "to": audioDTO.language_id_to
                 }
             }
 

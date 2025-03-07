@@ -102,7 +102,7 @@ Para levantar el backend sin Docker, sigue estos pasos:
    python -m venv venv
    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
    ```
-
+   # usar Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine en PowerShell
 3. Instala las dependencias:
 
    ```sh

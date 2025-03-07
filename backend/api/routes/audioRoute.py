@@ -1,5 +1,6 @@
-from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from fastapi import APIRouter, File, UploadFile, Query, Depends, HTTPException
 from api.controller.audioController import AudioController
+from api.DTO.audio.audioRequestDTO import create_audioDTO
 from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
@@ -8,10 +9,7 @@ audio_controller = AudioController()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
-async def create_audio(user_id: int , file: UploadFile = File(...), 
-    language_id_from :int = Query(1, ge=1, le=2, description="Idioma del audio"),
-    language_id_to :int = Query(1, ge=1, le=2, description="Idioma al que se traducirá el audio")
-    ):
+async def create_audio( audioDTO : create_audioDTO = Depends() ):
     """
     Handles the upload of an audio file.
     Args:
@@ -20,7 +18,7 @@ async def create_audio(user_id: int , file: UploadFile = File(...),
     Returns:
         AudioResponseSchema: The response after processing the audio file.
     """
-    return await audio_controller.create_audio(user_id, language_id_from, language_id_to, file)
+    return await audio_controller.create_audio(audioDTO)
 
 @router.post("/process-media", tags=["Audio"])
 async def process_media(audio_id: int, language_id_from: int, language_id_to: int):
