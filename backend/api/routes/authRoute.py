@@ -6,19 +6,16 @@ router = APIRouter()
 auth_controller = AuthController()
 
 @router.post("/auth/login", tags=["Auth"])
-async def login(email:str, password:str):
+async def login(username: str, password: str):
     """
     Endpoint to handle user login.
 
     Args:
-        email (str): The email address of the user.
+        username (str): The username of the user.
         password (str): The password of the user.
 
     Returns:
         JSON response containing authentication details.
-
-    Tags:
-        - Audio
     """
-    return await auth_controller.login(email, password)
+    return await auth_controller.login(username, password)
 
