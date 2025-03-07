@@ -15,7 +15,7 @@ const Home = () => {
       <MediaProvider>
 
         {/* Upload Section */}
-        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-md">
+        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-lg shadow-blueMetal/50">
           
           {/* Modal Providers */}
           <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">

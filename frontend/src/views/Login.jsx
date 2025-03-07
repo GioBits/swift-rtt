@@ -14,12 +14,12 @@ const Login = () => {
 
   return (
     <>
-      <div className='flex flex-col items-center justify-center h-screen w-full bg-gradient-to-b from-indigo-500 to-indigo-900'>
+      <div className='flex flex-col items-center justify-center h-screen w-full bg-[#1c6e8c]'>
         <div className='flex flex-col items-center justify-center h-screen w-full -mt-30'>
           <img src={logoColibri} alt='Colibri Logo' className='h-[15%] w-[15%] mb-4 z-10' />
           <div className='relative mb-12 text-center z-10'>
             <h1 className='text-white text-6xl mb-1 font-serif font-bold'>SwiftVoice</h1>
-            <h2 className='text-white text-xl uppercase font-serif font-semibold'>
+            <h2 className='text-white text-xl uppercase font-sans font-semibold'>
               TRANSCRIPCIÓN - TRADUCCIÓN - TEXTO A VOZ
             </h2>
           </div>

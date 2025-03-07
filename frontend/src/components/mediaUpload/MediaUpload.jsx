@@ -42,7 +42,7 @@ const MediaUpload = () => {
   }
 
   return (
-    <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto'>
+    <div className='box-border flex flex-col h-full w-full min-w-[400px] m-auto'>
       <MediaUploadSelector {...props} />
       <div className='box-border w-full h-[calc(100%-80px)] p-5 flex items-center justify-center'>
         {!getUploading ? (

@@ -52,10 +52,10 @@ const Dropzone = ({ onFileSelected }) => {
         <div>
           <p className="text-base sm:text-md md:text-lg">
             Arrastra y suelta un archivo o <br />
-            <b className="text-primary font-extrabold">haz click para subir uno</b>
+            <b className="text-cerulean font-extrabold">haz click para subir uno</b>
           </p>
           <span className="leading-[1.2] block mt-4 text-slate-500 whitespace-pre-wrap text-xs">
-            Admite solo formatos de audio mp3, hasta 10MB y entre 3 y 30 segundos de grabación.
+            Admite solo formatos de audio mp3. Máximo 10MB, con una duración mínima de 3 segundos hasta 30 segundos.
           </span>
           {error && (
             <p className="text-red-500 mt-2 text-sm font-medium">{error}</p>

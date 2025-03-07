@@ -16,9 +16,9 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
           pointerEvents: isClicked && buttonSelected ? 'none' : 'auto',
           width: '50%',
           height: '50px',
-          backgroundColor: isClicked && buttonSelected ? 'primary' : 'white',
-          borderColor: !buttonSelected ? 'primary' : 'transparent',
-          color: !buttonSelected ? 'primary' : 'white',
+          backgroundColor: isClicked && buttonSelected ? 'secondary' : 'white',
+          borderColor: !buttonSelected ? 'secondary' : 'transparent',
+          color: !buttonSelected ? 'secondary' : 'white',
           marginLeft: '20px',
           marginY: 'auto'
         }}
@@ -35,9 +35,9 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
           width: '50%',
           height: '50px',
           margin: '10px',
-          backgroundColor: isClicked && buttonSelected ? 'white' : 'primary',
-          borderColor: !buttonSelected ? 'transparent' : 'primary',
-          color: !buttonSelected ? 'white' : 'primary',
+          backgroundColor: isClicked && buttonSelected ? 'white' : 'secondary',
+          borderColor: !buttonSelected ? 'transparent' : 'secondary',
+          color: !buttonSelected ? 'white' : 'secondary',
           marginRight: '20px',
           marginY: 'auto'
         }}

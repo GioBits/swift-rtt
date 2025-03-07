@@ -164,7 +164,7 @@ export const RegisterForm = () => {
           </Link>
         </p>
       </div>
-      <div className='w-1/2 hidden sm:block bg-slate-400 rounded-r-xl'>
+      <div className='w-1/2 hidden sm:block bg-blueMetal rounded-r-xl'>
         <img src={registerImg} alt='Colibri App' className='w-full rounded-r-sm' />
       </div>
     </div>
