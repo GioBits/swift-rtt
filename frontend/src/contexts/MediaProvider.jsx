@@ -11,7 +11,6 @@ const wsService = new WebSocketService();
 export const MediaProvider = ({ children }) => {
   const [audioUrl, setAudioUrl] = useState("");
   const [audioTranslation, setAudioTranslation] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [providers, setProvider] = useState([]);
   const [transcription, setTranscription] = useState("");
@@ -95,8 +94,6 @@ export const MediaProvider = ({ children }) => {
         setUploading,
         audioUrl,
         setAudioUrl,
-        isRecording,
-        setIsRecording,
         audioSelected,
         setAudioSelected,
         transcription,
