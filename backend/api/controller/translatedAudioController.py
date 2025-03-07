@@ -3,12 +3,13 @@ from api.service.translatedAudioService import TranslatedAudioService
 from api.service.translationService import TranslationService
 from models.translated_audios import TranslatedAudioRecordSchema, TranslatedAudioResponseSchema
 from pybase64 import b64encode
-from utils.text_to_speech import text2speech
+from providers.serviceLoader import ServiceLoader
 
 class TranslatedAudioController:
     def __init__(self):
         self.translated_audio_service = TranslatedAudioService()
         self.translation_service = TranslationService()
+        self.audio_generator = ServiceLoader.get_text2speech()
 
     def parse_audio_response(self, audio_record: TranslatedAudioRecordSchema) -> TranslatedAudioResponseSchema:
         """
@@ -93,7 +94,7 @@ class TranslatedAudioController:
             language_id = translation_record.language_id
             audio_id = translation_record.audio_id
             
-            audio_data = await text2speech.text_2_speech(translation_record.translation_text, audio_id, translation_record.language_id)
+            audio_data = await self.audio_generator.text_2_speech(translation_record.translation_text, audio_id, translation_record.language_id)
 
             new_translated_audio = self.translated_audio_service.create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, len(audio_data))
             if new_translated_audio is None:
