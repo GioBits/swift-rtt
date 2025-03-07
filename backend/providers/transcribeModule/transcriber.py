@@ -6,7 +6,6 @@ import tempfile
 import asyncio
 import logging
 
-# Configurar el sistema de logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -56,21 +55,21 @@ class Transcriber:
             ValueError: If the language is not supported.
         """
         if not os.path.exists(file_path):
-            logger.error(f"File not found: {file_path}")
+            logger.error(f"Transcriber: File not found: {file_path}")
             raise FileNotFoundError(f"File not found: {file_path}")
         
         if language.lower() not in self.allowed_languages:
-            logger.error(f"Language '{language}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
-            raise ValueError(f"Language '{language}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
+            logger.error(f"Transcriber: Language '{language}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
+            raise ValueError(f"Transcriber: Language '{language}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
 
-        logger.info(f"Starting transcription in '{language}' for file: {file_path}")
+        logger.info(f"Transcriber: Starting transcription in '{language}' for file: {file_path}")
 
         try:
             result = self.model.transcribe(file_path, fp16=False, language=language.lower())
-            logger.info(f"Transcription completed successfully.")
+            logger.info(f"Transcriber: Transcription completed successfully.")
             return result["text"]
         except Exception as e:
-            logger.error(f"Error during transcription: {str(e)}")
+            logger.error(f"Transcriber: Error during transcription: {str(e)}")
             raise
 
     async def transcription_handler(self, file_data: bytes, audio_id: int, language_id: int) -> str:
@@ -89,7 +88,7 @@ class Transcriber:
             ValueError: If the language ID is not supported.
         """
         try:
-            logger.info(f"Initiating transcription for audio_id: {audio_id}")
+            logger.info(f"Transcriber: Initiating transcription for audio_id: {audio_id}")
 
             # Map language ID to language name
             if language_id == 1:
@@ -97,7 +96,7 @@ class Transcriber:
             elif language_id == 2:
                 language = "spanish"
             else:
-                logger.error(f"Language ID '{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
+                logger.error(f"Transcriber: Language ID '{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
                 raise ValueError(f"Language ID '{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
 
             # Create a temporary file to store the audio data
@@ -109,7 +108,7 @@ class Transcriber:
             loop = asyncio.get_running_loop()
 
             # Run the transcription in a separate thread
-            logger.info(f"Running transcription in executor for audio_id: {audio_id}")
+            logger.info(f"Transcriber: Running transcription in executor for audio_id: {audio_id}")
             transcription = await loop.run_in_executor(
                 None,
                 lambda: self.transcribe_audio(temp_path, language)
@@ -118,9 +117,9 @@ class Transcriber:
             # Delete the temporary file
             os.unlink(temp_path)
 
-            logger.info(f"Transcription completed successfully for audio_id: {audio_id}")
+            logger.info(f"Transcriber: Transcription completed successfully for audio_id: {audio_id}")
             return transcription
         
         except Exception as e:
-            logger.error(f"Error during transcription for audio_id: {audio_id}: {str(e)}")
+            logger.error(f"Transcriber: Error during transcription for audio_id: {audio_id}: {str(e)}")
             raise

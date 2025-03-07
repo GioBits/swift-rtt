@@ -2,8 +2,7 @@ import os
 import logging
 from providers.transcribeModule.transcriber import Transcriber
 from providers.translateModule.translate import Translate
-# from translate import Translate
-# from text2speech import Text2Speech
+from providers.text2speachModule.textToSpeach import Text2Speech
 
 # Configurar el sistema de logging
 logging.basicConfig(
@@ -29,7 +28,7 @@ class ServiceLoader:
             logger.info("ServiceLoader: Loading all services...")
             self.transcriber = Transcriber()
             self.translator = Translate()
-            # self.text2speech = Text2Speech()
+            self.text2speech = Text2Speech()
         else:
             logger.warning("ServiceLoader: Services are globally disabled.")
 
