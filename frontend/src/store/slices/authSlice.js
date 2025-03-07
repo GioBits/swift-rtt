@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, registerUser } from "./authActions";
+import { loginUser } from "./authActions";
 
 const authSlice = createSlice({
   name: "auth",
@@ -34,20 +34,6 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.error = action.payload;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        console.log("✅ Registro exitoso", action.payload);
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        console.log("❌ Error en registro:", action.payload);
-        state.user = null;
-        state.token = null;
-        state.isAuthenticated = false;
-        state.error = action.payload;
-      });
   },
 });
 
