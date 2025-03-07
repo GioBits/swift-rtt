@@ -1,6 +1,7 @@
 import os
 import logging
-from providers.transcriberModule.transcriber import Transcriber
+from providers.transcribeModule.transcriber import Transcriber
+from providers.translateModule.translate import Translate
 # from translate import Translate
 # from text2speech import Text2Speech
 
@@ -21,13 +22,13 @@ class ServiceLoader:
 
         # Inicializar servicios solo si el interruptor maestro está habilitado
         self.transcriber = None
-        self.translate = None
+        self.translator = None
         self.text2speech = None
 
         if self.services_enabled:
             logger.info("ServiceLoader: Loading all services...")
             self.transcriber = Transcriber()
-            # self.translate = Translate()
+            self.translator = Translate()
             # self.text2speech = Text2Speech()
         else:
             logger.warning("ServiceLoader: Services are globally disabled.")
@@ -41,14 +42,14 @@ class ServiceLoader:
             return None
         return self.transcriber
 
-    def get_translate(self):
+    def get_translator(self):
         """
         Get the Translate instance if services are enabled, otherwise log an error and return None.
         """
         if not self.services_enabled:
             logger.error("Attempted to access Translate service, but services are globally disabled.")
             return None
-        return self.translate
+        return self.translator
 
     def get_text2speech(self):
         """
