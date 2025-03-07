@@ -13,12 +13,10 @@ const RecordAudio = ({ onFileSelected }) => {
   const [prepCountdown, setPrepCountdown] = useState(3);
   const ffmpeg = useMemo(() => new FFmpeg(), []);
 
-  // Referencias para manejar la grabación
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const startTimeRef = useRef(null);
 
-  // Función para manejar el archivo grabado
   const handleAudioRecorded = useCallback(async (audioBlob) => {
     await ffmpeg.load();
     const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
@@ -28,7 +26,6 @@ const RecordAudio = ({ onFileSelected }) => {
     }
   }, [ffmpeg, onFileSelected]);
 
-  // Función para detener la grabación
   const stopRecording = useCallback(() => {
     const mediaRecorder = mediaRecorderRef.current;
     if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -37,14 +34,11 @@ const RecordAudio = ({ onFileSelected }) => {
     }
   }, []);
 
-  // Hook useTimer para manejar el temporizador
   const { elapsedTime, formatTime } = useTimer(isRecording, stopRecording, 30);
 
-  // Función para iniciar la grabación
   const startRecording = useCallback(() => {
     if (mediaRecorderRef.current) return;
 
-    // Iniciar grabación
     audioChunksRef.current = [];
     startTimeRef.current = Date.now();
     setIsRecording(true);
@@ -85,7 +79,6 @@ const RecordAudio = ({ onFileSelected }) => {
       });
   }, [handleAudioRecorded]);
 
-  // Manejador para iniciar la cuenta regresiva
   const handleStart = () => {
     setIsPreparing(true);
     setPrepCountdown(5);
@@ -116,7 +109,7 @@ const RecordAudio = ({ onFileSelected }) => {
           <div className="w-full flex justify-center items-center mx-auto gap-2 text-4xl">
             <div className="blinking-circle"></div>
             <span className="timer text-[4rem]" style={{ color: 'black' }}>
-              {formatTime(elapsedTime)} {/* Mostrar el temporizador */}
+              {formatTime(elapsedTime)}
             </span>
           </div>
         ) : (
