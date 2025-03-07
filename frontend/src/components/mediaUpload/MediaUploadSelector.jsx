@@ -11,6 +11,7 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
       <Button
         variant={isClicked && buttonSelected ? 'contained' : 'outlined'}
         onClick={() => handleButtonClick(true)}
+        color='secondary'
         sx={{
           textTransform: 'none',
           pointerEvents: isClicked && buttonSelected ? 'none' : 'auto',
@@ -29,6 +30,7 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
       <Button
         variant={isClicked && buttonSelected ? 'outlined' : 'contained'}
         onClick={() => handleButtonClick(false)}
+        color='secondary'
         sx={{
           textTransform: 'none',
           pointerEvents: isClicked && buttonSelected === false ? 'none' : 'auto',

@@ -61,6 +61,7 @@ const ModalProviders = () => {
     <Box className="w-full ml-5 mr-5 flex">
       <Button 
       sx={{ height: '50px' }}
+      color='secondary'
       variant="contained" onClick={handleOpen} fullWidth>
         Seleccionar Modelos
       </Button>
