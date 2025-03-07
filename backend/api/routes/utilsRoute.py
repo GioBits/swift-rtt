@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from fastapi.responses import JSONResponse
-from utils.transcribe import transcriber
+from providers.serviceLoader import ServiceLoader
 from utils.translate import translate
 import tempfile
 import os
 import asyncio
 
 router = APIRouter()
+transcriber = ServiceLoader.get_transcriber()
 
 @router.post("/transcribe", tags=["Utils"])
 async def transcribe_audio_file(file: UploadFile = File(...), language: str = Form(...)):
