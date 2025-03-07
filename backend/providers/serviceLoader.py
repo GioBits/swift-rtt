@@ -4,7 +4,7 @@ from providers.transcribeModule.transcriber import Transcriber
 from providers.translateModule.translate import Translate
 from providers.text2speachModule.textToSpeach import Text2Speech
 
-# Configurar el sistema de logging
+# Configure the logging system
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -16,10 +16,10 @@ class ServiceLoader:
         """
         Initialize the ServiceLoader and load all services if enabled by the environment variable.
         """
-        # Leer la variable de entorno para determinar si los servicios deben cargarse
+        # Read the environment variable to determine if services should be loaded
         self.services_enabled = os.getenv("ENABLE_RTT_SERVICES", "True").lower() == "true"
 
-        # Inicializar servicios solo si el interruptor maestro está habilitado
+        # Initialize services only if the master switch is enabled
         self.transcriber = None
         self.translator = None
         self.text2speech = None
@@ -59,4 +59,5 @@ class ServiceLoader:
             return None
         return self.text2speech
     
+# Create a global instance of the ServiceLoader
 ServiceLoader = ServiceLoader()
