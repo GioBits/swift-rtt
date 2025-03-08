@@ -1,12 +1,13 @@
 from fastapi import HTTPException, status
 from api.service.transcriptionService import TranscriptionService
 from api.service.audioService import AudioService
-from utils.transcribe import transcriber
+from providers.serviceLoader import ServiceLoader
 
 class TranscriptionController:
     def __init__(self):
         self.transcription_service = TranscriptionService()
         self.audio_service = AudioService()
+        self.transcriber = ServiceLoader.get_transcriber()
 
     async def retrieve_all_transcriptions(self):
         """
@@ -70,7 +71,7 @@ class TranscriptionController:
             file_data = audio_info.audio_data
 
             # Transcribe the audio
-            transcription = await transcriber.transcription_handler(file_data, audio_id, language_id)
+            transcription = await self.transcriber.transcription_handler(file_data, audio_id, language_id)
 
             new_transcription = self.transcription_service.create_transcription(audio_id, provider_id, language_id, transcription)
 

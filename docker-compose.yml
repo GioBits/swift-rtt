@@ -12,7 +12,7 @@ services:
     networks:
       - app-network
     restart: "no"
-    mem_limit: 4g
+    mem_limit: 6g
 
   frontend:
     build:
@@ -28,7 +28,7 @@ services:
       - backend
     networks:
       - app-network
-    mem_limit: 2g
+    mem_limit: 1g
 
   db:
     image: postgres:latest
@@ -43,7 +43,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
-    mem_limit: 2g
+    mem_limit: 1g
 
 volumes:
   postgres_data:

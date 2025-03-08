@@ -8,11 +8,12 @@ const AudioService = {
    * @param {Object} selectedLanguages - Object containing source and target languages.
    * @returns {Promise<Object>} - Promise object representing the response.
    */
-  uploadAudio: async (file, selectedLanguages) => {
+  uploadAudio: async (file, selectedLanguages, userId) => {
     const { sourceLanguage, targetLanguage } = selectedLanguages;
     const queryParams = new URLSearchParams({
       language_id_from: sourceLanguage,
       language_id_to: targetLanguage,
+      user_id: userId
     }).toString();
     
     const path = `/api/audio?${queryParams}`;

@@ -1,6 +1,8 @@
 import { useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
+import logo from "../assets/logo_colibri.png";
+import PingComponent from "./PingComponent";
 
 function NavbarComponent() {
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ function NavbarComponent() {
     <div className="h-[60px] bg-[#011638] flex items-center px-6 shadow-md">
       {/* Logo y título */}
       <div className="w-[30%] h-full border-r border-gray-500 flex items-center px-4">
-        <img src="src/assets/logo_colibri.png" alt="Logo" className="w-[70px] h-[40px]" />
+        <img src={logo} alt="Logo" className="w-[70px] h-[40px]" />
         <span className="text-2xl font-semibold text-white ml-3">
           SwiftVoice
         </span>
@@ -49,12 +51,16 @@ function NavbarComponent() {
           </button>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all shadow-md"
-        >
-          Cerrar sesión
-        </button>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all shadow-md"
+          >
+            Cerrar sesión
+          </button>
+
+          <PingComponent />
+        </div>
       </div>
     </div>
   );
