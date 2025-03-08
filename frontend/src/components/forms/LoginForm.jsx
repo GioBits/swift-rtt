@@ -25,7 +25,6 @@ export const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Intentando iniciar sesión con:", username, password);
 
     if (!username || !password) {
       Swal.fire({
@@ -37,9 +36,8 @@ export const LoginForm = () => {
     }
 
     try {
-      const result = await dispatch(loginUser({ username, password })).unwrap();
+      await dispatch(loginUser({ username, password }))
       navigate("/media-upload");
-      console.log("Respuesta del login:", result);
     } catch (err) {
       console.error("Error en el login:", err);
     }

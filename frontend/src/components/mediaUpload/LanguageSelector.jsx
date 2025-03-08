@@ -80,7 +80,7 @@ export default function LanguageSelector() {
 
         <Tooltip title="Intercambiar idiomas" arrow>
           <IconButton
-            color="primary"
+            color="secondary"
             size="medium"
             onClick={handleSwapLanguages}
             sx={{

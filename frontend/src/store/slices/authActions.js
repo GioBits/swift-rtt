@@ -7,7 +7,6 @@ export const loginUser = createAsyncThunk(
   async (credentials, thunkAPI) => {
     try {
       const response = await userService.login(credentials);
-      console.log(response)
       const { access_token: token} = response;
 
       const decoded = decodeJWT(token);
