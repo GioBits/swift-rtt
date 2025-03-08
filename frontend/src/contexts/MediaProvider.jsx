@@ -9,8 +9,8 @@ import PropTypes from "prop-types";
 const wsService = new WebSocketService();
 
 export const MediaProvider = ({ children }) => {
-  const [audioUrl, setAudioUrl] = useState("");
-  const [audioTranslation, setAudioTranslation] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaTranslation, setMediaTranslation] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [providers, setProvider] = useState([]);
@@ -28,9 +28,9 @@ export const MediaProvider = ({ children }) => {
     sourceLanguage: 2,
     targetLanguage: 1,
   });
-  const [audioSelected, setAudioSelected] = useState({
+  const [mediaSelected, setMediaSelected] = useState({
     id: "",
-    audio_data: "",
+    media_data: "",
   })
 
   const wsServiceRef = useRef(wsService);
@@ -93,18 +93,18 @@ export const MediaProvider = ({ children }) => {
         setTargetLanguage: handleSetTargetLanguage,
         getUploading,
         setUploading,
-        audioUrl,
-        setAudioUrl,
+        mediaUrl,
+        setMediaUrl,
         isRecording,
         setIsRecording,
-        audioSelected,
-        setAudioSelected,
+        mediaSelected,
+        setMediaSelected,
         transcription,
         setTranscription,
         translate,
         setTranslate,
-        audioTranslation,
-        setAudioTranslation,
+        mediaTranslation,
+        setMediaTranslation,
         providers
       }}
     >

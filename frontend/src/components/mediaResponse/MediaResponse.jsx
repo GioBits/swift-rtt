@@ -18,25 +18,25 @@ const MediaResponse = () => {
     setTranscription,
     translate,
     setTranslate,
-    audioSelected,
-    audioTranslation,
-    setAudioTranslation,
-    audioUrl,
-    setAudioUrl,
+    mediaSelected,
+    mediaTranslation,
+    setMediaTranslation,
+    mediaUrl,
+    setMediaUrl,
   } = useContext(MediaContext)
 
   useEffect(() => {
     const handleResponse = async () => {
-      if (audioSelected) {
-        setAudioUrl(base64ToUrl(audioSelected.audioData));
+      if (mediaSelected) {
+        setMediaUrl(base64ToUrl(mediaSelected.audioData));
         setTranscription("");
         setTranslate("");
-        setAudioTranslation("");
+        setMediaTranslation("");
         setResetTimers(!resetTimers);
       }
     };
     handleResponse();
-  }, [audioSelected]);
+  }, [mediaSelected]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -104,7 +104,7 @@ const MediaResponse = () => {
       <MediaContent
         title="Transcripción"
         contentText={transcription || ""}
-        audio={audioUrl || ""}
+        media={mediaUrl || ""}
         models={models}
         placeholder="Esperando audio transcrito..." 
         resetTimers={resetTimers}
@@ -114,7 +114,7 @@ const MediaResponse = () => {
       <MediaContent
         title="Traducción"
         contentText={translate || ""}
-        audio={audioTranslation || ""}
+        media={mediaTranslation || ""}
         models={models}
         placeholder="Esperando texto traducido..." 
         resetTimers={resetTimers}
