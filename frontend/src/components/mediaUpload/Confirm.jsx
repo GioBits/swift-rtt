@@ -1,32 +1,133 @@
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import WaveSurfer from "wavesurfer.js";
+import { IconButton, Tooltip } from "@mui/material";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import StopIcon from "@mui/icons-material/Stop";
 
-const Confirm = ({ handleConfirmation }) => {
+const Confirm = ({ handleConfirmation, file }) => {
+  const waveformRef = useRef(null); // Reference for the waveform container
+  const wavesurferRef = useRef(null); // Reference for the WaveSurfer instance
+  const [isPlaying, setIsPlaying] = useState(false); // State to track if audio is playing
+
+  // Function to shorten the file name if it's too long
+  const shortenFileName = (fileName, maxLength = 20) => {
+    if (fileName.length > maxLength) {
+      return `${fileName.substring(0, maxLength)}...`; // Truncate and add ellipsis
+    }
+    return fileName;
+  };
+
+  // Initialize WaveSurfer when the file changes
+  useEffect(() => {
+    if (file && waveformRef.current) {
+      const wavesurfer = WaveSurfer.create({
+        container: waveformRef.current, // Container for the waveform
+        waveColor: "#011638", // Color of the waveform
+        progressColor: "#1c6e8c", // Color of the progress bar
+        cursorColor: "#011638", // Color of the cursor
+        barWidth: 2, // Width of the waveform bars
+        barHeight: 1, // Height of the waveform bars
+        responsive: true, // Make the waveform responsive
+      });
+
+      // Load the audio file
+      wavesurfer.load(URL.createObjectURL(file));
+      wavesurferRef.current = wavesurfer;
+
+      // Event listener for when audio starts playing
+      wavesurfer.on("play", () => setIsPlaying(true));
+
+      // Event listener for when audio is paused
+      wavesurfer.on("pause", () => setIsPlaying(false));
+
+      // Event listener for when audio finishes playing
+      wavesurfer.on("finish", () => setIsPlaying(false));
+
+      // Cleanup function to destroy WaveSurfer instance when the component unmounts
+      return () => {
+        wavesurfer.destroy();
+      };
+    }
+  }, [file]);
+
+  // Function to play or pause the audio
+  const handlePlayPause = () => {
+    if (wavesurferRef.current) {
+      wavesurferRef.current.playPause();
+    }
+  };
+
+  // Function to stop the audio
+  const handleStop = () => {
+    if (wavesurferRef.current) {
+      wavesurferRef.current.stop();
+      setIsPlaying(false); // Set playing state to false
+    }
+  };
+
   return (
-    <div className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8">
-      <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-bold mb-4 text-brownie">Confirmar subida</h2>
-        <p>¿Estás seguro de que deseas subir este archivo de audio?</p>
+    <div className="border border-dashed border-gray-500 text-center rounded-lg w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8">
+      <div className="flex flex-col items-center w-full">
+        <p className="mb-4">Are you sure you want to upload this audio file?</p>
+        
+        {/* Display the file name with a tooltip */}
+        <Tooltip title={file?.name} arrow>
+          <p className="text-sm text-gray-600 mb-4 cursor-pointer">
+            Selected file: <strong>{shortenFileName(file?.name)}</strong>
+          </p>
+        </Tooltip>
+
+        {/* Waveform visualization */}
+        <div ref={waveformRef} className="w-full h-32 mb-1 bg-gray-300 cursor-pointer"></div>
+
+        {/* Playback controls with icons and tooltips */}
+        <div className="flex gap-2 mt-1">
+          <Tooltip title={isPlaying ? "Pause" : "Play"} arrow>
+            <IconButton
+              onClick={handlePlayPause}
+              color="primary"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Stop" arrow>
+            <IconButton
+              onClick={handleStop}
+              color="secondary"
+              aria-label="Stop"
+            >
+              <StopIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+
+        {/* Confirmation and cancellation buttons */}
         <div className="mt-4 flex justify-end">
           <button
             onClick={() => handleConfirmation(false)}
-            className="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            className="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 hover:cursor-pointer"
           >
-            Cancelar
+            Cancel
           </button>
           <button
             onClick={() => handleConfirmation(true)}
-            className="px-4 py-2 bg-cerulean text-white rounded hover:bg-cerulean/60"
+            className="px-4 py-2 bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer"
           >
-            Confirmar
+            Confirm
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Confirm
+export default Confirm;
 
-Confirm.PropTypes = {
-  handleConfirmation: PropTypes.any.isRequired
-}
+// Prop types validation
+Confirm.propTypes = {
+  handleConfirmation: PropTypes.func.isRequired, // Function to handle confirmation
+  file: PropTypes.object.isRequired, // File object to be uploaded
+};
