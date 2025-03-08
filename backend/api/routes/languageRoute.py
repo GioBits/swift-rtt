@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import Depends, APIRouter
 from api.controller.languageController import LanguageController
 from models.languages import LanguageSchema
+from utils.auth import AuthUtils
+auth = AuthUtils()
 
 """
 This module defines the routes for language-related operations in the API.
@@ -15,10 +17,10 @@ Functions:
 router = APIRouter()
 language_controller = LanguageController()
 
-@router.get("/languages", response_model=list, tags=["Languages"])
+@router.get("/languages", response_model=list, dependencies=[Depends(auth.validate_token)], tags=["Languages"])
 async def get_languages():
     return await language_controller.retrieve_all_languages()
 
-@router.post("/languages", response_model=LanguageSchema, tags=["Languages"])
+@router.post("/languages", response_model=LanguageSchema, dependencies=[Depends(auth.validate_token)], tags=["Languages"])
 async def add_language(code: str, name: str):
     return await language_controller.create_language(code, name)
