@@ -8,7 +8,7 @@ class ConnectionManager:
 
     async def connect(self, user_id: str, websocket: WebSocket):
         await websocket.accept()
-        print(self.active_connections)
+        # print(self.active_connections)
         self.active_connections[user_id] = websocket
 
     def disconnect(self, user_id: str):
@@ -20,6 +20,7 @@ class ConnectionManager:
         websocket = self.active_connections.get(str(user_id))
         if websocket:
             await websocket.send_text(json.dumps(message))
+            # print(f"WebSocket: Message sent to user {user_id}")
         else:
             raise ValueError(f"WebSocket: User {user_id} not connected")
 
