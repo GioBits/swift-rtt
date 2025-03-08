@@ -63,6 +63,7 @@ class AudioController:
             # Add the audio processing task to the queue
 
             config = {
+                "user_id": user_id,
                 "record_id": audio_record.id,
                 "providers": {
                     "transcription": 1,
