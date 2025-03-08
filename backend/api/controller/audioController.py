@@ -3,7 +3,7 @@ from api.service.audioService import AudioService
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
-from api.DTO.audio.audioRequestDTO import create_audioDTO
+from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO
 from ws.brokerDispatcher import add_audio_task
 
 class AudioController:
@@ -55,7 +55,7 @@ class AudioController:
             audio_record = self.audio_service.create_audio(
                 user_id=audioDTO.user_id,
                 filename=audioDTO.file.filename,
-                audio_data=audioDTO.file_data,
+                audio_data=file_data,
                 content_type=audioDTO.file.content_type,
                 file_size=len(file_data),
                 language_id=audioDTO.language_id_from
@@ -76,7 +76,7 @@ class AudioController:
                 }
             }
 
-            await add_audio_task(config, "transcribe")
+            #await add_audio_task(config, "transcribe")
 
             return self.parse_audio_response(audio_record, True)
 
@@ -90,7 +90,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def process_media(self, audio_record_id: int, language_id_from: int, language_id_to: int):
+    async def process_media(self, processDTO : process_mediaDTO):
         """
         Controller function to handle the processing of an media file.
 
@@ -105,15 +105,15 @@ class AudioController:
         try:
             # Add the audio processing task to the queue
             config = {
-                "record_id": audio_record_id,
+                "record_id": processDTO.audio_id,
                 "providers": {
                     "transcription": 1,
                     "translation": 2,
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": language_id_from,
-                    "to": language_id_to
+                    "from": processDTO.language_id_from,
+                    "to": processDTO.language_id_to
                 }
             }
 
