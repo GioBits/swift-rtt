@@ -1,13 +1,15 @@
-from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from fastapi import Depends, APIRouter, File, UploadFile, Query, HTTPException
 from api.controller.audioController import AudioController
+from utils.auth import AuthUtils
 from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
 router = APIRouter()
 audio_controller = AudioController()
+auth = AuthUtils()
 
 # Endpoint "/audio", recibe archivo de audio
-@router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
+@router.post("/audio", response_model=AudioResponseWithAudioSchema, dependencies=[Depends(auth.validate_token)],tags=["Audio"])
 async def create_audio(user_id: int , file: UploadFile = File(...), 
     language_id_from :int = Query(1, ge=1, le=2, description="Idioma del audio"),
     language_id_to :int = Query(1, ge=1, le=2, description="Idioma al que se traducirá el audio")
