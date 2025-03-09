@@ -5,24 +5,20 @@ import { languageService } from "../service/languageService";
 import { providerService } from "../service/providerService";
 import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
-
-const wsService = new WebSocketService();
+import { useSelector } from 'react-redux';
 
 export const MediaProvider = ({ children }) => {
   const [audioUrl, setAudioUrl] = useState("");
   const [audioTranslation, setAudioTranslation] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [providers, setProvider] = useState([]);
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
+  const wsServiceRef = useRef(null);
   const uploadingRef = useRef(false);
-
-  const getUploading = () => uploadingRef.current;
-  const setUploading = (value) => {
-    uploadingRef.current = value;
-  };
+  const [isUploading, setIsUploading] = useState(false);
+  const userId = useSelector(state => state.auth.user.id);
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
@@ -30,12 +26,14 @@ export const MediaProvider = ({ children }) => {
   });
   const [audioSelected, setAudioSelected] = useState({
     id: "",
-    audio_data: "",
+    audioData: "",
   })
 
-  const wsServiceRef = useRef(wsService);
-
   useEffect(() => {
+    if (!wsServiceRef.current || wsServiceRef.current.userId !== userId) {
+      wsServiceRef.current = new WebSocketService(userId);
+    }
+
     const handleMessage = (messageData) => {
       setWsResponse(messageData);
       console.log("Mensaje recibido:", messageData);
@@ -47,7 +45,7 @@ export const MediaProvider = ({ children }) => {
     return () => {
       wsServiceInstance.offMessage(handleMessage);
     };
-  }, []);
+  }, [userId])
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -91,12 +89,10 @@ export const MediaProvider = ({ children }) => {
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
         setTargetLanguage: handleSetTargetLanguage,
-        getUploading,
-        setUploading,
+        isUploading,
+        setIsUploading,
         audioUrl,
         setAudioUrl,
-        isRecording,
-        setIsRecording,
         audioSelected,
         setAudioSelected,
         transcription,
@@ -105,7 +101,8 @@ export const MediaProvider = ({ children }) => {
         setTranslate,
         audioTranslation,
         setAudioTranslation,
-        providers
+        providers,
+        userId
       }}
     >
       {children}

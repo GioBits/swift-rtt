@@ -1,12 +1,13 @@
 from fastapi import HTTPException, status
 from api.service.translationService import TranslationService
 from api.service.transcriptionService import TranscriptionService
-from utils.translate import translate
+from providers.serviceLoader import ServiceLoader
 
 class TranslationController:
     def __init__(self):
         self.translation_service = TranslationService()
         self.transcription_service = TranscriptionService()
+        self.translator = ServiceLoader.get_translator()
 
     async def retrieve_all_translations(self):
         """
@@ -71,7 +72,7 @@ class TranslationController:
             audio_id = transcription.audio_id
             
             # Translate the transcribed text
-            translated_text = await translate.translate_text(transcription.transcription_text, audio_id, language_id)
+            translated_text = await self.translator.translate_text(transcription.transcription_text, audio_id, language_id)
             
             # Create the new translation
             new_translation = self.translation_service.create_translation(audio_id, transcription_id, provider_id, language_id, translated_text)

@@ -58,8 +58,8 @@ export default function LanguageSelector() {
   };
 
   return (
-    <div className="flex flex-row w-full min-w-[410px] m-auto box-border h-full">
-      <Box className="flex flex-row w-full gap-5 ml-5 mr-5 items-center justify-center">
+    <div className="flex flex-row w-full m-auto box-border h-full">
+      <Box className="flex flex-row w-[90%] m-auto items-center justify-center">
         <FormControl variant="standard" sx={{ minWidth: 30, width: "45%", display: "flex" }}>
           <InputLabel id="origin-language-select" shrink>
             Idioma Origen
@@ -80,7 +80,7 @@ export default function LanguageSelector() {
 
         <Tooltip title="Intercambiar idiomas" arrow>
           <IconButton
-            color="primary"
+            color="secondary"
             size="medium"
             onClick={handleSwapLanguages}
             sx={{
@@ -88,6 +88,8 @@ export default function LanguageSelector() {
               borderRadius: "50%",
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
               transition: "transform 0.4s ease-in-out",
+              marginLeft: "10px",
+              marginRight: "10px",
             }}
           >
             <SwapHorizIcon fontSize="large" />

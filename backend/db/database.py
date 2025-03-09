@@ -45,6 +45,7 @@ from models.providers import ProviderRecord
 from models.transcription_records import TranscriptionRecord
 from models.translation_records import TranslationRecord
 from models.translated_audios import TranslatedAudioRecord
+from models.users import UserRecord
 
 # Crear las tablas en la base de datos (si no existen)
 def init_db():

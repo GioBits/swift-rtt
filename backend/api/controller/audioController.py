@@ -60,23 +60,6 @@ class AudioController:
                 language_id=language_id_from
             )
 
-            # Add the audio processing task to the queue
-
-            config = {
-                "record_id": audio_record.id,
-                "providers": {
-                    "transcription": 1,
-                    "translation": 2,
-                    "audio_generation": 3
-                },
-                "languages": {
-                    "from": language_id_from,
-                    "to": language_id_to
-                }
-            }
-
-            await add_audio_task(config, "transcribe")
-
             return self.parse_audio_response(audio_record, True)
 
         except ValueError as e:
@@ -89,7 +72,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def process_media(self, audio_record_id: int, language_id_from: int, language_id_to: int):
+    async def process_media(self,  user_id: int, audio_record_id: int, language_id_from: int, language_id_to: int):
         """
         Controller function to handle the processing of an media file.
 
@@ -104,6 +87,7 @@ class AudioController:
         try:
             # Add the audio processing task to the queue
             config = {
+                "user_id": user_id,
                 "record_id": audio_record_id,
                 "providers": {
                     "transcription": 1,

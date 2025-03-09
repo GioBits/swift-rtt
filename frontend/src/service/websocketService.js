@@ -1,7 +1,7 @@
 export default class WebSocketService {
-    constructor() {
+    constructor(userId) {
       this.base = import.meta.env.VITE_APP_API_URL || 'http://localhost:8000';
-      this.url = `${this.base}/ws`;
+      this.url = `${this.base}/ws/${userId}`;
       this.ws = null;
       this.messageCallbacks = [];
       this.connect();
@@ -30,6 +30,7 @@ export default class WebSocketService {
     }
   
     onMessage(callback) {
+      console.log("M:", callback);
       this.messageCallbacks.push(callback);
     }
 

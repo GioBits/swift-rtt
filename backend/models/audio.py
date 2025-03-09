@@ -11,7 +11,7 @@ class AudioRecord(Base):
     __tablename__ = "audios"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'))
     filename = Column(String(255))
     audio_data = Column(LargeBinary)
     content_type = Column(String(50))
@@ -26,6 +26,8 @@ class AudioRecord(Base):
     transcriptions = relationship("TranscriptionRecord", back_populates="audio")
     translations = relationship("TranslationRecord", back_populates="audio")
     translated_audio = relationship("TranslatedAudioRecord", back_populates="audio")
+    
+    user = relationship("UserRecord", back_populates="audio")
    
 class AudioRecordBase(BaseModel):
     user_id: Optional[int] = None

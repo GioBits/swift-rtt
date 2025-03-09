@@ -3,7 +3,7 @@ import { useForm } from "../../hooks/useForm";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/slices/authActions";
-import stt from '../../assets/speech_to_text_pana.svg';
+import stt from '../../assets/stt_pana.svg';
 import Swal from "sweetalert2";
 
 export const LoginForm = () => {
@@ -12,55 +12,32 @@ export const LoginForm = () => {
   const { error } = useSelector((state) => state.auth);
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailError, setEmailError] = useState("");
   const [valuesForm, handleInputChange] = useForm({
-    email: "",
+    username: "",
     password: "",
   });
 
-  const { email, password } = valuesForm;
+  const { username, password } = valuesForm;
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleEmailChange = (e) => {
-    handleInputChange(e);
-    const email = e.target.value;
-    if (!validateEmail(email) && email.length > 0) {
-      setEmailError("Correo electrónico no válido");
-    } else {
-      setEmailError("");
-    }
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Intentando iniciar sesión con:", email, password);
 
-    if (!email || !password) {
+    if (!username || !password) {
       Swal.fire({
         title: "Error",
-        text: "Email y contraseña son obligatorios",
+        text: "Nombre de usuario y contraseña son obligatorios",
         icon: "error",
       });
       return;
     }
 
-    if (!validateEmail(email)) {
-      setEmailError("Correo electrónico no válido");
-      return;
-    }
-
     try {
-      const result = await dispatch(loginUser({ email, password })).unwrap();
+      await dispatch(loginUser({ username, password }))
       navigate("/media-upload");
-      console.log("Respuesta del login:", result);
     } catch (err) {
       console.error("Error en el login:", err);
     }
@@ -75,11 +52,11 @@ export const LoginForm = () => {
             <input
               autoComplete="off"
               className="inputForm"
-              name="email"
-              onChange={handleEmailChange}
-              placeholder="Email"
-              type="email"
-              value={email}
+              name="username"
+              onChange={handleInputChange}
+              placeholder="Nombre de usuario"
+              type="text"
+              value={username}
             />
             <input
               autoComplete="off"
@@ -93,7 +70,7 @@ export const LoginForm = () => {
             <label className="flex mb-5">
               <input
                 type="checkbox"
-                className="mr-2 focus:bg-blueMetal"
+                className="mr-2 accent-blueMetal"
                 checked={isPasswordVisible}
                 onChange={togglePasswordVisibility}
               />
@@ -107,7 +84,6 @@ export const LoginForm = () => {
             </button>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </form>
         </div>
         <p className="mb-5 m-auto">
@@ -117,7 +93,7 @@ export const LoginForm = () => {
           </Link>
         </p>
       </div>
-      <div className='w-1/2 hidden sm:block bg-slate-400 rounded-r-xl'>
+      <div className='w-1/2 hidden sm:block bg-blueMetal rounded-r-xl'>
         <img src={stt} alt='Colibri App' className='h-full rounded-r-sm' />
       </div>
     </div>
