@@ -101,8 +101,8 @@ const MediaContent = ({
         </div>
       </div>
 
-      <div className="h-[50px] flex flex-row w-full">
-        <div className="m-auto ml-0 flex gap-7">
+      <div className="h-[50px] flex w-full">
+        <div className="m-auto w-full flex justify-between">
 
           <Tooltip title={tooltipTitle} arrow>
             <span>
@@ -181,21 +181,6 @@ const MediaContent = ({
             </Tooltip>
           </div>
 
-          <Tooltip title={copied ? "¡Copiado!" : "Copiar texto"} arrow>
-            <span>
-              <IconButton
-                onClick={handleCopyText}
-                disabled={!contentText}
-                sx={{
-                  opacity: contentText ? 1 : 0.5,
-                  cursor: contentText ? 'pointer' : 'not-allowed',
-                }}
-              >
-                <ContentCopyIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-
           <Tooltip title={tooltipDownload} arrow>
             <span>
               <IconButton
@@ -210,6 +195,22 @@ const MediaContent = ({
               </IconButton>
             </span>
           </Tooltip>
+
+          <Tooltip title={copied ? "¡Copiado!" : "Copiar texto"} arrow>
+            <span>
+              <IconButton
+                onClick={handleCopyText}
+                disabled={!contentText}
+                sx={{
+                  opacity: contentText ? 1 : 0.5,
+                  cursor: contentText ? 'pointer' : 'not-allowed',
+                }}
+              >
+                <ContentCopyIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          
         </div>
       </div>
     </div>
