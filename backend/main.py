@@ -90,7 +90,7 @@ app.add_middleware(
 async def get():
     return HTMLResponse(html)
 
-@app.get("/ping", tags=["Health"])
+@app.get("/api/ping", tags=["Health"])
 def ping():
     try:
         return {"message" : "pong"}

@@ -58,7 +58,7 @@ const apiService = {
 
   delete: (url, config = {}) => apiClient.delete(url, config), // DELETE request with optional configuration
 
-  ping: () => apiClient.get('/ping'), // Health check endpoint
+  ping: () => apiClient.get('/api/ping'), // Health check endpoint
 };
 
 export { apiService };
