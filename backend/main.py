@@ -31,6 +31,7 @@ from api.routes.utilsRoute import router as utilsRouter
 #Import queue helper
 from ws.queueSetup import get_message_queue
 from ws.brokerDispatcher import start_background_process
+from ws.connectionManager import manager
 
 #Template html
 from utils.html_template import html
@@ -85,7 +86,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.get("/")
+@app.get("/{user_id}")
 async def get():
     return HTMLResponse(html)
 
@@ -96,28 +97,16 @@ def ping():
     except:
         raise HTTPException(status_code=500, detail= "Internal Server Error")
 
-active_connections = []
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    active_connections.append(websocket)
+@app.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    await manager.connect(user_id, websocket)
     try:
         while True:
             message = await get_message_queue().get()
-            await send_message(message)
+            await manager.send_message(message)
     except WebSocketDisconnect:
-        active_connections.remove(websocket)
-        print("El cliente WebSocket se desconectó.")
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        active_connections.remove(websocket)
-
-async def send_message(message: str):
-    for connection in active_connections.copy():
-        try:
-            await connection.send_text(message)
-        except:
-            active_connections.remove(connection)
+        manager.disconnect(user_id)
+        print(f"WebSocket: User {user_id} disconnected")
 
 # Config host and port for the server
 if __name__ == "__main__":

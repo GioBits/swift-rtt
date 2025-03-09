@@ -5,8 +5,7 @@ import { languageService } from "../service/languageService";
 import { providerService } from "../service/providerService";
 import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
-
-const wsService = new WebSocketService();
+import { useSelector } from 'react-redux';
 
 export const MediaProvider = ({ children }) => {
   const [audioUrl, setAudioUrl] = useState("");
@@ -17,7 +16,9 @@ export const MediaProvider = ({ children }) => {
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
+  const wsServiceRef = useRef(null);
   const uploadingRef = useRef(false);
+  const userId = useSelector(state => state.auth.user.id);
 
   const getUploading = () => uploadingRef.current;
   const setUploading = (value) => {
@@ -33,9 +34,11 @@ export const MediaProvider = ({ children }) => {
     audio_data: "",
   })
 
-  const wsServiceRef = useRef(wsService);
-
   useEffect(() => {
+    if (!wsServiceRef.current || wsServiceRef.current.userId !== userId) {
+      wsServiceRef.current = new WebSocketService(userId);
+    }
+
     const handleMessage = (messageData) => {
       setWsResponse(messageData);
       console.log("Mensaje recibido:", messageData);
@@ -47,7 +50,7 @@ export const MediaProvider = ({ children }) => {
     return () => {
       wsServiceInstance.offMessage(handleMessage);
     };
-  }, []);
+  }, [userId])
 
   useEffect(() => {
     const fetchLanguages = async () => {

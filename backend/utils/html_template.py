@@ -9,7 +9,13 @@ html = """
         <ul id='messages'>
         </ul>
         <script>
-            var ws = new WebSocket("ws://localhost:8000/ws");
+
+            // Obtener el user_id de la URL
+            const pathSegments = window.location.pathname.split('/');
+            const userId = pathSegments[pathSegments.length - 1]; // Último segmento de la ruta
+
+            // Crear la conexión WebSocket usando el user_id
+            var ws = new WebSocket(`ws://localhost:8000/ws/${userId}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')

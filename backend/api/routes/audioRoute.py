@@ -25,7 +25,7 @@ async def create_audio(user_id: int , file: UploadFile = File(...),
     return await audio_controller.create_audio(user_id, language_id_from, language_id_to, file)
 
 @router.post("/process-media", dependencies=[Depends(auth.validate_token)], tags=["Audio"])
-async def process_media(audio_id: int, language_id_from: int, language_id_to: int):
+async def process_media(user_id: int, audio_id: int, language_id_from: int, language_id_to: int):
     """
     Asynchronously processes audio media by converting it from one language to another.
 
@@ -37,7 +37,7 @@ async def process_media(audio_id: int, language_id_from: int, language_id_to: in
     Returns:
         The response from the audio processing controller.
     """
-    return await audio_controller.process_media(audio_id, language_id_from, language_id_to)
+    return await audio_controller.process_media(user_id, audio_id, language_id_from, language_id_to)
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", dependencies=[Depends(auth.validate_token)], response_model=AudioListResponseSchema, tags=["Audio"])
