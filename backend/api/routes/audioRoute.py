@@ -9,7 +9,7 @@ audio_controller = AudioController()
 
 # Endpoint "/audio", recibe archivo de audio
 @router.post("/audio", response_model=AudioResponseWithAudioSchema, tags=["Audio"])
-async def create_audio( audioDTO : create_audioDTO = Depends() ):
+async def create_audio( create_audio_DTO : create_audioDTO = Depends() ):
     """
     Handles the upload of an audio file.
     Args:
@@ -18,7 +18,7 @@ async def create_audio( audioDTO : create_audioDTO = Depends() ):
     Returns:
         AudioResponseSchema: The response after processing the audio file.
     """
-    return await audio_controller.create_audio(audioDTO)
+    return await audio_controller.create_audio(create_audio_DTO)
 
 @router.post("/process-media", tags=["Audio"])
 async def process_media( processDTO: process_mediaDTO = Depends() ):

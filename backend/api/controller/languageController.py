@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from api.service.languageService import LanguageService
+from api.DTO.language.languageDTO import add_languageDTO
 
 class LanguageController:
     def __init__(self):
@@ -37,7 +38,7 @@ class LanguageController:
                 detail="Internal Server Error"
             )
 
-    async def create_language(self, code: str, name: str):
+    async def create_language(self, add_language_DTO : add_languageDTO):
         """
         Asynchronously creates a new language.
 
@@ -57,7 +58,7 @@ class LanguageController:
             server error occurs (HTTP 500).
         """
         try:
-            new_language = self.language_service.create_language(code, name)
+            new_language = self.language_service.create_language(add_language_DTO.code, add_language_DTO.name)
             if new_language is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

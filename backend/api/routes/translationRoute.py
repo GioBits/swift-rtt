@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from api.controller.translationController import TranslationController
 from models.translation_records import TranslationRecordSchema
 from typing import List
+from api.DTO.translation.translationRequestDTO import add_translationDTO
 
 router = APIRouter()
 translation_controller = TranslationController()
@@ -16,7 +17,7 @@ async def get_translations():
     return await translation_controller.retrieve_all_translations()
 
 @router.post("/translations", response_model=TranslationRecordSchema, tags=["Translated text"])
-async def add_translation(transcription_id: int, provider_id: int, language_id: int):
+async def add_translation(add_translation_DTO : add_translationDTO):
     """
     Adds a new translation.
     Args:
@@ -26,7 +27,7 @@ async def add_translation(transcription_id: int, provider_id: int, language_id: 
     Returns:
         TranslationRecordSchema: The newly created translation object.
     """
-    return await translation_controller.create_translation(transcription_id, provider_id, language_id)
+    return await translation_controller.create_translation(add_translation_DTO)
 
 @router.get("/translations/{translation_id}", response_model=TranslationRecordSchema, tags=["Translated text"])
 async def get_translation_by_id(translation_id: int):

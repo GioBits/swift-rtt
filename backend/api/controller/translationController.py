@@ -2,6 +2,7 @@ from fastapi import HTTPException, status
 from api.service.translationService import TranslationService
 from api.service.transcriptionService import TranscriptionService
 from providers.serviceLoader import ServiceLoader
+from api.DTO.translation.translationRequestDTO import add_translationDTO
 
 class TranslationController:
     def __init__(self):
@@ -41,7 +42,7 @@ class TranslationController:
                 detail="Internal Server Error"
             )
 
-    async def create_translation(self, transcription_id: int, provider_id: int, language_id: int):
+    async def create_translation(self, add_translation_DTO : add_translationDTO):
         """
         Asynchronously creates a new translation.
 
@@ -61,7 +62,7 @@ class TranslationController:
         """
         try:
             # Retrieve the transcription by ID
-            transcription = self.transcription_service.get_transcription_by_id(transcription_id)
+            transcription = self.transcription_service.get_transcription_by_id(add_translation_DTO.transcription_id)
             if transcription is None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -72,10 +73,10 @@ class TranslationController:
             audio_id = transcription.audio_id
             
             # Translate the transcribed text
-            translated_text = await self.translator.translate_text(transcription.transcription_text, audio_id, language_id)
+            translated_text = await self.translator.translate_text(transcription.transcription_text, audio_id, add_translation_DTO.language_id)
             
             # Create the new translation
-            new_translation = self.translation_service.create_translation(audio_id, transcription_id, provider_id, language_id, translated_text)
+            new_translation = self.translation_service.create_translation(audio_id, add_translation_DTO.transcription_id, add_translation_DTO.provider_id, add_translation_DTO.language_id, translated_text)
             if new_translation is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

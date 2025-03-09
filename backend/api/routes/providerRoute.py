@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from api.controller.providerController import ProviderController
 from models.providers import ProviderSchema
 from typing import List, Dict, Any
+from api.DTO.provider.providerDTO import add_providerDTO
 
 router = APIRouter()
 provider_controller = ProviderController()
@@ -16,7 +17,7 @@ async def get_providers():
     return await provider_controller.retrieve_all_providers()
 
 @router.post("/providers", response_model=ProviderSchema, tags=["Providers"])
-async def add_provider(data: Dict[str, Any]):
+async def add_provider(add_provider_DTO : add_providerDTO):
     """
     Adds a new provider.
     Args:
@@ -24,4 +25,4 @@ async def add_provider(data: Dict[str, Any]):
     Returns:
         ProviderSchema: The newly created provider object.
     """
-    return await provider_controller.create_provider(data)
+    return await provider_controller.create_provider(add_provider_DTO)

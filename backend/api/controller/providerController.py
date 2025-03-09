@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from api.service.providerService import ProviderService
 from typing import List, Dict, Any
+from api.DTO.provider.providerDTO import add_providerDTO
 
 class ProviderController:
     def __init__(self):
@@ -38,7 +39,7 @@ class ProviderController:
                 detail="Internal Server Error"
             )
 
-    async def create_provider(self, data: Dict[str, Any]):
+    async def create_provider(self, add_provider_DTO : add_providerDTO):
         """
         Asynchronously creates a new provider.
 
@@ -55,7 +56,7 @@ class ProviderController:
             HTTPException: If an internal server error occurs (HTTP 500).
         """
         try:
-            new_provider = self.provider_service.create_provider(data)
+            new_provider = self.provider_service.create_provider(add_provider_DTO.data)
             if new_provider is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

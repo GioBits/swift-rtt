@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from api.controller.translatedAudioController import TranslatedAudioController
 from models.translated_audios import TranslatedAudioRecordSchema
 from typing import List
+from api.DTO.translated_audio.translatedAudioDTO import add_translated_audioDTO
 
 router = APIRouter()
 translated_audio_controller = TranslatedAudioController()
@@ -16,7 +17,7 @@ async def get_translated_audios():
     return await translated_audio_controller.retrieve_all_translated_audios()
 
 @router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
-async def add_translated_audio(translation_id: int, provider_id: int):
+async def add_translated_audio(add_translated_audio_DTO : add_translated_audioDTO):
     """
     Adds a new translated audio.
     Args:
@@ -25,7 +26,7 @@ async def add_translated_audio(translation_id: int, provider_id: int):
     Returns:
         TranslatedAudioRecordSchema: The newly created translated audio object.
     """
-    return await translated_audio_controller.create_translated_audio(translation_id, provider_id)
+    return await translated_audio_controller.create_translated_audio(add_translated_audio_DTO)
 
 @router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
 async def get_translated_audio_by_id(translated_audio_id: int):

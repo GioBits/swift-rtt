@@ -37,7 +37,7 @@ class AudioController:
         else:
             return AudioResponseSchema(**base_response)
 
-    async def create_audio(self, audioDTO: create_audioDTO) -> AudioResponseSchema:
+    async def create_audio(self, create_audio_DTO: create_audioDTO) -> AudioResponseSchema:
         """
         Controller function to handle the upload of an audio file.
 
@@ -49,16 +49,16 @@ class AudioController:
             AudioRecordSchema: Record of the audio stored in the database.
         """
         try:
-            file_data = await validate_upload(audioDTO.file)
+            file_data = await validate_upload(create_audio_DTO.file)
 
             # Call the service layer to create the audio
             audio_record = self.audio_service.create_audio(
-                user_id=audioDTO.user_id,
-                filename=audioDTO.file.filename,
+                user_id=create_audio_DTO.user_id,
+                filename=create_audio_DTO.file.filename,
                 audio_data=file_data,
-                content_type=audioDTO.file.content_type,
+                content_type=create_audio_DTO.file.content_type,
                 file_size=len(file_data),
-                language_id=audioDTO.language_id_from
+                language_id=create_audio_DTO.language_id_from
             )
 
             # Add the audio processing task to the queue
@@ -71,8 +71,8 @@ class AudioController:
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": audioDTO.language_id_from,
-                    "to": audioDTO.language_id_to
+                    "from": create_audio_DTO.language_id_from,
+                    "to": create_audio_DTO.language_id_to
                 }
             }
 
@@ -90,7 +90,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def process_media(self, processDTO : process_mediaDTO):
+    async def process_media(self, process_media_DTO : process_mediaDTO):
         """
         Controller function to handle the processing of an media file.
 
@@ -105,15 +105,15 @@ class AudioController:
         try:
             # Add the audio processing task to the queue
             config = {
-                "record_id": processDTO.audio_id,
+                "record_id": process_media_DTO.audio_id,
                 "providers": {
                     "transcription": 1,
                     "translation": 2,
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": processDTO.language_id_from,
-                    "to": processDTO.language_id_to
+                    "from": process_media_DTO.language_id_from,
+                    "to": process_media_DTO.language_id_to
                 }
             }
 

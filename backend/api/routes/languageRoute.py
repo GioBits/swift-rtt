@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from api.controller.languageController import LanguageController
 from models.languages import LanguageSchema
+from api.DTO.language.languageDTO import add_languageDTO
 
 """
 This module defines the routes for language-related operations in the API.
@@ -20,5 +21,5 @@ async def get_languages():
     return await language_controller.retrieve_all_languages()
 
 @router.post("/languages", response_model=LanguageSchema, tags=["Languages"])
-async def add_language(code: str, name: str):
-    return await language_controller.create_language(code, name)
+async def add_language(add_language_DTO : add_languageDTO):
+    return await language_controller.create_language(add_language_DTO)
