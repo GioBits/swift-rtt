@@ -17,3 +17,10 @@ class process_mediaDTO(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+class retrieve_audios_listDTO(BaseModel):
+    page: int = Field(Query(1, ge=1, description="Número de página"));
+    size: int = Field(Query(10, ge=1, le=50, description="Número de elementos por página"))
+
+    class Config:
+        arbitrary_types_allowed = True

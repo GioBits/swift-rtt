@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, Query, Depends, HTTPException
 from api.controller.audioController import AudioController
-from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO
+from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO, retrieve_audios_listDTO
 from models.audio import AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from typing import List
 
@@ -37,10 +37,7 @@ async def process_media( processDTO: process_mediaDTO = Depends() ):
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])
-async def retrieve_audios_list(
-    page: int = Query(1, ge=1, description="Número de página"),
-    size: int = Query(10, ge=1, le=50, description="Número de elementos por página")
-):
+async def retrieve_audios_list(retrieve_audios_list_DTO : retrieve_audios_listDTO):
     """
     Retrieves a paginated list of audio files from the database.
     Args:
@@ -50,10 +47,10 @@ async def retrieve_audios_list(
         list: A list of AudioResponseSchema objects.
     """
     try:
-        if page < 1 or size < 1:
+        if retrieve_audios_list_DTO.page < 1 or retrieve_audios_list_DTO.size < 1:
             raise HTTPException(status_code=400, detail="Page y size deben ser números positivos.")
         
-        return await audio_controller.retrieve_all_audios(page, size)
+        return await audio_controller.retrieve_all_audios(retrieve_audios_list_DTO)
     except HTTPException as e:
         raise e
 

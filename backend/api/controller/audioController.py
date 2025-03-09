@@ -3,7 +3,7 @@ from api.service.audioService import AudioService
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
-from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO
+from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO, retrieve_audios_listDTO
 from ws.brokerDispatcher import add_audio_task
 
 class AudioController:
@@ -125,7 +125,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def retrieve_all_audios(self, page: int, size: int):
+    async def retrieve_all_audios(self, retrieve_audios_list_DTO : retrieve_audios_listDTO):
         """
         Asynchronously retrieves all audios with pagination.
 
@@ -144,13 +144,13 @@ class AudioController:
             HTTPException: If no audios are found (404) or if an internal server error occurs (500).
         """
         try:
-            audios, total_items, total_pages = self.audio_service.get_all_audios(page, size)
+            audios, total_items, total_pages = self.audio_service.get_all_audios(retrieve_audios_list_DTO.page, retrieve_audios_list_DTO.size)
 
             response = {
                 "data": audios,
                 "pagination": {
-                    "page": page,
-                    "size": size,
+                    "page": retrieve_audios_list_DTO.page,
+                    "size": retrieve_audios_list_DTO.size,
                     "total_items": total_items,
                     "total_pages": total_pages
                 }
