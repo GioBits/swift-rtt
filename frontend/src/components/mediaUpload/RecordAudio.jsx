@@ -1,34 +1,83 @@
-import { useState, useContext, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import { Button } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { convertWavToMp3 } from '../../utils/audioUtils';
-import { MediaContext } from '../../contexts/MediaContext';
 import { useTimer } from '../../hooks/useTimer';
 import '../../index.css';
 
 const RecordAudio = ({ onFileSelected }) => {
-  const { isRecording } = useContext(MediaContext);
-  const ffmpeg = useMemo(() => new FFmpeg(), []);
+  const [isRecording, setIsRecording] = useState(false);
   const [isPreparing, setIsPreparing] = useState(false);
   const [prepCountdown, setPrepCountdown] = useState(3);
+  const ffmpeg = useMemo(() => new FFmpeg(), []);
 
-  const handleAudioRecorded = useCallback(
-    async (audioBlob) => {
-      await ffmpeg.load();
-      const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const startTimeRef = useRef(null);
 
-      if (onFileSelected) {
-        onFileSelected(mp3File);
-      }
-    },
-    [ffmpeg, onFileSelected]
-  );
+  const handleAudioRecorded = useCallback(async (audioBlob) => {
+    await ffmpeg.load();
+    const mp3File = await convertWavToMp3(ffmpeg, audioBlob);
 
-  const { startRecording, stopRecording } = useAudioRecorder(handleAudioRecorded);
+    if (onFileSelected) {
+      onFileSelected(mp3File);
+    }
+  }, [ffmpeg, onFileSelected]);
+
+  const stopRecording = useCallback(() => {
+    const mediaRecorder = mediaRecorderRef.current;
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  }, []);
+
   const { elapsedTime, formatTime } = useTimer(isRecording, stopRecording, 30);
+
+  const startRecording = useCallback(() => {
+    if (mediaRecorderRef.current) return;
+
+    audioChunksRef.current = [];
+    startTimeRef.current = Date.now();
+    setIsRecording(true);
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = (e) => {
+          audioChunksRef.current.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const duration = Date.now() - startTimeRef.current;
+          mediaRecorderRef.current = null;
+          setIsRecording(false);
+
+          if (duration < 3000) {
+            console.error("La grabación es demasiado corta.");
+            return;
+          }
+
+          try {
+            const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+            await handleAudioRecorded(audioBlob);
+          } catch (uploadError) {
+            console.error("Error al subir el audio:", uploadError);
+          } finally {
+            audioChunksRef.current = [];
+          }
+        };
+      })
+      .catch((error) => {
+        console.error("Error al acceder al micrófono:", error);
+        setIsRecording(false);
+      });
+  }, [handleAudioRecorded]);
 
   const handleStart = () => {
     setIsPreparing(true);
@@ -39,7 +88,7 @@ const RecordAudio = ({ onFileSelected }) => {
         if (prev <= 1) {
           clearInterval(countdownInterval);
           setIsPreparing(false);
-          startRecording();
+          startRecording(); // Comenzar la grabación
         }
         return prev - 1;
       });
@@ -47,7 +96,7 @@ const RecordAudio = ({ onFileSelected }) => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg box-border p-4 sm:p-6 md:p-8">
+    <>
       <div className="h-3/4 w-full flex flex-col justify-center items-center">
         {isPreparing ? (
           <div className="p-5 text-center text-base sm:text-md md:text-lg text-black animate-pulse">
@@ -92,7 +141,7 @@ const RecordAudio = ({ onFileSelected }) => {
       >
         {isPreparing ? 'Preparando...' : isRecording ? 'Detener' : 'Iniciar'}
       </Button>
-    </div>
+    </>
   );
 };
 

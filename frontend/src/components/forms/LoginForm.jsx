@@ -3,7 +3,7 @@ import { useForm } from "../../hooks/useForm";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/slices/authActions";
-import stt from '../../assets/speech_to_text_pana.svg';
+import stt from '../../assets/stt_pana.svg';
 import Swal from "sweetalert2";
 
 export const LoginForm = () => {
@@ -25,7 +25,6 @@ export const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Intentando iniciar sesión con:", username, password);
 
     if (!username || !password) {
       Swal.fire({
@@ -37,9 +36,8 @@ export const LoginForm = () => {
     }
 
     try {
-      const result = await dispatch(loginUser({ username, password })).unwrap();
+      await dispatch(loginUser({ username, password }))
       navigate("/media-upload");
-      console.log("Respuesta del login:", result);
     } catch (err) {
       console.error("Error en el login:", err);
     }
@@ -72,7 +70,7 @@ export const LoginForm = () => {
             <label className="flex mb-5">
               <input
                 type="checkbox"
-                className="mr-2 focus:bg-blueMetal"
+                className="mr-2 accent-blueMetal"
                 checked={isPasswordVisible}
                 onChange={togglePasswordVisibility}
               />
@@ -95,7 +93,7 @@ export const LoginForm = () => {
           </Link>
         </p>
       </div>
-      <div className='w-1/2 hidden sm:block bg-slate-400 rounded-r-xl'>
+      <div className='w-1/2 hidden sm:block bg-blueMetal rounded-r-xl'>
         <img src={stt} alt='Colibri App' className='h-full rounded-r-sm' />
       </div>
     </div>

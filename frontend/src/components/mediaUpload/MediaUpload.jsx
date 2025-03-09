@@ -1,18 +1,23 @@
 import { useState, useContext } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
+import Confirm from './Confirm';
+import DisplayAudioWave from './DisplayAudioWave';
 import { CircularProgress } from '@mui/material';
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
-import AudioService from '../../service/audioService';
 import { useSelector } from 'react-redux';
+import { Button } from '@mui/material';
 
 const MediaUpload = () => {
-  const { getUploading, setUploading, setAudioSelected, selectedLanguages } = useContext(MediaContext);
-  const [buttonSelected, setButtonSelected] = useState(true);
-  const [isClicked, setIsClicked] = useState(true);
-  const userId = useSelector(state => state.auth.user.id);
- 
+  // Access context and state
+  const { isUploading, audioSelected, setAudioSelected } = useContext(MediaContext);
+  const [buttonSelected, setButtonSelected] = useState(true); // State for selected button (Dropzone or RecordAudio)
+  const [isClicked, setIsClicked] = useState(true); // State to track if a button is clicked
+  const [fileToUpload, setFileToUpload] = useState(null); // State to store the file to upload
+  const userId = useSelector(state => state.auth.user.id); // Get the user ID from Redux store
+
+  // Handle button click to switch between Dropzone and RecordAudio
   const handleButtonClick = (selected) => {
     if (buttonSelected !== selected) {
       setIsClicked(true);
@@ -20,41 +25,76 @@ const MediaUpload = () => {
     }
   };
 
-  const handleFileUpload = async (file) => {
-    setUploading(true);
-    try {
-      const response = await AudioService.uploadAudio(file, selectedLanguages, userId);
-      setAudioSelected({
-        audioData: response.audio_data,
-        audioId: response.id,
-      });
-    } catch (error) {
-      console.error("Error al subir el audio: ", error);
-    } finally {
-      setUploading(false);
-    }
+  // Handle file selection (from Dropzone or RecordAudio)
+  const handleFileSelected = (file) => {
+    setFileToUpload(file); // Set the file to upload
   };
 
+  const handleNewAudio = () => {
+    setAudioSelected({audioData: '', id: ''});
+    setFileToUpload(null);
+  }
+
+  // Props to pass to MediaUploadSelector
   const props = {
     isClicked: isClicked,
     buttonSelected: buttonSelected,
     handleButtonClick: handleButtonClick
-  }
+  };
+
+  // Logic to handle the content to render
+  const renderContent = () => {
+    if (isUploading) {
+      return <CircularProgress />;
+    }
+
+    if(fileToUpload){
+      return (
+        <>
+          <DisplayAudioWave file={fileToUpload} />
+          <Confirm file={fileToUpload} audioId={audioSelected.id} handleNewAudio={handleNewAudio} />
+        </>
+      )
+    }
+
+    if (buttonSelected) {
+      return <Dropzone onFileSelected={handleFileSelected} />;
+    }
+
+    return <RecordAudio onFileSelected={handleFileSelected} />;
+  };
 
   return (
-    <div className='box-border flex flex-col h-full w-full mix-w-[400px] m-auto'>
-      <MediaUploadSelector {...props} />
-      <div className='box-border w-full h-[calc(100%-80px)] p-5 flex items-center justify-center'>
-        {!getUploading ? (
-          <CircularProgress />
-        ) : buttonSelected ? (
-          <Dropzone onFileSelected={handleFileUpload} />
-        ) : (
-          <RecordAudio onFileSelected={handleFileUpload} />
-        )}
+    <div className='box-border flex flex-col h-full w-full m-auto'>
+      {/* Render the MediaUploadSelector component */}
+      { fileToUpload ?  // TODO move this buttom to another component
+      <Button
+        variant={'contained' }
+        onClick={ () => handleNewAudio() }
+        color='secondary'
+        sx={{
+          textTransform: 'none',
+          width: '90%',
+          height: '50px',
+          backgroundColor: 'secondary',
+          borderColor:'secondary',
+          color:'secondary',
+          margin: 'auto',
+        }}
+      >
+        Nuevo Audio
+      </Button> : 
+      <MediaUploadSelector {...props} /> }
+      
+      {/* Main content area */}
+      <div className="box-border w-[90%] m-auto h-full mt-[20px] mb-[20px] flex items-center justify-center">
+        <div div className="h-full w-full flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg box-border p-4 sm:p-6 md:p-8">
+        {renderContent()}
+        </div>
+        
       </div>
     </div>
   );
-}
+};
 
 export default MediaUpload;
