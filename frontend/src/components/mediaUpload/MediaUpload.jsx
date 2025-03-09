@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
 import Confirm from './Confirm';
+import DisplayAudioWave from './DisplayAudioWave';
 import { CircularProgress } from '@mui/material';
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
@@ -31,6 +32,11 @@ const MediaUpload = () => {
     setFileToUpload(file); // Set the file to upload
     setShowConfirmation(true); // Show the confirmation dialog
   };
+
+  const handleNewAudio = () => {
+    setAudioSelected({audioData: '', id: ''});
+    setFileToUpload(null);
+  }
 
   // Handle confirmation (when the user confirms or cancels the upload)
   const handleConfirmation = async (confirmed) => {
@@ -70,7 +76,6 @@ const MediaUpload = () => {
     } catch (error) {
       console.error("Error uploading or processing the audio: ", error); // Log any errors
     } finally {
-      setFileToUpload(null); // Clear the file to upload
       setIsUploading(false); // Set uploading state to false
     }
 
@@ -89,12 +94,20 @@ const MediaUpload = () => {
       return <CircularProgress />;
     }
 
-    if(audioSelected.id){
-      return <>holaa</>;
-    }
+    if(fileToUpload){
+      
+      let uploadButtom;
 
-    if (showConfirmation) {
-      return <Confirm handleConfirmation={handleConfirmation} file={fileToUpload} />;
+      if(audioSelected.id){
+        uploadButtom = <>holaaa</>
+      }else{
+        uploadButtom = <Confirm handleConfirmation={handleConfirmation} file={fileToUpload} />;
+      }
+
+      return (<>
+        <DisplayAudioWave file={fileToUpload} />;
+        {uploadButtom}
+      </>)
     }
 
     if (buttonSelected) {
@@ -107,10 +120,10 @@ const MediaUpload = () => {
   return (
     <div className='box-border flex flex-col h-full w-full m-auto'>
       {/* Render the MediaUploadSelector component */}
-      { audioSelected.id ?  // TODO move this buttom to another component
+      { fileToUpload ?  // TODO move this buttom to another component
       <Button
         variant={'contained' }
-        onClick={ () => {setAudioSelected({audioData: '', id: ''})}}
+        onClick={ () => handleNewAudio() }
         color='secondary'
         sx={{
           textTransform: 'none',
@@ -127,8 +140,11 @@ const MediaUpload = () => {
       <MediaUploadSelector {...props} /> }
       
       {/* Main content area */}
-      <div className="box-border w-full h-[calc(100%-80px)] p-5 flex items-center justify-center">
+      <div className="box-border w-[90%] m-auto h-full mt-[20px] mb-[20px] flex items-center justify-center">
+        <div div className="h-full w-full flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg box-border p-4 sm:p-6 md:p-8">
         {renderContent()}
+        </div>
+        
       </div>
     </div>
   );

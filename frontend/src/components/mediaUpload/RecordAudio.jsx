@@ -96,7 +96,7 @@ const RecordAudio = ({ onFileSelected }) => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg box-border p-4 sm:p-6 md:p-8">
+    <>
       <div className="h-3/4 w-full flex flex-col justify-center items-center">
         {isPreparing ? (
           <div className="p-5 text-center text-base sm:text-md md:text-lg text-black animate-pulse">
@@ -141,7 +141,7 @@ const RecordAudio = ({ onFileSelected }) => {
       >
         {isPreparing ? 'Preparando...' : isRecording ? 'Detener' : 'Iniciar'}
       </Button>
-    </div>
+    </>
   );
 };
 

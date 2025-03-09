@@ -40,7 +40,7 @@ const Dropzone = ({ onFileSelected }) => {
   return (
     <div
       {...getRootProps()}
-      className="border border-dashed border-gray-500 text-center rounded-lg cursor-pointer w-full flex justify-center items-center box-border h-full p-4 sm:p-6 md:p-8"
+      className=" text-center cursor-pointer"
     >
       <input {...getInputProps()} />
       <div>
