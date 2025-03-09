@@ -58,7 +58,7 @@ const ModalProviders = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box className="w-full ml-5 mr-5 flex">
+    <Box className="w-[90%] m-auto flex">
       <Button 
       sx={{ height: '50px' }}
       color='secondary'

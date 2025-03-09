@@ -17,12 +17,8 @@ export const MediaProvider = ({ children }) => {
   const [wsResponse, setWsResponse] = useState("");
   const wsServiceRef = useRef(null);
   const uploadingRef = useRef(false);
+  const [isUploading, setIsUploading] = useState(false);
   const userId = useSelector(state => state.auth.user.id);
-
-  const getUploading = () => uploadingRef.current;
-  const setUploading = (value) => {
-    uploadingRef.current = value;
-  };
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
@@ -30,7 +26,7 @@ export const MediaProvider = ({ children }) => {
   });
   const [audioSelected, setAudioSelected] = useState({
     id: "",
-    audio_data: "",
+    audioData: "",
   })
 
   useEffect(() => {
@@ -93,8 +89,8 @@ export const MediaProvider = ({ children }) => {
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
         setTargetLanguage: handleSetTargetLanguage,
-        getUploading,
-        setUploading,
+        isUploading,
+        setIsUploading,
         audioUrl,
         setAudioUrl,
         audioSelected,
