@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.controller.providerController import ProviderController
 from models.providers import ProviderSchema
 from typing import List, Dict, Any
@@ -17,7 +17,7 @@ async def get_providers():
     return await provider_controller.retrieve_all_providers()
 
 @router.post("/providers", response_model=ProviderSchema, tags=["Providers"])
-async def add_provider(add_provider_DTO : add_providerDTO):
+async def add_provider(add_provider_DTO : add_providerDTO = Depends()):
     """
     Adds a new provider.
     Args:

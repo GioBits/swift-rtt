@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.controller.transcriptionController import TranscriptionController
 from models.transcription_records import TranscriptionRecordSchema
 from typing import List
@@ -12,7 +12,7 @@ async def get_transcriptions():
     return await transcription_controller.retrieve_all_transcriptions()
 
 @router.post("/transcriptions", response_model=TranscriptionRecordSchema, tags=["Transcriptions"])
-async def add_transcription(add_transcription_DTO : add_transcriptionDTO):
+async def add_transcription(add_transcription_DTO : add_transcriptionDTO = Depends()):
     return await transcription_controller.create_transcription(add_transcription_DTO)
 
 @router.get("/transcriptions/{transcription_id}", response_model=TranscriptionRecordSchema, tags=["Transcriptions"])

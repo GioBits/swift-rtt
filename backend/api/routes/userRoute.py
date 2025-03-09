@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from fastapi import APIRouter, File, UploadFile, Query, HTTPException, Depends
 from api.controller.userController import userController
 from typing import List
 from api.DTO.user.userRequestDTO import create_userDTO
@@ -8,7 +8,7 @@ user_controller= userController()
 
 # Endpoint "/users", recibe datos de usuario para crear un nuevo usuario
 @router.post("/users", tags=["Users"])
-async def create_user(create_user_DTO : create_userDTO):
+async def create_user(create_user_DTO : create_userDTO = Depends()):
     """
     Create a new user entry in the database.
     Args:

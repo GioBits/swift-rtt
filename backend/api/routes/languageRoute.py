@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.controller.languageController import LanguageController
 from models.languages import LanguageSchema
 from api.DTO.language.languageDTO import add_languageDTO
@@ -21,5 +21,5 @@ async def get_languages():
     return await language_controller.retrieve_all_languages()
 
 @router.post("/languages", response_model=LanguageSchema, tags=["Languages"])
-async def add_language(add_language_DTO : add_languageDTO):
+async def add_language(add_language_DTO : add_languageDTO = Depends()):
     return await language_controller.create_language(add_language_DTO)

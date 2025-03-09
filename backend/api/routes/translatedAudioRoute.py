@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.controller.translatedAudioController import TranslatedAudioController
 from models.translated_audios import TranslatedAudioRecordSchema
 from typing import List
@@ -17,7 +17,7 @@ async def get_translated_audios():
     return await translated_audio_controller.retrieve_all_translated_audios()
 
 @router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
-async def add_translated_audio(add_translated_audio_DTO : add_translated_audioDTO):
+async def add_translated_audio(add_translated_audio_DTO : add_translated_audioDTO = Depends()):
     """
     Adds a new translated audio.
     Args:

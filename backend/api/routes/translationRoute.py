@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.controller.translationController import TranslationController
 from models.translation_records import TranslationRecordSchema
 from typing import List
@@ -17,7 +17,7 @@ async def get_translations():
     return await translation_controller.retrieve_all_translations()
 
 @router.post("/translations", response_model=TranslationRecordSchema, tags=["Translated text"])
-async def add_translation(add_translation_DTO : add_translationDTO):
+async def add_translation(add_translation_DTO : add_translationDTO = Depends()):
     """
     Adds a new translation.
     Args:
