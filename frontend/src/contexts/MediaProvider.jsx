@@ -101,7 +101,8 @@ export const MediaProvider = ({ children }) => {
         setTranslate,
         audioTranslation,
         setAudioTranslation,
-        providers
+        providers,
+        userId
       }}
     >
       {children}
