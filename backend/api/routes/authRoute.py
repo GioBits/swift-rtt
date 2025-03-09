@@ -7,7 +7,7 @@ router = APIRouter()
 auth_controller = AuthController()
 
 @router.post("/auth/login", tags=["Auth"])
-async def login(login_DTO : loginDTO):
+async def login(login_DTO : loginDTO = Depends()):
     """
     Endpoint to handle user login.
 

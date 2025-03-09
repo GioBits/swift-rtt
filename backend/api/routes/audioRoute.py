@@ -37,7 +37,7 @@ async def process_media( processDTO: process_mediaDTO = Depends() ):
 
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", response_model=AudioListResponseSchema, tags=["Audio"])
-async def retrieve_audios_list(retrieve_audios_list_DTO : retrieve_audios_listDTO):
+async def retrieve_audios_list(retrieve_audios_list_DTO : retrieve_audios_listDTO = Depends()):
     """
     Retrieves a paginated list of audio files from the database.
     Args:
