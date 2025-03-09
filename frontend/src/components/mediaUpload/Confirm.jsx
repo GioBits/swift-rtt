@@ -4,7 +4,7 @@ import { MediaContext } from '../../contexts/MediaContext';
 
 const Confirm = ({ file, audioId, handleNewAudio }) => {
 
-  const { setIsUploading, setFileToUpload, setAudioSelected, selectedLanguages, userId } = useContext(MediaContext);
+  const { setIsUploading, setFileToUpload, audioSelected, setAudioSelected, selectedLanguages, userId } = useContext(MediaContext);
 
   // Handle confirmation (when the user confirms or cancels the upload)
   const handleConfirmation = async () => {
@@ -50,6 +50,10 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
   }
 
   const processMedia = async () => {
+
+    // Force re-render to clear the media reponse
+    setAudioSelected((prev) => ({ ...prev }));
+
     // Process the uploaded audio file
     const processResponse = await AudioService.processMedia(
       userId,
