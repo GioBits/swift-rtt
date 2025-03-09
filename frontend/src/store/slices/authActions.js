@@ -19,9 +19,6 @@ export const loginUser = createAsyncThunk(
         username: decoded.username,
       };
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(userData));
-
       return { token, user: userData };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
