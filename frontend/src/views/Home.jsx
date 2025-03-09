@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MediaProvider } from "../contexts/MediaProvider";
 import LanguageSelector from "../components/mediaUpload/LanguageSelector";
 import MediaUpload from "../components/mediaUpload/MediaUpload";
@@ -11,7 +11,7 @@ const Home = () => {
     }, [])
 
   return (
-    <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex mt-10 m-auto block">
+    <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] lg:flex mt-10 m-auto block">
       <MediaProvider>
 
         {/* Upload Section */}
@@ -32,6 +32,8 @@ const Home = () => {
             <MediaUpload />
           </div>
         </div>
+
+        <div className='md:h-[50px] md:w-full lg:block lg:w-[50px] lg:h-full  '></div>
 
         {/* App Response */}
         <div className="lg:w-1/2 w-full h-full flex flex-col m-auto rounded gap-4">

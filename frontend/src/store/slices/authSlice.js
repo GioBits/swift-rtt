@@ -4,9 +4,9 @@ import { loginUser } from "./authActions";
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: JSON.parse(localStorage.getItem("user")) || null,
-    token: localStorage.getItem("token") || null,
-    isAuthenticated: !!localStorage.getItem("token"),
+    user: null,
+    token: null,
+    isAuthenticated: false,
     error: null,
   },
   reducers: {
@@ -14,8 +14,6 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -33,7 +31,7 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.error = action.payload;
-      })
+      });
   },
 });
 

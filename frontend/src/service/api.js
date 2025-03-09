@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '../store';
 
 // Axios instance with default configuration
 const apiClient = axios.create({
@@ -9,8 +10,9 @@ const apiClient = axios.create({
 // Interceptor to handle requests before they are sent
 apiClient.interceptors.request.use(
   (config) => {
-    // Retrieve the token from localStorage or sessionStorage
-    const token = localStorage.getItem('authToken');
+    // Retrieve the token from the Redux store
+    const state = store.getState();
+    const token = state.auth.token;
 
     if (token) {
       // If a token exists, add it to the Authorization header
