@@ -24,7 +24,9 @@ class Text2Speech:
         # Initialize with default models
         self.models = {
             1: {"language": "english", "model": None, "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
-            2: {"language": "spanish", "model": None, "model_name": "tts_models/es/css10/vits"}
+            2: {"language": "spanish", "model": None, "model_name": "tts_models/es/css10/vits"},
+            3: {"language": "italian", "model": None, "model_name": "tts_models/it/mai_male/vits"},
+            4: {"language": "japonese", "model": None, "model_name": "tts_models/ja/kokoro/tacotron2-DDC"}
         }
 
         # Load the models for each language
