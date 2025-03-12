@@ -7,7 +7,7 @@ import PropTypes from "prop-types"
 
 const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => {
   return (
-    <div className='box-border w-full flex flex-row space-between h-[80px] m-auto'>
+    <div className='box-border flex flex-row space-between h-[80px] m-auto w-[90%] gap-4'>
       <Button
         variant={isClicked && buttonSelected ? 'contained' : 'outlined'}
         onClick={() => handleButtonClick(true)}
@@ -20,7 +20,6 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
           backgroundColor: isClicked && buttonSelected ? 'secondary' : 'white',
           borderColor: !buttonSelected ? 'secondary' : 'transparent',
           color: !buttonSelected ? 'secondary' : 'white',
-          marginLeft: '20px',
           marginY: 'auto'
         }}
         startIcon={<CloudUploadIcon />}
@@ -36,11 +35,9 @@ const MediaUploadSelector = ({isClicked, handleButtonClick, buttonSelected}) => 
           pointerEvents: isClicked && buttonSelected === false ? 'none' : 'auto',
           width: '50%',
           height: '50px',
-          margin: '10px',
           backgroundColor: isClicked && buttonSelected ? 'white' : 'secondary',
           borderColor: !buttonSelected ? 'transparent' : 'secondary',
           color: !buttonSelected ? 'white' : 'secondary',
-          marginRight: '20px',
           marginY: 'auto'
         }}
         startIcon={<MicIcon />}

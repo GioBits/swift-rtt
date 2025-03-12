@@ -1,14 +1,18 @@
 import { useContext } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import AudioService from '../../service/audioService';
 import { MediaContext } from '../../contexts/MediaContext';
 
 const Confirm = ({ file, audioId, handleNewAudio }) => {
-
-  const { setIsUploading, setFileToUpload, audioSelected, setAudioSelected, selectedLanguages, userId } = useContext(MediaContext);
+  const {
+    setIsUploading,
+    setFileToUpload,
+    setAudioSelected,
+    selectedLanguages,
+    userId } = useContext(MediaContext);
 
   // Handle confirmation (when the user confirms or cancels the upload)
   const handleConfirmation = async () => {
-
     if (!file) {
       setFileToUpload(null);
       return;
@@ -17,19 +21,16 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
     setIsUploading(true); // Set uploading state to true
 
     try {
-
-      if(audioId){
-        await processMedia()
+      if (audioId) {
+        await processMedia();
       } else {
         await uploadMedia();
       }
-      
     } catch (error) {
       console.error("Error uploading or processing the audio: ", error); // Log any errors
     } finally {
       setIsUploading(false); // Set uploading state to false
     }
-
   };
 
   const uploadMedia = async () => {
@@ -47,11 +48,10 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
     });
 
     console.log("Audio uploaded"); // Log the processing response
-  }
+  };
 
   const processMedia = async () => {
-
-    // Force re-render to clear the media reponse
+    // Force re-render to clear the media response
     setAudioSelected((prev) => ({ ...prev }));
 
     // Process the uploaded audio file
@@ -62,24 +62,41 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
     );
 
     console.log("Audio processing", processResponse); // Log the processing response
-  }
+  };
 
-  return (       //TODO Mejorar el manejo del audioid para mostrar el boton de procesar audio
-    <div className="mt-4 flex justify-end">
-        {!audioId ? (<button
-          onClick={() => handleNewAudio()}
-          className="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 hover:cursor-pointer"
-        >
-          Cancel
-        </button>) : null}
+  return (
+    <div className="mt-4 flex w-72">
+      {/* Flexible container for buttons */}
+      <div className={`flex ${audioId ? "justify-center" : "justify-end"} w-full`}>
+        {/* Cancel button (only shown if there's no audioId) */}
+        {!audioId && (
+          <button
+            onClick={() => handleNewAudio()}
+            className="mr-2 w-1/2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 hover:cursor-pointer"
+          >
+            Cancelar
+          </button>
+        )}
+
+        {/* Main button (Upload Audio or Process Audio) */}
         <button
           onClick={() => handleConfirmation()}
-          className="px-4 py-2 bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer"
+          className={`px-4 py-2 ${
+            audioId ? "w-1/2" : "w-1/2"
+          } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer`}
         >
           {audioId ? "Procesar Audio" : "Subir Audio"}
         </button>
+      </div>
     </div>
   );
+};
+
+// Define PropTypes for the component
+Confirm.propTypes = {
+  file: PropTypes.object, // File to upload (can be null or undefined)
+  audioId: PropTypes.string, // ID of the audio to process (optional)
+  handleNewAudio: PropTypes.func.isRequired, // Function to handle new audio action
 };
 
 export default Confirm;

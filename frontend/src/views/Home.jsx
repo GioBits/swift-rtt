@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { MediaProvider } from "../contexts/MediaProvider";
 import LanguageSelector from "../components/mediaUpload/LanguageSelector";
 import MediaUpload from "../components/mediaUpload/MediaUpload";
