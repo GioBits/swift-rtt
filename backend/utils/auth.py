@@ -2,7 +2,7 @@ import jwt
 import os
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status, Response
+from fastapi import Depends, HTTPException, status, Response, Cookie
 from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")

@@ -2,6 +2,7 @@ from db.database import SessionLocal
 from sqlalchemy.orm import Session
 from utils.auth import AuthUtils
 from api.service.userService import userService
+from fastapi import Response
 
 class AuthService:
     """
@@ -26,7 +27,7 @@ class AuthService:
         """
         self.db.close()
 
-    def login(self, username: str, password: str):
+    def login(self, username: str, password: str, response: Response):
         """
         Authenticates a user by their username and password.
 
@@ -48,5 +49,6 @@ class AuthService:
             raise Exception("Invalid password")
 
         access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
+        self.auth_utils.set_auth_cookie(response, access_token)
 
         return {"access_token": access_token, "token_type": "bearer"}
