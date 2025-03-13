@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 
 export const MediaProvider = ({ children }) => {
+  
   const [audioUrl, setAudioUrl] = useState("");
   const [audioTranslation, setAudioTranslation] = useState("");
   const [languages, setLanguages] = useState([]);
@@ -16,9 +17,9 @@ export const MediaProvider = ({ children }) => {
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
   const wsServiceRef = useRef(null);
-  const uploadingRef = useRef(false);
   const [isUploading, setIsUploading] = useState(false);
   const userId = useSelector(state => state.auth.user.id);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
@@ -28,6 +29,10 @@ export const MediaProvider = ({ children }) => {
     id: "",
     audioData: "",
   })
+
+  const resetStepper = () => {
+    setCurrentStep(1);
+  };
 
   useEffect(() => {
     if (!wsServiceRef.current || wsServiceRef.current.userId !== userId) {
@@ -102,7 +107,10 @@ export const MediaProvider = ({ children }) => {
         audioTranslation,
         setAudioTranslation,
         providers,
-        userId
+        userId,
+        currentStep,
+        setCurrentStep,
+        resetStepper
       }}
     >
       {children}
