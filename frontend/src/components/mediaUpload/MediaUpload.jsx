@@ -9,7 +9,7 @@ import MediaUploadSelector from './MediaUploadSelector';
 import NewAudioButton from './NewAudioButton';
 
 const MediaUpload = () => {
-  const { isUploading, audioSelected, setAudioSelected } = useContext(MediaContext);
+  const { isUploading, mediaSelected, setMediaSelected } = useContext(MediaContext);
   const [buttonSelected, setButtonSelected] = useState(true); // State for selected button (Dropzone or RecordAudio)
   const [isClicked, setIsClicked] = useState(true); // State to track if a button is clicked
   const [fileToUpload, setFileToUpload] = useState(null); // State to store the file to upload
@@ -29,7 +29,7 @@ const MediaUpload = () => {
   };
 
   const handleNewAudio = () => {
-    setAudioSelected({ audioData: '', id: '' });
+    setMediaSelected({ data: '', id: '' });
     setFileToUpload(null);
   }
 
@@ -52,7 +52,7 @@ const MediaUpload = () => {
           <DisplayAudioWave file={fileToUpload} />
           <Confirm
             file={fileToUpload}
-            audioId={audioSelected.id}
+            audioId={mediaSelected.id}
             handleNewAudio={handleNewAudio} />
         </>
       )
