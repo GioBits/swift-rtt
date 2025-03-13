@@ -26,7 +26,7 @@ export const MediaProvider = ({ children }) => {
   });
   const [mediaSelected, setMediaSelected] = useState({
     id: "",
-    media_data: "",
+    data: "",
   })
 
   useEffect(() => {
@@ -97,9 +97,6 @@ export const MediaProvider = ({ children }) => {
         setMediaSelected,
         isUploading,
         setIsUploading,
-        audioUrl,
-        setAudioUrl,
-        audioSelected,
         transcription,
         setTranscription,
         translate,
