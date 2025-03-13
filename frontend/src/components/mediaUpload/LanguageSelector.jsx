@@ -49,8 +49,8 @@ export default function LanguageSelector() {
   };
 
   const selectStyle = {
-    fontSize: "14px",
-    height: "40px",
+    fontSize: "16px",
+    height: "32px",
     minWidth: "30px",
     maxwidth: "120px",
     width: "100%",
@@ -59,9 +59,9 @@ export default function LanguageSelector() {
 
   return (
     <div className="flex flex-row w-full m-auto box-border h-full">
-      <Box className="flex flex-row w-[90%] m-auto items-center justify-center">
+      <Box className="flex flex-row w-[100%] m-auto items-center justify-center">
         <FormControl variant="standard" sx={{ minWidth: 30, width: "45%", display: "flex" }}>
-          <InputLabel id="origin-language-select" shrink>
+          <InputLabel id="origin-language-select" sx={{fontSize: '14px'}} shrink>
             Idioma Origen
           </InputLabel>
           <Select
@@ -84,12 +84,13 @@ export default function LanguageSelector() {
             size="medium"
             onClick={handleSwapLanguages}
             sx={{
-              border: "1px solid #e0e0e0",
               borderRadius: "50%",
               transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
               transition: "transform 0.4s ease-in-out",
               marginLeft: "10px",
               marginRight: "10px",
+              width: "40px",
+              height: "40px"
             }}
           >
             <SwapHorizIcon fontSize="large" />
@@ -97,7 +98,7 @@ export default function LanguageSelector() {
         </Tooltip>
 
         <FormControl variant="standard" sx={{ minWidth: 30, width: "45%", display: "flex" }}>
-          <InputLabel id="target-language-select" shrink>
+          <InputLabel id="target-language-select" sx={{fontSize: '14px'}} shrink>
             Idioma Destino
           </InputLabel>
           <Select

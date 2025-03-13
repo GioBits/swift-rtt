@@ -4,8 +4,9 @@ import MicIcon from '@mui/icons-material/Mic';
 import PropTypes from 'prop-types';
 
 const NewAudioButton = ({ onClick, buttonSelected }) => {
+  
   return (
-    <div className='flex h-[80px] w-[90%] m-auto'>
+    <div className='flex h-[60px] w-[100%]'>
 
       <Button
         variant="contained"
@@ -14,7 +15,7 @@ const NewAudioButton = ({ onClick, buttonSelected }) => {
         sx={{
           textTransform: 'none',
           width: '100%',
-          height: '50px',
+          height: '40px',
           backgroundColor: 'secondary',
           borderColor: 'secondary',
           color: 'white',
