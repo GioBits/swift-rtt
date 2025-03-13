@@ -110,6 +110,7 @@ const MediaResponse = () => {
         resetTimers={resetTimers}
         tooltipTitle="Reproducir/Detener audio original"
         tooltipDownload="Descargar audio original"
+        speed="1"
         />
       <MediaContent
         title="Traducción"
@@ -120,6 +121,7 @@ const MediaResponse = () => {
         resetTimers={resetTimers}
         tooltipTitle="Reproducir/Detener audio traducido"
         tooltipDownload="Descargar audio traducido"
+        speed="1.25"
         />
     </>
   )

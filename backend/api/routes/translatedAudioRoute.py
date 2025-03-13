@@ -1,12 +1,14 @@
-from fastapi import APIRouter
+from fastapi import Depends, APIRouter
 from api.controller.translatedAudioController import TranslatedAudioController
 from models.translated_audios import TranslatedAudioRecordSchema
 from typing import List
+from utils.auth import AuthUtils
 
+auth = AuthUtils()
 router = APIRouter()
 translated_audio_controller = TranslatedAudioController()
 
-@router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
+@router.get("/translated_audios", response_model=List[TranslatedAudioRecordSchema], dependencies=[Depends(auth.validate_token)], tags=["Translated Audios"])
 async def get_translated_audios():
     """
     Retrieves all translated audios.
@@ -15,7 +17,7 @@ async def get_translated_audios():
     """
     return await translated_audio_controller.retrieve_all_translated_audios()
 
-@router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
+@router.post("/translated_audios", response_model=TranslatedAudioRecordSchema, dependencies=[Depends(auth.validate_token)], tags=["Translated Audios"])
 async def add_translated_audio(translation_id: int, provider_id: int):
     """
     Adds a new translated audio.
@@ -27,7 +29,7 @@ async def add_translated_audio(translation_id: int, provider_id: int):
     """
     return await translated_audio_controller.create_translated_audio(translation_id, provider_id)
 
-@router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, tags=["Translated Audios"])
+@router.get("/translated_audios/{translated_audio_id}", response_model=TranslatedAudioRecordSchema, dependencies=[Depends(auth.validate_token)], tags=["Translated Audios"])
 async def get_translated_audio_by_id(translated_audio_id: int):
     """
     Retrieves a translated audio by its ID.
@@ -38,7 +40,7 @@ async def get_translated_audio_by_id(translated_audio_id: int):
     """
     return await translated_audio_controller.retrieve_translated_audio_by_id(translated_audio_id)
 
-@router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema], tags=["Translated Audios"])
+@router.get("/translated_audios/audio/{audio_id}", response_model=List[TranslatedAudioRecordSchema], dependencies=[Depends(auth.validate_token)], tags=["Translated Audios"])
 async def get_translated_audios_by_audio_id(audio_id: int):
     """
     Retrieves all translated audios for a given audio ID.

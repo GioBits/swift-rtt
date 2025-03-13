@@ -49,7 +49,7 @@ export default function ParticleBg () {
             default: 'bounce'
           },
           random: false,
-          speed: 2.1,
+          speed: 0.5,
           straight: false
         },
         number: {

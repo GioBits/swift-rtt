@@ -26,15 +26,17 @@ const PingComponent = () => {
   return (
     <>
       <div style={{
-        top: '20px',
-        right: '20px',
         backgroundColor: online ? 'green' : 'red',
-        padding: '10px',
         borderRadius: '5px',
         color: 'white',
         fontWeight: 'bold',
+        display: 'flex',
+        height: '36px',
+        width: (online ? '80px' : '100px'),
       }}>
-        {online ? "En línea" : "Desconectado"}
+        <div className="m-auto text-sm">
+          {online ? "En línea" : "Desconectado"}
+        </div>
       </div>
     </>
   );

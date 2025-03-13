@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo_colibri.png";
@@ -8,6 +8,7 @@ function NavbarComponent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const username = useSelector(state => state.auth.user.username);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -25,7 +26,7 @@ function NavbarComponent() {
       </div>
 
       <div className="w-[70%] h-full flex justify-between items-center px-4">
-        <div className="flex space-x-8">
+        <div className="flex space-x-8 w-1/2">
           <button
             onClick={() => navigate("/media-upload")}
             className={`relative text-lg font-semibold text-white px-2 py-1 transition-all 
@@ -51,15 +52,23 @@ function NavbarComponent() {
           </button>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-600 transition-all shadow-md"
-          >
-            Cerrar sesión
-          </button>
+        <div className="w-1/2 flex">
+          <div className="flex space-x-4 m-auto mr-[0px]">
 
-          <PingComponent />
+            <div className="text-md font-semibold text-white flex">
+              <span className="m-auto"> {username}</span>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white w-[100px] font-semibold h-[36px] rounded-lg text-sm hover:bg-red-600 shadow-md"
+            >
+              Cerrar sesión
+            </button>
+
+            <PingComponent />
+          </div>
+
         </div>
       </div>
     </div>
