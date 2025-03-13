@@ -6,12 +6,14 @@ import { translationService } from '../../service/translateService';
 import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
 import toast from "react-hot-toast";
+import { IconButton } from "@mui/material"; // Import IconButton from Material-UI
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon for the close button
 
 const MediaResponse = () => {
   const models = [];
 
   const [resetTimers, setResetTimers] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar la modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
   const {
     wsResponse,
@@ -26,7 +28,7 @@ const MediaResponse = () => {
     setAudioUrl,
     setCurrentStep,
     setIsUploading,
-    currentStep, // Obtener el estado currentStep
+    currentStep, // Get the currentStep state
   } = useContext(MediaContext);
 
   useEffect(() => {
@@ -107,30 +109,35 @@ const MediaResponse = () => {
     return blob ? URL.createObjectURL(blob) : null;
   };
 
-  // Componente de Modal
+  // Modal Component
   const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-10">
-        <div className="bg-white p-6 rounded-lg w-11/12 max-w-4xl">
-          <div className="flex justify-end">
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-4xl"
-            >
-              &times; {/* Icon to close */}
-            </button>
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-10">
+        <div className="relative p-5 rounded-lg w-11/12 max-w-4xl shadow-lg">
+            {/* Modal Content */}
+            {children}
+
+            {/* Close Button at the Bottom */}
+            <div className="relative justify-end -mt-10 ml-10">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+              >
+                Cerrar
+              </button>
+            </div>
+
           </div>
-          {children}
-        </div>
+
       </div>
     );
   };
 
   return (
     <>
-      {/* Botón para mostrar resultados */}
+      {/* Button to show results */}
       <button
         onClick={() => setIsModalOpen(true)}
         disabled={currentStep !== 6}
@@ -141,30 +148,25 @@ const MediaResponse = () => {
 
       {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="flex flex-row w-100 lg:w-200 gap-x-10 justify-between p-10">
-        <MediaContent
-          title="Transcripción"
-          contentText={transcription || ""}
-          audio={audioUrl || ""}
-          models={models}
-          placeholder="Esperando audio transcrito..."
-          resetTimers={resetTimers}
-          tooltipTitle="Reproducir/Detener audio original"
-          tooltipDownload="Descargar audio original"
-          speed="1"
-        />
-        <MediaContent
-          title="Traducción"
-          contentText={translate || ""}
-          audio={audioTranslation || ""}
-          models={models}
-          placeholder="Esperando texto traducido..."
-          resetTimers={resetTimers}
-          tooltipTitle="Reproducir/Detener audio traducido"
-          tooltipDownload="Descargar audio traducido"
-          speed="1.25"
-        />
-
+        <div className="flex flex-col md:flex-row w-full gap-x-10 justify-between p-10">
+          <MediaContent
+            title="Transcripción"
+            contentText={transcription || ""}
+            audio={audioUrl || ""}
+            models={models}
+            resetTimers={resetTimers}
+            tooltipTitle="Reproducir/Detener audio original"
+            tooltipDownload="Descargar audio original"
+          />
+          <MediaContent
+            title="Traducción"
+            contentText={translate || ""}
+            audio={audioTranslation || ""}
+            models={models}
+            resetTimers={resetTimers}
+            tooltipDownload="Descargar audio traducido"
+            speed="1.25"
+          />
         </div>
       </Modal>
     </>
