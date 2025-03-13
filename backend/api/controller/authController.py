@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from api.service.authService import AuthService
 from models.users import UsersSchema
@@ -18,7 +18,7 @@ class AuthController:
         """
         self.auth_service = AuthService()
 
-    async def login(self, username: str, password: str):
+    async def login(self, username: str, password: str, response: Response):  
         """
         Handles a user's login request.
         Args:
@@ -31,7 +31,7 @@ class AuthController:
             HTTPException: If an internal server error occurs.
         """  
         try:
-            return self.auth_service.login(username, password)
+            return self.auth_service.login(username, password, response)
 
         except Exception as e:  # Capture general exceptions
 
@@ -53,3 +53,17 @@ class AuthController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
             )
+
+    async def logout(self, response: Response):
+        """
+        Removes the user's session by deleting the authentication cookie.
+
+        Args:
+            response (Response): The HTTP response object where the authentication cookie will be deleted.
+
+        Returns:
+            dict: A dictionary with a message indicating that the session has been successfully closed.
+        """
+        """Elimina la sesión del usuario al borrar la cookie"""
+        self.auth_service.auth_utils.remove_auth_cookie(response)
+        return {"message": "Sesión cerrada correctamente"}
