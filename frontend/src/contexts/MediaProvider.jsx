@@ -8,9 +8,9 @@ import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
 
 export const MediaProvider = ({ children }) => {
-  
-  const [audioUrl, setAudioUrl] = useState("");
-  const [audioTranslation, setAudioTranslation] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaTranslation, setMediaTranslation] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [providers, setProvider] = useState([]);
   const [transcription, setTranscription] = useState("");
@@ -25,9 +25,9 @@ export const MediaProvider = ({ children }) => {
     sourceLanguage: 2,
     targetLanguage: 1,
   });
-  const [audioSelected, setAudioSelected] = useState({
+  const [mediaSelected, setMediaSelected] = useState({
     id: "",
-    audioData: "",
+    data: "",
   })
 
   const resetStepper = () => {
@@ -94,18 +94,20 @@ export const MediaProvider = ({ children }) => {
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
         setTargetLanguage: handleSetTargetLanguage,
+        mediaUrl,
+        setMediaUrl,
+        isRecording,
+        setIsRecording,
+        mediaSelected,
+        setMediaSelected,
         isUploading,
         setIsUploading,
-        audioUrl,
-        setAudioUrl,
-        audioSelected,
-        setAudioSelected,
         transcription,
         setTranscription,
         translate,
         setTranslate,
-        audioTranslation,
-        setAudioTranslation,
+        mediaTranslation,
+        setMediaTranslation,
         providers,
         userId,
         currentStep,

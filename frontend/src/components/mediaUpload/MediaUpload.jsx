@@ -9,10 +9,11 @@ import NewAudioButton from './NewAudioButton';
 import MediaResponse from '../mediaResponse/MediaResponse';
  
 const MediaUpload = () => {
+
   const {
-    audioSelected,
-    setAudioSelected,
-    resetStepper
+    resetStepper,
+    mediaSelected,
+    setMediaSelected
   } = useContext(MediaContext);
   const [buttonSelected, setButtonSelected] = useState(true); // State for selected button (Dropzone or RecordAudio)
   const [isClicked, setIsClicked] = useState(true); // State to track if a button is clicked
@@ -33,7 +34,7 @@ const MediaUpload = () => {
   };
 
   const handleNewAudio = () => {
-    setAudioSelected({ audioData: '', id: '' });
+    setMediaSelected({ data: '', id: '' });
     setFileToUpload(null);
     resetStepper(1)
   }
@@ -56,9 +57,9 @@ const MediaUpload = () => {
           {/* Render Confirm (button change to CircularProgress if isUploading is true) */}
           <Confirm
             file={fileToUpload}
-            audioId={audioSelected.id}
+            audioId={mediaSelected.id}
             handleNewAudio={handleNewAudio}
-          />
+            />
           <div className='mt-3'>
           <MediaResponse />
           </div>

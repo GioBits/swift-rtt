@@ -12,7 +12,6 @@ import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon for the c
 const MediaResponse = () => {
   const models = [];
 
-  const [resetTimers, setResetTimers] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
 
   const {
@@ -21,28 +20,28 @@ const MediaResponse = () => {
     setTranscription,
     translate,
     setTranslate,
-    audioSelected,
-    audioTranslation,
-    setAudioTranslation,
-    audioUrl,
-    setAudioUrl,
     setCurrentStep,
     setIsUploading,
-    currentStep, // Get the currentStep state
+    mediaSelected,
+    mediaTranslation,
+    setMediaTranslation,
+    mediaUrl,
+    setMediaUrl,
+    currentStep
   } = useContext(MediaContext);
+  
 
   useEffect(() => {
     const handleResponse = async () => {
-      if (audioSelected) {
-        setAudioUrl(base64ToUrl(audioSelected.audioData));
+      if (mediaSelected) {
+        setMediaUrl(base64ToUrl(mediaSelected.data));
         setTranscription("");
         setTranslate("");
-        setAudioTranslation("");
-        setResetTimers(!resetTimers);
+        setMediaTranslation("");
       }
     };
     handleResponse();
-  }, [audioSelected]);
+  }, [mediaSelected]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -97,7 +96,7 @@ const MediaResponse = () => {
 
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
-      setAudioTranslation(base64ToUrl(translatedAudio.audioData));
+      setMediaTranslation(base64ToUrl(translatedAudio.audioData));
       toast.success('Audio traducido completado!', { duration: 5000 });
     } catch (error) {
       console.error("Error fetching translated audio:", error);
@@ -152,18 +151,16 @@ const MediaResponse = () => {
           <MediaContent
             title="Transcripción"
             contentText={transcription || ""}
-            audio={audioUrl || ""}
+            audio={mediaUrl || ""}
             models={models}
-            resetTimers={resetTimers}
             tooltipTitle="Reproducir/Detener audio original"
             tooltipDownload="Descargar audio original"
           />
           <MediaContent
             title="Traducción"
             contentText={translate || ""}
-            audio={audioTranslation || ""}
+            audio={mediaTranslation || ""}
             models={models}
-            resetTimers={resetTimers}
             tooltipDownload="Descargar audio traducido"
             speed="1.25"
           />

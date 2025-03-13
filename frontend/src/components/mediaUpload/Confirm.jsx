@@ -9,7 +9,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
     isUploading,
     setIsUploading,
     setFileToUpload,
-    setAudioSelected,
+    setMediaSelected,
     selectedLanguages,
     userId,
     setCurrentStep,
@@ -43,11 +43,11 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       selectedLanguages,
       userId
     );
-
+    
     // Update the selected audio in the context
-    setAudioSelected({
-      audioData: response.audio_data,
-      id: response.id,
+    setMediaSelected({ 
+      data: response.audio_data, 
+      id: response.id.toString() 
     });
 
     setCurrentStep(2);
@@ -58,7 +58,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
   const processMedia = async () => {
     setIsUploading(true);
     // Force re-render to clear the media response
-    setAudioSelected((prev) => ({ ...prev }));
+    setMediaSelected((prev) => ({ ...prev }));
 
     // Process the uploaded audio file
     const processResponse = await AudioService.processMedia(
