@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaContent from "./MediaContent";
 import { transcriptionService } from '../../service/transcribeService';
@@ -6,13 +7,11 @@ import { translationService } from '../../service/translateService';
 import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
 import toast from "react-hot-toast";
-import { IconButton } from "@mui/material"; // Import IconButton from Material-UI
-import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon for the close button
 
 const MediaResponse = () => {
   const models = [];
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     wsResponse,
@@ -29,7 +28,6 @@ const MediaResponse = () => {
     setMediaUrl,
     currentStep
   } = useContext(MediaContext);
-  
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -69,7 +67,7 @@ const MediaResponse = () => {
     if (task === "generate_audio") {
       await fetchTranslatedAudioByAudioId(audioId);
       setCurrentStep(6);
-      setIsUploading(false); // Set uploading state to false
+      setIsUploading(false);
     }
   };
 
@@ -115,23 +113,28 @@ const MediaResponse = () => {
     return (
       <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-10">
         <div className="relative p-5 rounded-lg w-11/12 max-w-4xl shadow-lg">
-            {/* Modal Content */}
-            {children}
+          {/* Modal Content */}
+          {children}
 
-            {/* Close Button at the Bottom */}
-            <div className="relative justify-end -mt-10 ml-10">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-              >
-                Cerrar
-              </button>
-            </div>
-
+          {/* Close Button at the Bottom */}
+          <div className="relative justify-end -mt-10 ml-10">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              Cerrar
+            </button>
           </div>
-
+        </div>
       </div>
     );
+  };
+
+  // Define PropTypes for the Modal component
+  Modal.propTypes = {
+    isOpen: PropTypes.bool.isRequired, // isOpen must be a boolean and is required
+    onClose: PropTypes.func.isRequired, // onClose must be a function and is required
+    children: PropTypes.node.isRequired, // children must be a React node and is required
   };
 
   return (

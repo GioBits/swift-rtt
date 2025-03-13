@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material'; 
+import { CircularProgress } from '@mui/material';
 import { useContext } from "react";
 import PropTypes from "prop-types";
 import AudioService from '../../service/audioService';
@@ -43,11 +43,11 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       selectedLanguages,
       userId
     );
-    
+
     // Update the selected audio in the context
-    setMediaSelected({ 
-      data: response.audio_data, 
-      id: response.id.toString() 
+    setMediaSelected({
+      data: response.audio_data,
+      id: response.id.toString()
     });
 
     setCurrentStep(2);
@@ -89,7 +89,8 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
         <button
           onClick={() => handleConfirmation()}
           className={`px-4 py-2 ${audioId ? "w-1/2" : "w-1/2"
-            } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer`}
+            } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed`}
+          disabled={isUploading}
         >
           {isUploading ? ( // Show CircularProgress is isUPloading true
             <CircularProgress size={20} color="inherit" />
