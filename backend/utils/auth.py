@@ -60,7 +60,7 @@ class AuthUtils:
             HTTPException: If the token is expired or invalid.
         """
         try:
-            final_token = token or session_token  # Prioridad: Header > Cookie
+            final_token = session_token or token   # Prioridad: Header < Cookie
             if not final_token:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
 
@@ -90,6 +90,16 @@ class AuthUtils:
         """
         return self.pwd_context.verify(plain_password, hashed_password)
     
+    def get_auth_cookie(self, session_token: str = Cookie(None)):
+        """
+        Gets the authentication token from the cookie.
+        Args:
+            session_token (str): The session token from the cookie.
+        Returns:
+            str: The session token.
+        """
+        return session_token
+    
     def set_auth_cookie(self, response: Response, token: str):
         """
         Sets the authentication cookie in the response.
@@ -104,7 +114,7 @@ class AuthUtils:
             secure=True,     # Solo en HTTPS
             samesite="Strict" # Protección CSRF
         )
-
+        
     def remove_auth_cookie(self, response: Response):
         """
         Removes the authentication cookie from the response.
