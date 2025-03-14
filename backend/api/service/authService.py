@@ -27,7 +27,7 @@ class AuthService:
         """
         self.db.close()
 
-    def login(self, username: str, password: str, response: Response):
+    def login(self,response: Response, username: str, password: str):
         """
         Authenticates a user by their username and password.
 
@@ -49,6 +49,42 @@ class AuthService:
             raise Exception("Invalid password")
 
         access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
-        self.auth_utils.set_auth_cookie(response, access_token)
+        if response: 
+            self.auth_utils.set_auth_cookie(response, access_token)
+            response.status_code = 200 
+            return {"message": "Login exitoso"}
+        else:
+            return {"message": "Error con Login"}
+    def login_token(self,response: Response, username: str, password: str):
+        """
+        Authenticates a user by their username and password.
 
-        return {"access_token": access_token, "token_type": "bearer"}
+        Args:
+            username (str): The user's username.
+            password (str): The user's password.
+
+        Returns:
+            dict: A dictionary containing the access token if authentication is successful.
+            str: An error message if authentication fails.
+        """
+
+        user = self.user_service.get_user_by_username_with_pass(username)
+        if not user:
+            raise Exception("User not found")
+
+        verify_password = self.auth_utils.verify_password(password, user.password_hash)
+        if  not verify_password:
+            raise Exception("Invalid password")
+
+        access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
+        return {"access_token": access_token}
+
+    def get_current_user(self):
+        """
+        Obtains the information of the authenticated user from the token in the cookie.
+        """
+        token = self.auth_utils.get_auth_cookie()
+        if not token:
+            return {"message": "No autenticado"}
+        payload = self.auth_utils.decode_token(token)
+        return {"id": payload.get("id"), "username": payload.get("username")}
