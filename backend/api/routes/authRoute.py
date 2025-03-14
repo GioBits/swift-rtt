@@ -8,7 +8,9 @@ router = APIRouter()
 auth_controller = AuthController()
 
 @router.post("/auth/login", tags=["Auth"])
-async def login(username: str, password: str, response: Response):
+async def login(response: Response,
+                username: str, 
+                password: str):
     """
     Endpoint to handle user login.
 
@@ -19,7 +21,7 @@ async def login(username: str, password: str, response: Response):
     Returns:
         JSON response containing authentication details.
     """
-    return await auth_controller.login(username, password, response)
+    return await auth_controller.login(response, username, password, )
     
 @router.post("/auth/token", tags=["Auth"])
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -34,7 +36,14 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
         JSON response containing authentication details.
     """
     if form_data.username and form_data.password:
-        return await auth_controller.login(form_data.username, form_data.password)
+        return await auth_controller.login_token(form_data.username, form_data.password)
+    
+@router.get("/auth/me", tags=["Auth"])
+async def get_current_user(response:Response):
+    """
+    Obtiene la información del usuario autenticado a partir del token en la cookie.
+    """
+    return await auth_controller.get_current_user(response)
 
 @router.post("/auth/logout", tags=["Auth"])
 async def logout(response: Response):
