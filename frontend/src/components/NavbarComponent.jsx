@@ -3,6 +3,7 @@ import { logout } from "../store/slices/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo_colibri.png";
 import PingComponent from "./PingComponent";
+import userService from "../service/userService";
 
 function NavbarComponent() {
   const dispatch = useDispatch();
@@ -11,8 +12,13 @@ function NavbarComponent() {
   const username = useSelector(state => state.auth.user.username);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    try {
+      userService.logout();  
+      dispatch(logout());          
+      navigate("/login");         
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
 
   return (
