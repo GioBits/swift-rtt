@@ -94,3 +94,30 @@ class userController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
             )
+        
+    async def validate_password(password : str):
+        
+        # invalido si es más corto que 8 o más largo que 12
+        if len(password) < 8 or 12 < len(password):
+            return False
+        
+        # invalido si es todo en mayuscula
+        if password.isupper():
+            return False
+        
+        # invalido si es todo en minuscula
+        if password.islower():
+            return False
+        
+        # invalido si no contiene números
+        if not(any(char.isdigit() for char in password)):
+            return False
+
+        # inválido si no contiene al menos uno de: !@#$^&*.
+        if not(any((char == '!' or char == '@' or char == '#' or char == '$' 
+                    or char == '^' or char == '&' or char == '*' or char == '.')
+                    for char in password)):
+            return False
+        
+        #Si pasa por los condicionales sin retornar, es válido
+        return True
