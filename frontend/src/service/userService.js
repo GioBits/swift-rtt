@@ -48,8 +48,9 @@ const UserService = {
     const path = `/api/auth/login?${queryParams}`;
     
     try {
-      document.cookie = `session_token=cookie`;
+      document.cookie = `session_token=; secure; httponly;`;
       const response = await apiService.post(path);
+      document.cookie = "session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       const userData = await apiService.get("api/users/me");
       toast.success('Inicio de sesión exitoso!', { duration: 5000 });
       return userData;

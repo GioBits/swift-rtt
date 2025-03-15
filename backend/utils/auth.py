@@ -103,7 +103,7 @@ class AuthUtils:
             value=token,
             httponly=True,   # No accesible desde JavaScript
             secure=True,     # Solo en HTTPS
-            samesite="Strict" # Protección CSRF
+            # samesite="Strict" # Protección CSRF
         )
         
     def remove_auth_cookie(self, response: Response):
