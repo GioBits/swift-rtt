@@ -9,6 +9,7 @@ import Typewriter from "typewriter-effect";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
 import DisplayAudioWave from "../mediaUpload/DisplayAudioWave";
+import { CircularProgress } from "@mui/material";
 
 const MediaContent = ({
   title,
@@ -54,7 +55,7 @@ const MediaContent = ({
         <div className="w-full h-full p-4 border border-dashed border-gray-600 box-border rounded max-h-full overflow-y-auto">
           <Typewriter
             options={{
-              strings: contentText,
+              strings: contentText || "Cargando...",
               autoStart: true,
               loop: false,
               delay: 12,
@@ -64,7 +65,7 @@ const MediaContent = ({
         </div>
       </div>
 
-      <div className="flex flex-col">
+      {audio ? <div className="flex flex-col">
         {/* Integrar DisplayAudioWave */}
         <DisplayAudioWave file={audio} />
 
@@ -99,7 +100,7 @@ const MediaContent = ({
             </span>
           </Tooltip>
         </div>
-      </div>
+      </div> : <CircularProgress size={60} color="inherit" className="m-auto" />} 
     </div>
   );
 };

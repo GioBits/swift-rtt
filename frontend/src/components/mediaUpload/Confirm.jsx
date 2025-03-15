@@ -88,7 +88,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
         {/* Main button (Upload Audio or Process Audio) */}
         <button
           onClick={() => handleConfirmation()}
-          className={`px-4 py-2 ${audioId ? "w-1/2" : "w-1/2"
+          className={`px-4 py-2 ${audioId ? "w-[180px]" : "w-1/2"
             } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed`}
           disabled={isUploading}
         >

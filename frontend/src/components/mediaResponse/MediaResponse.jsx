@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types"; // Import PropTypes
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaContent from "./MediaContent";
@@ -6,6 +6,7 @@ import { transcriptionService } from '../../service/transcribeService';
 import { translationService } from '../../service/translateService';
 import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
+import Modal from "./ModalResponse";
 import toast from "react-hot-toast";
 
 const MediaResponse = () => {
@@ -77,6 +78,7 @@ const MediaResponse = () => {
     const transcriptionResponse = await transcriptionService.getTranscriptionByAudioId(audioId);
     const transcriptionText = transcriptionResponse.transcription;
     setTranscription(transcriptionText);
+    setIsModalOpen(true);
     toast.success('Transcripción completada!', { duration: 5000 });
   };
 
@@ -106,51 +108,20 @@ const MediaResponse = () => {
     return blob ? URL.createObjectURL(blob) : null;
   };
 
-  // Modal Component
-  const Modal = ({ isOpen, onClose, children }) => {
-    if (!isOpen) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-10">
-        <div className="relative p-5 rounded-lg w-11/12 max-w-4xl shadow-lg">
-          {/* Modal Content */}
-          {children}
-
-          {/* Close Button at the Bottom */}
-          <div className="relative justify-end -mt-10 ml-10">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Define PropTypes for the Modal component
-  Modal.propTypes = {
-    isOpen: PropTypes.bool.isRequired, // isOpen must be a boolean and is required
-    onClose: PropTypes.func.isRequired, // onClose must be a function and is required
-    children: PropTypes.node.isRequired, // children must be a React node and is required
-  };
-
   return (
     <>
       {/* Button to show results */}
       <button
         onClick={() => setIsModalOpen(true)}
-        disabled={currentStep !== 6}
-        className="px-4 py-2 bg-cerulean text-white rounded hover:bg-cerulean/60 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        disabled={currentStep < 4}
+        className="px-4 py-2 w-[180px] bg-cerulean text-white rounded hover:bg-cerulean/60 disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
         Mostrar Resultados
       </button>
 
       {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="flex flex-col md:flex-row w-full gap-x-10 justify-between p-10">
+        <div className="flex flex-col md:flex-row w-full gap-x-10 justify-between">
           <MediaContent
             title="Transcripción"
             contentText={transcription || ""}
