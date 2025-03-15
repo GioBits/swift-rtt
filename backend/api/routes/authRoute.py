@@ -35,4 +35,8 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
         JSON response containing authentication details.
     """
     if form_data.username and form_data.password:
-        return await auth_controller.login(form_data.username, form_data.password)
+        login_DTO = loginDTO(
+            username= form_data.username,
+            password= form_data.password
+        )
+        return await auth_controller.login(login_DTO)
