@@ -102,7 +102,7 @@ class AuthUtils:
             key="session_token",
             value=token,
             httponly=True,   # No accesible desde JavaScript
-            secure=True,     # Solo en HTTPS
+            secure=False,     # Solo en HTTPS
             # samesite="Strict" # Protección CSRF
         )
         
