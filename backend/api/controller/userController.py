@@ -27,10 +27,10 @@ class userController:
             )
 
         try:
-            if validate_password(password) == False:
+            if self.validate_password(create_user_DTO.password) == False:
                 raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="User not found"
+                    status_code=422,
+                    detail="Invalid password input"
                 )
             new_user = self.user_create_service.create_user(
                 username=create_user_DTO.username,
@@ -101,7 +101,7 @@ class userController:
                 detail="Internal Server Error"
             )
         
-    async def validate_password(self, password : str):
+    def validate_password(self, password : str):
         """
         Check if an input password is valid for user creation
         Args:
@@ -113,24 +113,34 @@ class userController:
         # invalido si es más corto que 8 o más largo que 12
         if len(password) < 8 or 12 < len(password):
             return False
-        
+
         # invalido si es todo en mayuscula
         if password.isupper():
             return False
-        
+
         # invalido si es todo en minuscula
         if password.islower():
             return False
-        
+
         # invalido si no contiene números
         if not(any(char.isdigit() for char in password)):
             return False
-
+        print(any(char.isdigit() for char in password))
         # inválido si no contiene al menos uno de: !@#$^&*.
         if not(any((char == '!' or char == '@' or char == '#' or char == '$' 
                     or char == '^' or char == '&' or char == '*' or char == '.')
                     for char in password)):
             return False
         
+        print("! : ", any(char == '!' for char in password) )
+        print("@ : ", any(char == '@' for char in password) )
+        print("# : ", any(char == '#' for char in password) )
+        print("$ : ", any(char == '$' for char in password) )
+        print("^ : ", any(char == '^' for char in password) )
+        print("& : ", any(char == '&' for char in password) )
+        print("* : ", any(char == '*' for char in password) )
+        print(". : ", any(char == '.' for char in password) )
+        
+
         #Si pasa por los condicionales sin retornar, es válido
         return True
