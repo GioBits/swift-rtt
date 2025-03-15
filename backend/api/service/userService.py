@@ -99,12 +99,9 @@ class userService:
         try:
             if not session_token:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
-
             payload = self.auth.decode_token(session_token)
-            print("HOLAAAAA AQUI ESTOY")
             user_id = payload.get("id")
             username = payload.get("username")
-            print("LO LOGREEEEEEE")
             if user_id is None or username is None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
 

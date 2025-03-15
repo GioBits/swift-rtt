@@ -2,7 +2,7 @@ import jwt
 import os
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status, Response, Cookie
+from fastapi import Depends, HTTPException, status, Response, Cookie, Request
 from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
@@ -49,7 +49,7 @@ class AuthUtils:
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido", headers={"WWW-Authenticate": "Bearer"})
 
-    def validate_token(self, token: str = Depends(oauth2_scheme), session_token: str = Cookie(None)):
+    def validate_token(self, session_token: str = Cookie(None)):
         """
         Validates a JWT token and returns the decoded payload.
         Args:
@@ -60,7 +60,7 @@ class AuthUtils:
             HTTPException: If the token is expired or invalid.
         """
         try:
-            final_token = session_token or token   # Prioridad: Header < Cookie
+            final_token = session_token   # Prioridad: Header < Cookie
             if not final_token:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
 
@@ -90,15 +90,6 @@ class AuthUtils:
         """
         return self.pwd_context.verify(plain_password, hashed_password)
     
-    def get_auth_cookie(self, session_token: str = Cookie(None)):
-        """
-        Gets the authentication token from the cookie.
-        Args:
-            session_token (str): The session token from the cookie.
-        Returns:
-            str: The session token.
-        """
-        return session_token
     
     def set_auth_cookie(self, response: Response, token: str):
         """
