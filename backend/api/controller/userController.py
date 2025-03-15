@@ -26,6 +26,11 @@ class userController:
             )
 
         try:
+            if validate_password(password) == False:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="User not found"
+                )
             new_user = self.user_create_service.create_user(
                 username=username,
                 password=password,
@@ -95,8 +100,15 @@ class userController:
                 detail="Internal Server Error"
             )
         
-    async def validate_password(password : str):
-        
+    async def validate_password(self, password : str):
+        """
+        Check if an input password is valid for user creation
+        Args:
+            password (str): The password given.
+        Returns:
+            False: If the password follows an invalid structure
+            True: If the password is valid
+        """
         # invalido si es más corto que 8 o más largo que 12
         if len(password) < 8 or 12 < len(password):
             return False
