@@ -2,7 +2,7 @@ from db.database import SessionLocal
 from sqlalchemy.orm import Session
 from utils.auth import AuthUtils
 from api.service.userService import userService
-
+from fastapi import Response, Request
 class AuthService:
     """
     AuthService handles authentication-related operations such as user login.
@@ -26,7 +26,7 @@ class AuthService:
         """
         self.db.close()
 
-    def login(self, username: str, password: str):
+    def login(self,response: Response, username: str, password: str):
         """
         Authenticates a user by their username and password.
 
@@ -48,5 +48,19 @@ class AuthService:
             raise Exception("Invalid password")
 
         access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
-
-        return {"access_token": access_token, "token_type": "bearer"}
+        if response: 
+            self.auth_utils.set_auth_cookie(response, access_token)
+            response.status_code = 200 
+            return {"message": "Login exitoso"}
+        else:
+            return {"message": "Error con Login"}
+        
+    def get_current_user(self, request: Request):
+        """
+        Obtains the information of the authenticated user from the token in the cookie.
+        """
+        token = self.auth_utils.get_auth_cookie(request)
+        if not token:
+            return {"message": "No autenticado"}
+        payload = self.auth_utils.decode_token(token)
+        return {"id": payload.get("id"), "username": payload.get("username")}

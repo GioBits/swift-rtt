@@ -48,12 +48,29 @@ const UserService = {
     const path = `/api/auth/login?${queryParams}`;
     
     try {
+      document.cookie = `session_token=cookie`;
       const response = await apiService.post(path);
+      const userData = await apiService.get("api/users/me");
       toast.success('Inicio de sesión exitoso!', { duration: 5000 });
-      return response;
+      return userData;
     } catch (error) {
       console.error(error);
       toast.error('Error al iniciar sesión.', { duration: 5000 });
+      throw error;
+    }
+  },
+
+  /**
+   * User logout.
+   * @returns {Promise<void>} - Promise object representing the response.
+   */
+  logout: async () => {
+    try {
+      await apiService.post("/api/auth/logout");
+      toast.success("Sesión cerrada correctamente.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al cerrar sesión.");
       throw error;
     }
   }

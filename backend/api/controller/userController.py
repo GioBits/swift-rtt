@@ -1,4 +1,4 @@
-from fastapi import HTTPException, UploadFile, status
+from fastapi import HTTPException, UploadFile, status, Request
 from api.service.userService import userService
 
 class userController:
@@ -94,3 +94,9 @@ class userController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
             )
+        
+    async def get_current_user(self, session_token: str):
+        """
+        Obtains the information of the authenticated user from the token in the cookie.
+        """
+        return self.user_create_service.get_current_user(session_token)
