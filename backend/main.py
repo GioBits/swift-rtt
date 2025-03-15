@@ -80,7 +80,7 @@ app.include_router(utilsRouter, prefix=("/utils"))
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://66.42.83.237:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
