@@ -18,25 +18,25 @@ const MediaResponse = () => {
     setTranscription,
     translate,
     setTranslate,
-    audioSelected,
-    audioTranslation,
-    setAudioTranslation,
-    audioUrl,
-    setAudioUrl,
+    mediaSelected,
+    mediaTranslation,
+    setMediaTranslation,
+    mediaUrl,
+    setMediaUrl,
   } = useContext(MediaContext)
 
   useEffect(() => {
     const handleResponse = async () => {
-      if (audioSelected) {
-        setAudioUrl(base64ToUrl(audioSelected.audioData));
+      if (mediaSelected) {
+        setMediaUrl(base64ToUrl(mediaSelected.data));
         setTranscription("");
         setTranslate("");
-        setAudioTranslation("");
+        setMediaTranslation("");
         setResetTimers(!resetTimers);
       }
     };
     handleResponse();
-  }, [audioSelected]);
+  }, [mediaSelected]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -87,7 +87,7 @@ const MediaResponse = () => {
 
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
-      setAudioTranslation(base64ToUrl(translatedAudio.audioData));
+      setMediaTranslation(base64ToUrl(translatedAudio.audioData));
       toast.success('Audio traducido completado!', { duration: 5000 });
     } catch (error) {
       console.error("Error fetching translated audio:", error);
@@ -104,22 +104,24 @@ const MediaResponse = () => {
       <MediaContent
         title="Transcripción"
         contentText={transcription || ""}
-        audio={audioUrl || ""}
+        audio={mediaUrl || ""}
         models={models}
         placeholder="Esperando audio transcrito..." 
         resetTimers={resetTimers}
         tooltipTitle="Reproducir/Detener audio original"
         tooltipDownload="Descargar audio original"
+        speed="1"
         />
       <MediaContent
         title="Traducción"
         contentText={translate || ""}
-        audio={audioTranslation || ""}
+        audio={mediaTranslation || ""}
         models={models}
         placeholder="Esperando texto traducido..." 
         resetTimers={resetTimers}
         tooltipTitle="Reproducir/Detener audio traducido"
         tooltipDownload="Descargar audio traducido"
+        speed="1.25"
         />
     </>
   )

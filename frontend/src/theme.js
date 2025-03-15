@@ -6,7 +6,7 @@ const theme = createTheme({
       main: '#011638',
     },
     secondary: {
-      main: '#0B6E4F',
+      main: '#1c6e8c',
     },
     blueMetal: {
       main: '#011638',

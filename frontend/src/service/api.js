@@ -1,66 +1,64 @@
 import axios from 'axios';
+import store from '../store';
 
-
-// Instancia de Axios con configuración predeterminada
+// Axios instance with default configuration
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000',
-  timeout: 60000,  // Tiempo de espera de 60 segundos
+  baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000', // Base URL for API requests
+  timeout: 60000,  // Timeout of 60 seconds
 });
-console.log(import.meta.env)
 
-// Interceptor para manejar las solicitudes antes de enviarlas
+// Interceptor to handle requests before they are sent
 apiClient.interceptors.request.use(
   (config) => {
-    // Obtener el token desde localStorage o sessionStorage
-    const token = localStorage.getItem('authToken');
+    // Retrieve the token from the Redux store
+    const state = store.getState();
+    const token = state.auth.token;
 
     if (token) {
-      // Si hay un token, agrégalo al encabezado Authorization
+      // If a token exists, add it to the Authorization header
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
     return config;
   },
   (error) => {
+    // Handle request errors
     return Promise.reject(error);
   }
 );
 
-
-// Interceptor para manejar respuestas de la API
+// Interceptor to handle API responses
 apiClient.interceptors.response.use(
-  (response) => response.data,  // Extrae directamente la data de la respuesta
+  (response) => response.data,  // Extract the data directly from the response
   (error) => {
-
     if (error.response) {
-      // Aquí tratamos los errores de respuesta de la API
-      console.error('Error de respuesta:', error.response);
+      // Handle API response errors here
+      console.error('Response error:', error.response);
       return Promise.reject(error.response);
     } else if (error.request) {
-      // Si no hubo respuesta de la API
-      console.error('Error de red:', error.message);
-      return Promise.reject({ message: 'No se pudo conectar con el servidor' });
+      // Handle cases where no response was received from the API
+      console.error('Network error:', error.message);
+      return Promise.reject({ message: 'Could not connect to the server' });
     } else {
-      // Error desconocido
-      return Promise.reject({ message: 'Ocurrió un error inesperado' });
+      // Handle unknown errors
+      return Promise.reject({ message: 'An unexpected error occurred' });
     }
   }
 );
 
 export default apiClient;
 
-
-// Servicio API que usa Axios para hacer solicitudes
+// API service that uses Axios to make requests
 const apiService = {
-  get: (url, params = {}) => apiClient.get(url, { params }),
+  get: (url, params = {}) => apiClient.get(url, { params }), // GET request with optional parameters
 
-  post: (url, data, config = {}) => apiClient.post(url, data, config),
+  post: (url, data, config = {}) => apiClient.post(url, data, config), // POST request with data and optional configuration
 
-  put: (url, data, config = {}) => apiClient.put(url, data, config),
+  put: (url, data, config = {}) => apiClient.put(url, data, config), // PUT request with data and optional configuration
 
-  delete: (url, config = {}) => apiClient.delete(url, config),
+  delete: (url, config = {}) => apiClient.delete(url, config), // DELETE request with optional configuration
 
-  ping: () => apiClient.get('/ping'),
+  ping: () => apiClient.get('/api/ping'), // Health check endpoint
 };
 
 export { apiService };

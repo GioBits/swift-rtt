@@ -61,23 +61,6 @@ class AudioController:
                 language_id=create_audio_DTO.language_id_from
             )
 
-            # Add the audio processing task to the queue
-
-            config = {
-                "record_id": audio_record.id,
-                "providers": {
-                    "transcription": 1,
-                    "translation": 2,
-                    "audio_generation": 3
-                },
-                "languages": {
-                    "from": create_audio_DTO.language_id_from,
-                    "to": create_audio_DTO.language_id_to
-                }
-            }
-
-            #await add_audio_task(config, "transcribe")
-
             return self.parse_audio_response(audio_record, True)
 
         except ValueError as e:
@@ -106,6 +89,7 @@ class AudioController:
             # Add the audio processing task to the queue
             config = {
                 "record_id": process_media_DTO.audio_id,
+                "user_id": process_media_DTO.user_id,
                 "providers": {
                     "transcription": 1,
                     "translation": 2,

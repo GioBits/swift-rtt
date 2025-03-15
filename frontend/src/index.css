@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: rgb(137,129,250);
-  --color-mintDark: #0B6E4F;
+  --color-primary: #1DA1F2;
+  --color-mintDark: #1c6e8c;
   --color-loto: rgb(255,116,144);
   --color-blueMetal: #011638;
-  --color-bg: #EFF1F3
+  --color-bg: #fbfcff;
+  --color-tropicalIndigo: #8981FA;
+  --color-cerulean: #1c6e8c;
+  --color-brownie: #605856;
 }
 
 .blinking-circle {

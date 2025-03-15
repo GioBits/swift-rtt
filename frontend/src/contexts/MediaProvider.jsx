@@ -5,37 +5,35 @@ import { languageService } from "../service/languageService";
 import { providerService } from "../service/providerService";
 import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
-
-const wsService = new WebSocketService();
+import { useSelector } from 'react-redux';
 
 export const MediaProvider = ({ children }) => {
-  const [audioUrl, setAudioUrl] = useState("");
-  const [audioTranslation, setAudioTranslation] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [mediaTranslation, setMediaTranslation] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [languages, setLanguages] = useState([]);
   const [providers, setProvider] = useState([]);
   const [transcription, setTranscription] = useState("");
   const [translate, setTranslate] = useState("");
   const [wsResponse, setWsResponse] = useState("");
-  const uploadingRef = useRef(false);
-
-  const getUploading = () => uploadingRef.current;
-  const setUploading = (value) => {
-    uploadingRef.current = value;
-  };
+  const wsServiceRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const userId = useSelector(state => state.auth.user.id);
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
     targetLanguage: 1,
   });
-  const [audioSelected, setAudioSelected] = useState({
+  const [mediaSelected, setMediaSelected] = useState({
     id: "",
-    audio_data: "",
+    data: "",
   })
 
-  const wsServiceRef = useRef(wsService);
-
   useEffect(() => {
+    if (!wsServiceRef.current || wsServiceRef.current.userId !== userId) {
+      wsServiceRef.current = new WebSocketService(userId);
+    }
+
     const handleMessage = (messageData) => {
       setWsResponse(messageData);
       console.log("Mensaje recibido:", messageData);
@@ -47,7 +45,7 @@ export const MediaProvider = ({ children }) => {
     return () => {
       wsServiceInstance.offMessage(handleMessage);
     };
-  }, []);
+  }, [userId])
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -91,21 +89,22 @@ export const MediaProvider = ({ children }) => {
         selectedLanguages,
         setSourceLanguage: handleSetSourceLanguage,
         setTargetLanguage: handleSetTargetLanguage,
-        getUploading,
-        setUploading,
-        audioUrl,
-        setAudioUrl,
+        mediaUrl,
+        setMediaUrl,
         isRecording,
         setIsRecording,
-        audioSelected,
-        setAudioSelected,
+        mediaSelected,
+        setMediaSelected,
+        isUploading,
+        setIsUploading,
         transcription,
         setTranscription,
         translate,
         setTranslate,
-        audioTranslation,
-        setAudioTranslation,
-        providers
+        mediaTranslation,
+        setMediaTranslation,
+        providers,
+        userId
       }}
     >
       {children}
