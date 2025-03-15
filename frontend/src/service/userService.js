@@ -48,9 +48,11 @@ const UserService = {
     const path = `/api/auth/login?${queryParams}`;
     
     try {
-      const response = await apiService.post(path, { withCredentials: true });
+      document.cookie = `session_token=cookie`;
+      const response = await apiService.post(path);
+      const userData = await apiService.get("api/users/me");
       toast.success('Inicio de sesión exitoso!', { duration: 5000 });
-      return true;
+      return userData;
     } catch (error) {
       console.error(error);
       toast.error('Error al iniciar sesión.', { duration: 5000 });

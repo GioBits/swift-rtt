@@ -26,7 +26,7 @@ const authSlice = createSlice({
         console.log("❌ Error en login:", action.payload);
         state.user = null;
         state.isAuthenticated = false;
-        state.error = action.payload;
+        state.error = action;
       });
   },
 });
