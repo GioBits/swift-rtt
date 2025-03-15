@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 from sqlalchemy.orm import Session
 from api.service.authService import AuthService
 from models.users import UsersSchema
@@ -18,7 +18,7 @@ class AuthController:
         """
         self.auth_service = AuthService()
 
-    async def login(self, response: Response, username: str, password: str, ):  
+    async def login(self, response: Response, username: str, password: str):  
         """
         Handles a user's login request.
         Args:
@@ -53,46 +53,6 @@ class AuthController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
             )
-    async def login_token(self, response: Response, username: str, password: str, ):  
-        """
-        Handles a user's login request.
-        Args:
-            username (str): The user's username.
-            password (str): The user's password.
-        Returns:
-            dict: A dictionary with the user's authentication details if login is successful.
-        Raises:
-            HTTPException: If an HTTP error occurs during login.
-            HTTPException: If an internal server error occurs.
-        """  
-        try:
-            return self.auth_service.login_token(response, username, password)
-
-        except Exception as e:  # Capture general exceptions
-
-            print(f"Error: {str(e)}")
-
-            if str(e) == "User not found":
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="invalid username or password"
-                )
-
-            if str(e) == "Invalid password":
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="invalid username or password"
-                )
-
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Internal Server Error"
-            )
-    async def get_current_user(self):
-        """
-        Obtains the information of the authenticated user from the token in the cookie.
-        """
-        return self.auth_service.get_current_user()
 
     async def logout(self, response: Response):
         """

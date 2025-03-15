@@ -2,8 +2,7 @@ from db.database import SessionLocal
 from sqlalchemy.orm import Session
 from utils.auth import AuthUtils
 from api.service.userService import userService
-from fastapi import Response
-
+from fastapi import Response, Request
 class AuthService:
     """
     AuthService handles authentication-related operations such as user login.
@@ -55,35 +54,12 @@ class AuthService:
             return {"message": "Login exitoso"}
         else:
             return {"message": "Error con Login"}
-    def login_token(self,response: Response, username: str, password: str):
-        """
-        Authenticates a user by their username and password.
-
-        Args:
-            username (str): The user's username.
-            password (str): The user's password.
-
-        Returns:
-            dict: A dictionary containing the access token if authentication is successful.
-            str: An error message if authentication fails.
-        """
-
-        user = self.user_service.get_user_by_username_with_pass(username)
-        if not user:
-            raise Exception("User not found")
-
-        verify_password = self.auth_utils.verify_password(password, user.password_hash)
-        if  not verify_password:
-            raise Exception("Invalid password")
-
-        access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
-        return {"access_token": access_token}
-
-    def get_current_user(self):
+        
+    def get_current_user(self, request: Request):
         """
         Obtains the information of the authenticated user from the token in the cookie.
         """
-        token = self.auth_utils.get_auth_cookie()
+        token = self.auth_utils.get_auth_cookie(request)
         if not token:
             return {"message": "No autenticado"}
         payload = self.auth_utils.decode_token(token)

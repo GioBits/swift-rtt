@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from fastapi import APIRouter, File, UploadFile, Query, HTTPException, Request, Cookie
 from api.controller.userController import userController
 from typing import List
 
@@ -33,6 +33,13 @@ async def get_user_by_username(username: str):
     """
     return await user_controller.get_user_by_username(username)
 
+@router.get("/users/me", tags=["Users"])
+async def get_current_user(session_token: str = Cookie(None)):
+    """
+    Obtiene la información del usuario autenticado a partir del token en la cookie.
+    """
+    return await user_controller.get_current_user(session_token)
+    
 # Endpoint "/users/{userId}", recupera un usuario por su ID
 @router.get("/users/{userId}", tags=["Users"])
 async def get_user_by_id(userId: int):
