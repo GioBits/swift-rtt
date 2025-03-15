@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser } from "./authActions";
+import { fetchCurrentUser, loginUser } from "./authActions";
 
 const authSlice = createSlice({
   name: "auth",
@@ -27,6 +27,18 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = action;
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        console.log("✅ Login exitoso fetch", action.payload);
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        console.log("❌ Error fetch", action.payload);
+        state.user = action.payload.user;
+        state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });
