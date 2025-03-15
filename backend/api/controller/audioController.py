@@ -3,6 +3,7 @@ from api.service.audioService import AudioService
 from models.audio import AudioRecordSchema, AudioResponseSchema, AudioResponseWithAudioSchema, AudioListResponseSchema
 from pybase64 import b64encode
 from api.validators.audioValidations import validate_upload
+from api.DTO.audio.audioRequestDTO import create_audioDTO, process_mediaDTO, retrieve_audios_listDTO
 from ws.brokerDispatcher import add_audio_task
 
 class AudioController:
@@ -36,7 +37,7 @@ class AudioController:
         else:
             return AudioResponseSchema(**base_response)
 
-    async def create_audio(self, user_id: int, language_id_from: int, language_id_to, file: UploadFile) -> AudioResponseSchema:
+    async def create_audio(self, create_audio_DTO: create_audioDTO) -> AudioResponseSchema:
         """
         Controller function to handle the upload of an audio file.
 
@@ -48,16 +49,16 @@ class AudioController:
             AudioRecordSchema: Record of the audio stored in the database.
         """
         try:
-            file_data = await validate_upload(file)
+            file_data = await validate_upload(create_audio_DTO.file)
 
             # Call the service layer to create the audio
             audio_record = self.audio_service.create_audio(
-                user_id=user_id,
-                filename=file.filename,
+                user_id=create_audio_DTO.user_id,
+                filename=create_audio_DTO.file.filename,
                 audio_data=file_data,
-                content_type=file.content_type,
+                content_type=create_audio_DTO.file.content_type,
                 file_size=len(file_data),
-                language_id=language_id_from
+                language_id=create_audio_DTO.language_id_from
             )
 
             return self.parse_audio_response(audio_record, True)
@@ -72,7 +73,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def process_media(self,  user_id: int, audio_record_id: int, language_id_from: int, language_id_to: int):
+    async def process_media(self, process_media_DTO : process_mediaDTO):
         """
         Controller function to handle the processing of an media file.
 
@@ -87,16 +88,16 @@ class AudioController:
         try:
             # Add the audio processing task to the queue
             config = {
-                "user_id": user_id,
-                "record_id": audio_record_id,
+                "record_id": process_media_DTO.audio_id,
+                "user_id": process_media_DTO.user_id,
                 "providers": {
                     "transcription": 1,
                     "translation": 2,
                     "audio_generation": 3
                 },
                 "languages": {
-                    "from": language_id_from,
-                    "to": language_id_to
+                    "from": process_media_DTO.language_id_from,
+                    "to": process_media_DTO.language_id_to
                 }
             }
 
@@ -108,7 +109,7 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def retrieve_all_audios(self, page: int, size: int):
+    async def retrieve_all_audios(self, retrieve_audios_list_DTO : retrieve_audios_listDTO):
         """
         Asynchronously retrieves all audios with pagination.
 
@@ -127,13 +128,13 @@ class AudioController:
             HTTPException: If no audios are found (404) or if an internal server error occurs (500).
         """
         try:
-            audios, total_items, total_pages = self.audio_service.get_all_audios(page, size)
+            audios, total_items, total_pages = self.audio_service.get_all_audios(retrieve_audios_list_DTO.page, retrieve_audios_list_DTO.size)
 
             response = {
                 "data": audios,
                 "pagination": {
-                    "page": page,
-                    "size": size,
+                    "page": retrieve_audios_list_DTO.page,
+                    "size": retrieve_audios_list_DTO.size,
                     "total_items": total_items,
                     "total_pages": total_pages
                 }

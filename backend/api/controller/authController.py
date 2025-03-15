@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from api.service.authService import AuthService
 from models.users import UsersSchema
+from api.DTO.auth.loginRequestDTO import loginDTO
 
 router = APIRouter()
 
@@ -18,7 +19,7 @@ class AuthController:
         """
         self.auth_service = AuthService()
 
-    async def login(self, username: str, password: str):
+    async def login(self, login_DTO : loginDTO):
         """
         Handles a user's login request.
         Args:
@@ -31,7 +32,7 @@ class AuthController:
             HTTPException: If an internal server error occurs.
         """  
         try:
-            return self.auth_service.login(username, password)
+            return self.auth_service.login(login_DTO.username, login_DTO.password)
 
         except Exception as e:  # Capture general exceptions
 

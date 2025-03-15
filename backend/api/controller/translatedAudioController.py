@@ -4,6 +4,7 @@ from api.service.translationService import TranslationService
 from models.translated_audios import TranslatedAudioRecordSchema, TranslatedAudioResponseSchema
 from pybase64 import b64encode
 from providers.serviceLoader import ServiceLoader
+from api.DTO.translated_audio.translatedAudioDTO import add_translated_audioDTO
 
 class TranslatedAudioController:
     def __init__(self):
@@ -66,7 +67,7 @@ class TranslatedAudioController:
                 detail="Internal Server Error"
             )
 
-    async def create_translated_audio(self, translation_id: int, provider_id: int):
+    async def create_translated_audio(self, add_translated_audio_DTO : add_translated_audioDTO):
         """
         Asynchronously creates a new translated audio.
 
@@ -85,7 +86,7 @@ class TranslatedAudioController:
         """
         try:
             # Retrieve the translation record using the translation_id
-            translation_record = self.translation_service.get_translation_by_id(translation_id)
+            translation_record = self.translation_service.get_translation_by_id(add_translated_audio_DTO.translation_id)
             if translation_record is None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -96,7 +97,7 @@ class TranslatedAudioController:
             
             audio_data = await self.audio_generator.text_2_speech(translation_record.translation_text, audio_id, translation_record.language_id)
 
-            new_translated_audio = self.translated_audio_service.create_translated_audio(audio_id, translation_id, provider_id, language_id, audio_data, len(audio_data))
+            new_translated_audio = self.translated_audio_service.create_translated_audio(audio_id, add_translated_audio_DTO.translation_id, add_translated_audio_DTO.provider_id, language_id, audio_data, len(audio_data))
             if new_translated_audio is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

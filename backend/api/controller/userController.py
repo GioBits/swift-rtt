@@ -1,12 +1,13 @@
 from fastapi import HTTPException, UploadFile, status
 from api.service.userService import userService
+from api.DTO.user.userRequestDTO import create_userDTO
 
 class userController:
 
     def __init__(self):
         self.user_create_service = userService()
 
-    async def create_user(self, username:str, password:str, first_name:str, last_name:str):
+    async def create_user(self, create_user_DTO : create_userDTO):
         """
         Create a new user entry in the database.
         Args:
@@ -18,7 +19,7 @@ class userController:
             UsersSchema: Dates of the user stored in the database.
         """
 
-        existing_user = self.user_create_service.get_user_by_username(username)
+        existing_user = self.user_create_service.get_user_by_username(create_user_DTO.username)
         if existing_user is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -32,10 +33,10 @@ class userController:
                     detail="User not found"
                 )
             new_user = self.user_create_service.create_user(
-                username=username,
-                password=password,
-                first_name=first_name,
-                last_name=last_name
+                username=create_user_DTO.username,
+                password=create_user_DTO.password,
+                first_name=create_user_DTO.first_name,
+                last_name=create_user_DTO.last_name
             )
             return new_user
         

@@ -1,13 +1,14 @@
-from fastapi import APIRouter, File, UploadFile, Query, HTTPException
+from fastapi import APIRouter, File, UploadFile, Query, HTTPException, Depends
 from api.controller.userController import userController
 from typing import List
+from api.DTO.user.userRequestDTO import create_userDTO
 
 router = APIRouter()
 user_controller= userController()
 
 # Endpoint "/users", recibe datos de usuario para crear un nuevo usuario
 @router.post("/users", tags=["Users"])
-async def create_user(username:str, password:str, first_name:str, last_name:str):
+async def create_user(create_user_DTO : create_userDTO = Depends()):
     """
     Create a new user entry in the database.
     Args:
@@ -18,7 +19,7 @@ async def create_user(username:str, password:str, first_name:str, last_name:str)
     Returns:
         UsersSchema: Dates of the user stored in the database.
     """
-    return await user_controller.create_user(username, password, first_name, last_name)
+    return await user_controller.create_user(create_user_DTO)
 
 # Endpoint "/users/username/{username}", recupera un usuario por su correo electrónico
 @router.get("/users/username/{username}", tags=["Users"])
