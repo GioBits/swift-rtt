@@ -80,7 +80,7 @@ app.include_router(utilsRouter, prefix=("/utils"))
 allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["66.42.83.237"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
