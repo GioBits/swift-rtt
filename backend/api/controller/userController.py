@@ -125,22 +125,12 @@ class userController:
         # invalido si no contiene números
         if not(any(char.isdigit() for char in password)):
             return False
-        print(any(char.isdigit() for char in password))
+        
         # inválido si no contiene al menos uno de: !@#$^&*.
         if not(any((char == '!' or char == '@' or char == '#' or char == '$' 
                     or char == '^' or char == '&' or char == '*' or char == '.')
                     for char in password)):
             return False
-        
-        print("! : ", any(char == '!' for char in password) )
-        print("@ : ", any(char == '@' for char in password) )
-        print("# : ", any(char == '#' for char in password) )
-        print("$ : ", any(char == '$' for char in password) )
-        print("^ : ", any(char == '^' for char in password) )
-        print("& : ", any(char == '&' for char in password) )
-        print("* : ", any(char == '*' for char in password) )
-        print(". : ", any(char == '.' for char in password) )
-        
 
         #Si pasa por los condicionales sin retornar, es válido
         return True

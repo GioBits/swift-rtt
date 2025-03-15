@@ -9,7 +9,7 @@ router = APIRouter()
 auth_controller = AuthController()
 
 @router.post("/auth/login", tags=["Auth"])
-async def login(login_DTO : loginDTO = Depends()):
+async def login(payload : str):
     """
     Endpoint to handle user login.
 
@@ -20,7 +20,8 @@ async def login(login_DTO : loginDTO = Depends()):
     Returns:
         JSON response containing authentication details.
     """
-    return await auth_controller.login(login_DTO)
+
+    return await auth_controller.login(payload)
     
 @router.post("/auth/token", tags=["Auth"])
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):

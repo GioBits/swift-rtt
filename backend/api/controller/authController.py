@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from api.service.authService import AuthService
 from models.users import UsersSchema
 from api.DTO.auth.loginRequestDTO import loginDTO
+import base64, json
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ class AuthController:
         """
         self.auth_service = AuthService()
 
-    async def login(self, login_DTO : loginDTO):
+    async def login(self, payload : str):
         """
         Handles a user's login request.
         Args:
@@ -32,6 +33,15 @@ class AuthController:
             HTTPException: If an internal server error occurs.
         """  
         try:
+
+            payloadBytes = payload.encode("ascii")
+
+            bytesToDecode = base64.b64decode(payloadBytes)
+            decodedPayload = bytesToDecode.decode("ascii")
+
+            data_dict = json.loads(decodedPayload)
+            login_DTO = loginDTO(username= data_dict["username"], password= data_dict["password"])
+
             return self.auth_service.login(login_DTO.username, login_DTO.password)
 
         except Exception as e:  # Capture general exceptions
