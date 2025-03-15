@@ -2,45 +2,41 @@ import { useEffect } from 'react'
 import { MediaProvider } from "../contexts/MediaProvider";
 import LanguageSelector from "../components/mediaUpload/LanguageSelector";
 import MediaUpload from "../components/mediaUpload/MediaUpload";
-import MediaResponse from "../components/mediaResponse/MediaResponse";
-import ModalProviders from "../components/ModalProviders";
+import ProcessBar from '../components/ProcessBar';
+import NavbarComponent from '../components/NavbarComponent'
 
 const Home = () => {
   useEffect(() => {
-      document.title = 'Media Upload'
-    }, [])
+    document.title = 'Media Upload'
+  }, [])
 
   return (
-    <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] lg:flex mt-10 m-auto block">
-      <MediaProvider>
+    <MediaProvider>
+      <div className="w-screen h-screen">
+        <div className='block w-full h-full'>
+          <NavbarComponent />
+          <div className='flex flex-row h-[calc(100%-60px)] w-full'>
+            <div className='flex m-auto'>
+              <div className='hidden md:flex md:w-100'>
+                <ProcessBar />
+              </div>
+              {/* Upload Section */}
+              <div className="w-100 h-130 lg:w-150 flex flex-col gap-y-4 bg-white p-8 rounded-lg shadow-lg shadow-blueMetal/50">
 
-        {/* Upload Section */}
-        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto bg-white rounded-lg shadow-lg shadow-blueMetal/50">
-          
-          {/* Modal Providers */}
-          <div className="box-border h-[80px]  text-3xl font-bold text-center flex items-center justify-center rounded-t-lg">
-            <ModalProviders />
-          </div>
-          
-          {/* LanguageSelector */}
-          <div className="box-border flex h-[80px] w-full m-auto">
-            <LanguageSelector />
-          </div>
-
-          {/* Dropfile and RecordAudio Upload */}
-          <div className="h-[calc(100%-160px)] flex flex-col items-center justify-center">
-            <MediaUpload />
+                {/* LanguageSelector */}
+                <div className="box-border flex h-[40px] w-[100%]">
+                  <LanguageSelector />
+                </div>
+                {/* Dropfile and RecordAudio Upload */}
+                <div className="flex flex-col h-full">
+                  <MediaUpload />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div className='md:h-[50px] md:w-full lg:block lg:w-[50px] lg:h-full  '></div>
-
-        {/* App Response */}
-        <div className="lg:w-1/2 w-full h-full flex flex-col m-auto rounded gap-4">
-          <MediaResponse />
-        </div>
-      </MediaProvider>
-    </div>
+      </div>
+    </MediaProvider>
   );
 };
 

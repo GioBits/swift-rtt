@@ -3,13 +3,18 @@ import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
 import Confirm from './Confirm';
 import DisplayAudioWave from './DisplayAudioWave';
-import { CircularProgress } from '@mui/material';
 import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
 import NewAudioButton from './NewAudioButton';
-
+import MediaResponse from '../mediaResponse/MediaResponse';
+ 
 const MediaUpload = () => {
-  const { isUploading, audioSelected, setAudioSelected } = useContext(MediaContext);
+
+  const {
+    resetStepper,
+    mediaSelected,
+    setMediaSelected
+  } = useContext(MediaContext);
   const [buttonSelected, setButtonSelected] = useState(true); // State for selected button (Dropzone or RecordAudio)
   const [isClicked, setIsClicked] = useState(true); // State to track if a button is clicked
   const [fileToUpload, setFileToUpload] = useState(null); // State to store the file to upload
@@ -29,8 +34,9 @@ const MediaUpload = () => {
   };
 
   const handleNewAudio = () => {
-    setAudioSelected({ audioData: '', id: '' });
+    setMediaSelected({ data: '', id: '' });
     setFileToUpload(null);
+    resetStepper(1)
   }
 
   // Props to pass to MediaUploadSelector
@@ -42,38 +48,41 @@ const MediaUpload = () => {
 
   // Logic to handle the content to render
   const renderContent = () => {
-    if (isUploading) {
-      return <CircularProgress />;
-    }
-
     if (fileToUpload) {
       return (
         <>
+          {/* Rendder DisplayAudioWave */}
           <DisplayAudioWave file={fileToUpload} />
+  
+          {/* Render Confirm (button change to CircularProgress if isUploading is true) */}
           <Confirm
             file={fileToUpload}
-            audioId={audioSelected.id}
-            handleNewAudio={handleNewAudio} />
+            audioId={mediaSelected.id}
+            handleNewAudio={handleNewAudio}
+            />
+          <div className='mt-3'>
+          <MediaResponse />
+          </div>
         </>
-      )
+      );
     }
-
+  
     if (buttonSelected) {
       return <Dropzone onFileSelected={handleFileSelected} />;
     }
-
+  
     return <RecordAudio onFileSelected={handleFileSelected} />;
   };
 
   return (
-    <div className='box-border flex flex-col h-full w-full m-auto'>
+    <div className='flex flex-col gap-y-4 h-full'>
       {/* Render the MediaUploadSelector component or upload NewAudioButton*/}
       {fileToUpload
-        ? <NewAudioButton onClick={handleNewAudio}  buttonSelected={buttonSelected} />
+        ? <NewAudioButton onClick={handleNewAudio} buttonSelected={buttonSelected} />
         : <MediaUploadSelector {...props} />}
 
       {/* Main content area */}
-      <div className="box-border w-[90%] m-auto h-full mt-[20px] mb-[20px] flex items-center justify-center">
+      <div className="box-border w-[100%] h-full flex items-center justify-center">
         <div className="h-full w-full flex flex-col justify-center items-center border border-dashed border-gray-400 rounded-lg box-border sm:p-6 md:p-8">
           {renderContent()}
         </div>
