@@ -47,7 +47,7 @@ export const LoginForm = () => {
   return (
     <div className='w-full h-full flex flex-row'>
       {/* Form */}
-      <div className='w-full md:w-1/2 h-full flex flex-col px-8 py-4'>
+      <div className='w-full lg:w-1/2 h-full flex flex-col px-8 py-4'>
         <img src={logoColibri} alt="Logo SwiftVoice App" className="w-22 h-22 flex m-auto" />
         <div className="h-full flex flex-col text-center">
           <h3 className="titleForm">Iniciar sesión</h3>
@@ -97,7 +97,7 @@ export const LoginForm = () => {
         </p>
       </div>
       {/* Img */}
-      <div className='hidden md:flex'>
+      <div className='hidden lg:flex '>
         <img src={stt} alt='SwiftApp Login' className='h-full rounded-r-lg bg-blueMetal' />
       </div>
     </div>

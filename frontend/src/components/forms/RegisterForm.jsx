@@ -86,7 +86,7 @@ export const RegisterForm = () => {
   return (
     <div className='w-full h-full flex flex-row'>
       {/* Form */}
-      <div className='w-full md:w-1/2 h-full flex flex-col px-8 py-4'>
+      <div className='w-full lg:w-1/2 h-full flex flex-col px-8 py-4'>
         <div className="h-full flex flex-col text-center">
           <h3 className="titleForm">Registro</h3>
           <form onSubmit={handleRegister}>
@@ -165,7 +165,7 @@ export const RegisterForm = () => {
           </Link>
         </p>
       </div>
-      <div className='hidden md:flex'>
+      <div className='hidden lg:flex'>
         <img src={registerImg} alt='Colibri App' className='h-full rounded-r-lg bg-blueMetal' />
       </div>
     </div>
