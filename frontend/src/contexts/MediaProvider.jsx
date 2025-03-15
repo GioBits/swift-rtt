@@ -19,6 +19,7 @@ export const MediaProvider = ({ children }) => {
   const wsServiceRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const userId = useSelector(state => state.auth.user.id);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
@@ -28,6 +29,10 @@ export const MediaProvider = ({ children }) => {
     id: "",
     data: "",
   })
+
+  const resetStepper = () => {
+    setCurrentStep(1);
+  };
 
   useEffect(() => {
     if (!wsServiceRef.current || wsServiceRef.current.userId !== userId) {
@@ -104,7 +109,10 @@ export const MediaProvider = ({ children }) => {
         mediaTranslation,
         setMediaTranslation,
         providers,
-        userId
+        userId,
+        currentStep,
+        setCurrentStep,
+        resetStepper
       }}
     >
       {children}

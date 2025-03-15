@@ -1,6 +1,7 @@
-import { useContext, useEffect, useState } from "react"
-import { MediaContext } from '../../contexts/MediaContext'
-import MediaContent from "./MediaContent"
+import { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
+import { MediaContext } from '../../contexts/MediaContext';
+import MediaContent from "./MediaContent";
 import { transcriptionService } from '../../service/transcribeService';
 import { translationService } from '../../service/translateService';
 import { translatedAudioService } from "../../service/translatedAudioService";
@@ -10,7 +11,7 @@ import toast from "react-hot-toast";
 const MediaResponse = () => {
   const models = [];
 
-  const [resetTimers, setResetTimers] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     wsResponse,
@@ -18,12 +19,15 @@ const MediaResponse = () => {
     setTranscription,
     translate,
     setTranslate,
+    setCurrentStep,
+    setIsUploading,
     mediaSelected,
     mediaTranslation,
     setMediaTranslation,
     mediaUrl,
     setMediaUrl,
-  } = useContext(MediaContext)
+    currentStep
+  } = useContext(MediaContext);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -32,7 +36,6 @@ const MediaResponse = () => {
         setTranscription("");
         setTranslate("");
         setMediaTranslation("");
-        setResetTimers(!resetTimers);
       }
     };
     handleResponse();
@@ -53,16 +56,20 @@ const MediaResponse = () => {
     let task = wsResponseData.task;
     if (task === "transcribe") {
       await fetchTranscriptionByAudioId(audioId);
+      setCurrentStep(4);
     }
 
     if (task === "translate") {
       await fetchTranslationByAudioId(audioId);
+      setCurrentStep(5);
     }
 
     if (task === "generate_audio") {
       await fetchTranslatedAudioByAudioId(audioId);
+      setCurrentStep(6);
+      setIsUploading(false);
     }
-  }
+  };
 
   const fetchTranscriptionByAudioId = async (audioId) => {
     if (audioId === "") return;
@@ -97,34 +104,73 @@ const MediaResponse = () => {
   const base64ToUrl = (base64) => {
     const blob = b64toBlob(base64, 'audio/mp3');
     return blob ? URL.createObjectURL(blob) : null;
-  }
+  };
+
+  // Modal Component
+  const Modal = ({ isOpen, onClose, children }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-10">
+        <div className="relative p-5 rounded-lg w-11/12 max-w-4xl shadow-lg">
+          {/* Modal Content */}
+          {children}
+
+          {/* Close Button at the Bottom */}
+          <div className="relative justify-end -mt-10 ml-10">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Define PropTypes for the Modal component
+  Modal.propTypes = {
+    isOpen: PropTypes.bool.isRequired, // isOpen must be a boolean and is required
+    onClose: PropTypes.func.isRequired, // onClose must be a function and is required
+    children: PropTypes.node.isRequired, // children must be a React node and is required
+  };
 
   return (
     <>
-      <MediaContent
-        title="Transcripción"
-        contentText={transcription || ""}
-        audio={mediaUrl || ""}
-        models={models}
-        placeholder="Esperando audio transcrito..." 
-        resetTimers={resetTimers}
-        tooltipTitle="Reproducir/Detener audio original"
-        tooltipDownload="Descargar audio original"
-        speed="1"
-        />
-      <MediaContent
-        title="Traducción"
-        contentText={translate || ""}
-        audio={mediaTranslation || ""}
-        models={models}
-        placeholder="Esperando texto traducido..." 
-        resetTimers={resetTimers}
-        tooltipTitle="Reproducir/Detener audio traducido"
-        tooltipDownload="Descargar audio traducido"
-        speed="1.25"
-        />
-    </>
-  )
-}
+      {/* Button to show results */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        disabled={currentStep !== 6}
+        className="px-4 py-2 bg-cerulean text-white rounded hover:bg-cerulean/60 disabled:bg-gray-300 disabled:cursor-not-allowed"
+      >
+        Mostrar Resultados
+      </button>
 
-export default MediaResponse
+      {/* Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="flex flex-col md:flex-row w-full gap-x-10 justify-between p-10">
+          <MediaContent
+            title="Transcripción"
+            contentText={transcription || ""}
+            audio={mediaUrl || ""}
+            models={models}
+            tooltipTitle="Reproducir/Detener audio original"
+            tooltipDownload="Descargar audio original"
+          />
+          <MediaContent
+            title="Traducción"
+            contentText={translate || ""}
+            audio={mediaTranslation || ""}
+            models={models}
+            tooltipDownload="Descargar audio traducido"
+            speed="1.25"
+          />
+        </div>
+      </Modal>
+    </>
+  );
+};
+
+export default MediaResponse;
