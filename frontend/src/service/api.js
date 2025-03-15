@@ -6,6 +6,7 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000', // Base URL for API requests
   timeout: 60000,  // Timeout of 60 seconds
   withCredentials: true,  // Send cookies when cross-origin requests
+  origin: "http://localhost:3000, http://66.42.83.237:3000",
 });
 
 // Interceptor to handle requests before they are sent
