@@ -151,7 +151,7 @@ class userController:
             if user_id is None or username is None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
 
-            user = self.get_user_by_id(user_id)
+            user = await self.get_user_by_id(user_id)
             if not user:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
 
