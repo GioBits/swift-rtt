@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from utils.auth import AuthUtils
 from api.service.userService import userService
 from fastapi import Response, Request
+from api.DTO.auth.loginRequestDTO import loginDTO
 class AuthService:
     """
     AuthService handles authentication-related operations such as user login.
@@ -26,7 +27,7 @@ class AuthService:
         """
         self.db.close()
 
-    def login(self,response: Response, username: str, password: str):
+    def login(self,response: Response, loginDTO: loginDTO):
         """
         Authenticates a user by their username and password.
 
@@ -38,6 +39,9 @@ class AuthService:
             dict: A dictionary containing the access token if authentication is successful.
             str: An error message if authentication fails.
         """
+
+        username = loginDTO.username
+        password = loginDTO.password
 
         user = self.user_service.get_user_by_username_with_pass(username)
         if not user:

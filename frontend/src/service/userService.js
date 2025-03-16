@@ -40,9 +40,9 @@ const UserService = {
    * @returns {Promise<Object>} - Promise object representing the response.
    */
   login: async (loginData) => {
+    console.log(loginData);
     const queryParams = new URLSearchParams({
-      username: loginData.username,
-      password: loginData.password,
+      payload: btoa(JSON.stringify(loginData)),
     }).toString();
 
     const path = `/api/auth/login?${queryParams}`;
@@ -59,6 +59,7 @@ const UserService = {
       return userData;
 
     } catch (error) {
+      console.log(error);
       toast.error('Error al iniciar sesión.', { duration: 5000 });
       throw error;
     }

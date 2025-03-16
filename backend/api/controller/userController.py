@@ -1,12 +1,16 @@
 from fastapi import HTTPException, UploadFile, status, Request
 from api.service.userService import userService
+from api.DTO.user.userRequestDTO import create_userDTO
+from utils.auth import AuthUtils
+from fastapi import Request, HTTPException, status
 
 class userController:
 
     def __init__(self):
         self.user_create_service = userService()
+        self.auth = AuthUtils()
 
-    async def create_user(self, username:str, password:str, first_name:str, last_name:str):
+    async def create_user(self, create_user_DTO : create_userDTO):
         """
         Create a new user entry in the database.
         Args:
@@ -18,7 +22,7 @@ class userController:
             UsersSchema: Dates of the user stored in the database.
         """
 
-        existing_user = self.user_create_service.get_user_by_username(username)
+        existing_user = self.user_create_service.get_user_by_username(create_user_DTO.username)
         if existing_user is not None:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
@@ -26,11 +30,16 @@ class userController:
             )
 
         try:
+            if self.validate_password(create_user_DTO.password) == False:
+                raise HTTPException(
+                    status_code=422,
+                    detail="Invalid password input"
+                )
             new_user = self.user_create_service.create_user(
-                username=username,
-                password=password,
-                first_name=first_name,
-                last_name=last_name
+                username=create_user_DTO.username,
+                password=create_user_DTO.password,
+                first_name=create_user_DTO.first_name,
+                last_name=create_user_DTO.last_name
             )
             return new_user
         
@@ -95,8 +104,58 @@ class userController:
                 detail="Internal Server Error"
             )
         
+    def validate_password(self, password : str):
+        """
+        Check if an input password is valid for user creation
+        Args:
+            password (str): The password given.
+        Returns:
+            False: If the password follows an invalid structure
+            True: If the password is valid
+        """
+        # invalido si es más corto que 8 o más largo que 12
+        if len(password) < 8 or 12 < len(password):
+            return False
+
+        # invalido si es todo en mayuscula
+        if password.isupper():
+            return False
+
+        # invalido si es todo en minuscula
+        if password.islower():
+            return False
+
+        # invalido si no contiene números
+        if not(any(char.isdigit() for char in password)):
+            return False
+        
+        # inválido si no contiene al menos uno de: !@#$^&*.
+        if not(any((char == '!' or char == '@' or char == '#' or char == '$' 
+                    or char == '^' or char == '&' or char == '*' or char == '.')
+                    for char in password)):
+            return False
+
+        #Si pasa por los condicionales sin retornar, es válido
+        return True
+    
     async def get_current_user(self, session_token: str):
         """
         Obtains the information of the authenticated user from the token in the cookie.
         """
-        return self.user_create_service.get_current_user(session_token)
+        try:
+            if not session_token:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
+            payload = self.auth.decode_token(session_token)
+            user_id = payload.get("id")
+            username = payload.get("username")
+            if user_id is None or username is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+
+            user = await self.get_user_by_id(user_id)
+            if not user:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+            return {"id": user.id, "username": user.username}
+
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
