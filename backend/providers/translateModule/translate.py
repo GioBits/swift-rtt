@@ -4,106 +4,137 @@ import warnings
 import os
 import logging
 
+# Configure logging and warnings
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("Translate")
-
 warnings.filterwarnings("ignore", message="Recommended: pip install sacremoses.")
 
 class Translate:
     def __init__(self):
         """
-        Initialize the Translate class with default models for English and Spanish.
+        Initializes the Translate class with the models and tokenizers for each language/direction.
         """
-        # Initialize with default models
         self.models = {
-            "english": {"model": None, "tokenizer": None, "model_name": "Helsinki-NLP/opus-mt-es-en"},
-            "spanish": {"model": None, "tokenizer": None, "model_name": "Helsinki-NLP/opus-mt-en-es"}
+            "english": {
+                "forward": None,
+                "reverse": None
+            },
+            "spanish": {
+                "forward": {
+                    "model_name": "Helsinki-NLP/opus-mt-en-es",
+                    "model": None,
+                    "tokenizer": None
+                },
+                "reverse": {
+                    "model_name": "Helsinki-NLP/opus-mt-es-en",
+                    "model": None,
+                    "tokenizer": None
+                }
+            },
+            "italian": {
+                "forward": {
+                    "model_name": "Helsinki-NLP/opus-mt-en-it",
+                    "model": None,
+                    "tokenizer": None
+                },
+                "reverse": {
+                    "model_name": "Helsinki-NLP/opus-mt-it-en",
+                    "model": None,
+                    "tokenizer": None
+                }
+            },
+            "Chinese": {
+                "forward": {
+                    "model_name": "Helsinki-NLP/opus-mt-en-zh",
+                    "model": None,
+                    "tokenizer": None
+                },
+                "reverse": {
+                    "model_name": "Helsinki-NLP/opus-mt-zh-en",
+                    "model": None,
+                    "tokenizer": None
+                }
+            }
         }
 
-        # Load the model and tokenizer for English and Spanish
-        self.load_model_and_tokenizer("english")
-        self.load_model_and_tokenizer("spanish")
+        # Load models for each language/direction
+        for lang in ["spanish", "italian", "Chinese"]:
+            self.load_model_and_tokenizer(lang, "forward")
+            self.load_model_and_tokenizer(lang, "reverse")
 
-    def load_model_and_tokenizer(self, language: str):
+    def load_model_and_tokenizer(self, language: str, direction: str = None):
         """
-        Load the model and tokenizer for the specified language.
-
-        Args:
-            language (str): The target language ("english" or "spanish").
+        Loads the model and tokenizer for the specified language.
+        If 'direction' is provided (e.g., "forward" or "reverse"), that variant is loaded.
         """
-        model_info = self.models[language]
+        
+        model_info = self.models[language][direction] if direction else self.models[language]
         model_path = f"../static/text2text/{model_info['model_name'].replace('/', '-')}"
-
+        
         if not os.path.exists(model_path):
-            logger.info(f"Traductor: Creating directory for {language} model at {model_path}")
+            logger.info(f"Translator: Creating directory for the {language} model at {model_path}")
             os.makedirs(model_path)
 
         if model_info["model"] is None or model_info["tokenizer"] is None:
-            logger.info(f"Traductor: Loading model and tokenizer for language {language}...")
+            logger.info(f"Translator: Loading model and tokenizer for {language} ({direction if direction else ''})...")
             model_info["tokenizer"] = MarianTokenizer.from_pretrained(model_info["model_name"], cache_dir=model_path)
             model_info["model"] = MarianMTModel.from_pretrained(model_info["model_name"], cache_dir=model_path)
-            logger.info(f"Traductor: Model and tokenizer for language {language} loaded.")
+            logger.info(f"Translator: Model and tokenizer for {language} ({direction if direction else ''}) loaded.")
 
-    async def translate_text(self, text: str, audio_id: int, language_id: int) -> str:
+    async def translate_text(self, text: str, audio_id: int, source_lang_id: int, target_lang_id: int) -> str:
         """
-        Translate text using the model corresponding to the language ID.
-
-        Args:
-            text (str): The text to translate.
-            audio_id (int): Identifier for the audio file.
-            language_id (int): Language ID (1 for English, 2 for Spanish).
-
-        Returns:
-            str: Translated text.
-
-        Raises:
-            ValueError: If the language ID is not supported.
+        Translates the text from the source language to the target language asynchronously.
+        Language IDs are mapped as follows:
+            1: english
+            2: spanish
+            3: italian
+            4: Chinese
         """
-        try:
-            # Map language ID to language name
-            if language_id == 1:
-                language = "english"
-            elif language_id == 2:
-                language = "spanish"
-            else:
-                logger.error(f"Language ID '{language_id}' not supported. Supported languages are: english, spanish.")
-                raise ValueError(f"Language ID '{language_id}' not supported.")
+        language_mapping = {
+            1: "english",
+            2: "spanish",
+            3: "italian",
+            4: "Chinese"
+        }
 
-            logger.info(f"Traductor: Initiating translation for audio_id: {audio_id}")
-            logger.debug(f"Traductor: Translating text: {text}")
+        source_language = language_mapping.get(source_lang_id)
+        target_language = language_mapping.get(target_lang_id)
 
-            # Get the current event loop
-            loop = asyncio.get_running_loop()
+        if source_language is None or target_language is None:
+            logger.error("Unsupported language ID.")
+            raise ValueError("Unsupported language ID.")
 
-            # Run the translation in a separate thread
-            translated_text = await loop.run_in_executor(
-                None,
-                lambda: self._translate(text, language)
-            )
+        logger.info(f"Translator: Starting translation for audio_id: {audio_id}")
+        loop = asyncio.get_running_loop()
+        translated_text = await loop.run_in_executor(
+            None,
+            lambda: self._translate(text, source_language, target_language)
+        )
+        logger.info(f"Translator: Translation completed for audio_id: {audio_id}")
+        return translated_text
 
-            logger.info(f"Traductor: Translation completed successfully for audio_id: {audio_id}")
-            logger.debug(f"Traductor: Translation result: {translated_text}")
-            return translated_text
-
-        except Exception as e:
-            logger.error(f"Error during translation for audio_id: {audio_id}: {str(e)}")
-            raise
-
-    def _translate(self, text: str, language: str) -> str:
+    def _translate(self, text: str, source_language: str, target_language: str) -> str:
         """
-        Perform the actual translation using the selected model.
-
-        Args:
-            text (str): The text to translate.
-            language (str): The target language ("english" or "spanish").
-
-        Returns:
-            str: Translated text.
+        Performs the translation of the text between the source and target languages.
+        If neither language is English, English is used as an intermediate pivot.
         """
-        model_info = self.models[language]
+        # if source_language == target_language return text
+        if source_language == target_language:
+            return text
+        
+        # if at least one of the languages is English, use the corresponding model
+        if source_language == "english":
+            model_info = self.models[target_language]["forward"]
+        elif target_language == "english":
+            model_info = self.models[source_language]["reverse"]
+        else:
+            # If neither language is English, translate first to English, then to the target language
+            intermediate_text = self._translate(text, source_language, "english")
+            return self._translate(intermediate_text, "english", target_language)
+
         inputs = model_info["tokenizer"](text, return_tensors="pt", padding=True)
         outputs = model_info["model"].generate(**inputs)
         translated_text = model_info["tokenizer"].decode(outputs[0], skip_special_tokens=True)
