@@ -12,7 +12,7 @@ export const loginUser = createAsyncThunk(
       return {user: response};
       
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue("Invalid username or password");
     }
   }
 );

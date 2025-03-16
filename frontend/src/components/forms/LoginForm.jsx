@@ -37,10 +37,13 @@ export const LoginForm = () => {
     }
 
     try {
-      await dispatch(loginUser({ username, password }))
-      navigate("/media-upload");
+      const resultAction = await dispatch(loginUser({ username, password })).unwrap();
+
+      if (resultAction) {
+        navigate("/media-upload");
+      }
     } catch (err) {
-      console.error("Error en el login:", err);
+      console.error("Error en el login:");
     }
   };
 

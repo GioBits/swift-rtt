@@ -6,6 +6,7 @@ from fastapi import Depends, HTTPException, status, Response, Cookie, Request
 from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+
 class AuthUtils:
     """
     Utility class for handling authentication-related tasks such as token generation, token validation, password hashing, and cookie management.
@@ -49,7 +50,7 @@ class AuthUtils:
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido", headers={"WWW-Authenticate": "Bearer"})
 
-    def validate_token(self, session_token: str = Cookie(None)):
+    def validate_token(self, session_token: str = Cookie()):
         """
         Validates a JWT token and returns the decoded payload.
         Args:
@@ -60,9 +61,10 @@ class AuthUtils:
             HTTPException: If the token is expired or invalid.
         """
         try:
-            final_token = session_token   # Prioridad: Header < Cookie
-            if not final_token:
-                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
+            final_token = session_token
+
+            if final_token == None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authorized")
 
             decoded_payload = self.decode_token(final_token)
             return decoded_payload
@@ -89,7 +91,6 @@ class AuthUtils:
             bool: True if the passwords match, False otherwise.
         """
         return self.pwd_context.verify(plain_password, hashed_password)
-    
     
     def set_auth_cookie(self, response: Response, token: str):
         """

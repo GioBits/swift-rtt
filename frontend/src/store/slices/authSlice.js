@@ -23,10 +23,10 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        console.log("❌ Error en login:", action.payload);
+        console.log("❌ Error en login:", action.type);
         state.user = null;
         state.isAuthenticated = false;
-        state.error = action;
+        state.error = null;
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         console.log("✅ Login exitoso fetch", action.payload);
@@ -35,8 +35,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
-        console.log("❌ Error fetch", action.payload);
-        state.user = action.payload.user;
+        console.log("❌ Error fetch", action.type);
+        state.user = null;
         state.isAuthenticated = false;
         state.error = null;
       });
