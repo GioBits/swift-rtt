@@ -1,15 +1,20 @@
+import { CircularProgress } from '@mui/material';
 import { useContext } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
 import AudioService from '../../service/audioService';
 import { MediaContext } from '../../contexts/MediaContext';
 
 const Confirm = ({ file, audioId, handleNewAudio }) => {
   const {
+    isUploading,
     setIsUploading,
     setFileToUpload,
     setMediaSelected,
     selectedLanguages,
-    userId } = useContext(MediaContext);
+    userId,
+    setCurrentStep,
+    resetStepper
+  } = useContext(MediaContext);
 
   // Handle confirmation (when the user confirms or cancels the upload)
   const handleConfirmation = async () => {
@@ -18,8 +23,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       return;
     }
 
-    setIsUploading(true); // Set uploading state to true
-
+    resetStepper(2);
     try {
       if (audioId) {
         await processMedia();
@@ -28,29 +32,31 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       }
     } catch (error) {
       console.error("Error uploading or processing the audio: ", error); // Log any errors
-    } finally {
-      setIsUploading(false); // Set uploading state to false
     }
   };
 
   const uploadMedia = async () => {
+    setIsUploading(true); // Set uploading state to true
     // Upload the audio file
     const response = await AudioService.uploadAudio(
       file,
       selectedLanguages,
       userId
     );
-    
+
     // Update the selected audio in the context
-    setMediaSelected({ 
-      data: response.audio_data, 
-      id: response.id.toString() 
+    setMediaSelected({
+      data: response.audio_data,
+      id: response.id.toString()
     });
 
+    setCurrentStep(2);
+    setIsUploading(false);
     console.log("Audio uploaded"); // Log the processing response
   };
 
   const processMedia = async () => {
+    setIsUploading(true);
     // Force re-render to clear the media response
     setMediaSelected((prev) => ({ ...prev }));
 
@@ -61,6 +67,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       selectedLanguages
     );
 
+    setCurrentStep(3);
     console.log("Audio processing", processResponse); // Log the processing response
   };
 
@@ -81,11 +88,15 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
         {/* Main button (Upload Audio or Process Audio) */}
         <button
           onClick={() => handleConfirmation()}
-          className={`px-4 py-2 ${
-            audioId ? "w-1/2" : "w-1/2"
-          } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer`}
+          className={`px-4 py-2 ${audioId ? "w-[180px]" : "w-1/2"
+            } bg-cerulean text-white rounded hover:bg-cerulean/60 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed`}
+          disabled={isUploading}
         >
-          {audioId ? "Procesar Audio" : "Subir Audio"}
+          {isUploading ? ( // Show CircularProgress is isUPloading true
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            audioId ? "Procesar Audio" : "Subir Audio" // Show text button is isUploading false
+          )}
         </button>
       </div>
     </div>

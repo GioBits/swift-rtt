@@ -15,14 +15,6 @@ const DisplayAudioWave = ({ file }) => {
   const [currentTime, setCurrentTime] = useState(0); // Elapsed time
   const [playbackRate, setPlaybackRate] = useState(1.0); // Playback speed
 
-  // Function to shorten the file name if it's too long
-  const shortenFileName = (fileName, maxLength = 20) => {
-    if (fileName.length > maxLength) {
-      return `${fileName.substring(0, maxLength)}...`; // Truncate and add ellipsis
-    }
-    return fileName;
-  };
-
   // Function to format time in minutes and seconds
   const formatTime = (time) => {
     if (isNaN(time)) return "00:00";
@@ -45,8 +37,14 @@ const DisplayAudioWave = ({ file }) => {
         height: 50, // Height of the waveform
       });
 
-      // Load the audio file
-      wavesurfer.load(URL.createObjectURL(file));
+      if (typeof file === "string") {
+        wavesurfer.load(file);
+      } else if (file instanceof Blob || file instanceof File) {
+        wavesurfer.load(URL.createObjectURL(file));
+      } else {
+        console.error("Invalid file type passed to DisplayAudioWave:", file);
+      }
+
       wavesurferRef.current = wavesurfer;
 
       // Event when audio starts playing
@@ -101,19 +99,12 @@ const DisplayAudioWave = ({ file }) => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full p-4">
-      {/* File name */}
-      <Tooltip title={file?.name} arrow>
-        <p className="text-sm text-gray-600 mb-4">
-          Selected file: <strong className="hover:cursor-pointer">{shortenFileName(file?.name)}</strong>
-        </p>
-      </Tooltip>
-
+    <div className="flex flex-col items-center w-full">
       {/* Main container */}
       <div className="w-full h-20">
         <div className="flex flex-row gap-2 bg-blueMetal/10 w-full rounded-2xl h-full">
           {/* Play/pause button */}
-          <div className=" rounded-full flex m-auto mx-2">
+          <div className="rounded-full flex m-auto mx-2">
             <Tooltip title={isPlaying ? "Pausa" : "Reproducir"} arrow>
               <IconButton
                 onClick={handlePlayPause}
@@ -171,5 +162,5 @@ export default DisplayAudioWave;
 
 // PropTypes validation
 DisplayAudioWave.propTypes = {
-  file: PropTypes.object.isRequired, // Audio file
+  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]), // Audio file or URL
 };

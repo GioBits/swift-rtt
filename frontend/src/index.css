@@ -48,7 +48,7 @@
 .buttonForm {
   @apply w-full py-1 bg-blueMetal rounded-sm text-base text-white shadow-md 
          transition-colors duration-300 cursor-pointer 
-         hover:bg-primary active:bg-primary;
+         hover:bg-blueMetal/80 active:bg-blueMetal;
 }
 
 

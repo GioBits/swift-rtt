@@ -5,24 +5,17 @@ import store from '../store';
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:8000', // Base URL for API requests
   timeout: 60000,  // Timeout of 60 seconds
+  withCredentials: true,  // Send cookies when cross-origin requests
+  origin: "http://localhost:3000, http://66.42.83.237:3000",
 });
 
 // Interceptor to handle requests before they are sent
 apiClient.interceptors.request.use(
   (config) => {
-    // Retrieve the token from the Redux store
     const state = store.getState();
-    const token = state.auth.token;
-
-    if (token) {
-      // If a token exists, add it to the Authorization header
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-
     return config;
   },
   (error) => {
-    // Handle request errors
     return Promise.reject(error);
   }
 );

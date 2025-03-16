@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../store/slices/authActions";
 import stt from '../../assets/stt_pana.svg';
 import Swal from "sweetalert2";
+import logoColibri from '../../assets/logo_blue.png'
 
 export const LoginForm = () => {
   const dispatch = useDispatch();
@@ -36,17 +37,22 @@ export const LoginForm = () => {
     }
 
     try {
-      await dispatch(loginUser({ username, password }))
-      navigate("/media-upload");
+      const resultAction = await dispatch(loginUser({ username, password })).unwrap();
+
+      if (resultAction) {
+        navigate("/media-upload");
+      }
     } catch (err) {
-      console.error("Error en el login:", err);
+      console.error("Error en el login:");
     }
   };
 
   return (
-    <div className='w-[800px] flex flex-row shadow-xl z-10'>
-      <div className='w-1/2 flex flex-col bg-white rounded-l-xl h-[29rem]'>
-        <div className="h-full bg-white p-5 flex flex-col items-center justify-center rounded-l-xl m-auto">
+    <div className='w-full h-full flex flex-row'>
+      {/* Form */}
+      <div className='w-full lg:w-1/2 h-full flex flex-col px-8 py-4'>
+        <img src={logoColibri} alt="Logo SwiftVoice App" className="w-22 h-22 flex m-auto" />
+        <div className="h-full flex flex-col text-center">
           <h3 className="titleForm">Iniciar sesión</h3>
           <form onSubmit={handleLogin}>
             <input
@@ -93,8 +99,9 @@ export const LoginForm = () => {
           </Link>
         </p>
       </div>
-      <div className='w-1/2 hidden sm:block bg-blueMetal rounded-r-xl'>
-        <img src={stt} alt='Colibri App' className='h-full rounded-r-sm' />
+      {/* Img */}
+      <div className='hidden lg:flex '>
+        <img src={stt} alt='SwiftApp Login' className='h-full rounded-r-lg bg-blueMetal' />
       </div>
     </div>
   );

@@ -1,11 +1,14 @@
-from fastapi import HTTPException, UploadFile, status
+from fastapi import HTTPException, UploadFile, status, Request
 from api.service.userService import userService
 from api.DTO.user.userRequestDTO import create_userDTO
+from utils.auth import AuthUtils
+from fastapi import Request, HTTPException, status
 
 class userController:
 
     def __init__(self):
         self.user_create_service = userService()
+        self.auth = AuthUtils()
 
     async def create_user(self, create_user_DTO : create_userDTO):
         """
@@ -134,3 +137,25 @@ class userController:
 
         #Si pasa por los condicionales sin retornar, es válido
         return True
+    
+    async def get_current_user(self, session_token: str):
+        """
+        Obtains the information of the authenticated user from the token in the cookie.
+        """
+        try:
+            if not session_token:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="No autenticado")
+            payload = self.auth.decode_token(session_token)
+            user_id = payload.get("id")
+            username = payload.get("username")
+            if user_id is None or username is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+
+            user = self.get_user_by_id(user_id)
+            if not user:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+            return {"id": user.id, "username": user.username}
+
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))

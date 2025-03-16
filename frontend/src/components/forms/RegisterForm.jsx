@@ -84,9 +84,10 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className='w-[800px] flex flex-row shadow-xl z-10'>
-      <div className='w-1/2 flex flex-col bg-white rounded-l-xl h-[29rem]'>
-        <div className="h-full bg-white p-5 flex flex-col items-center justify-center rounded-l-xl m-auto">
+    <div className='w-full h-full flex flex-row'>
+      {/* Form */}
+      <div className='w-full lg:w-1/2 h-full flex flex-col px-8 py-4'>
+        <div className="h-full flex flex-col text-center">
           <h3 className="titleForm">Registro</h3>
           <form onSubmit={handleRegister}>
             <div className="flex w-full gap-4">
@@ -157,15 +158,15 @@ export const RegisterForm = () => {
             {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
           </form>
         </div>
-        <p className="mb-5 m-auto">
+        <p className="mb-5 text-center">
           ¿Ya tienes una cuenta?{' '}
           <Link to='/login' className='text-mintDark font-semibold hover:underline'>
             Inicia sesión aquí
           </Link>
         </p>
       </div>
-      <div className='w-1/2 hidden sm:block bg-blueMetal rounded-r-xl'>
-        <img src={registerImg} alt='Colibri App' className='w-full rounded-r-sm' />
+      <div className='hidden lg:flex'>
+        <img src={registerImg} alt='Colibri App' className='h-full rounded-r-lg bg-blueMetal' />
       </div>
     </div>
   );

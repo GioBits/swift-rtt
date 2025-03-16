@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from api.controller.authController import AuthController
@@ -9,7 +9,7 @@ router = APIRouter()
 auth_controller = AuthController()
 
 @router.post("/auth/login", tags=["Auth"])
-async def login(payload : str):
+async def login(response : Response, payload : str):
     """
     Endpoint to handle user login.
 
@@ -21,10 +21,10 @@ async def login(payload : str):
         JSON response containing authentication details.
     """
 
-    return await auth_controller.login(payload)
+    return await auth_controller.login(response, payload)
     
 @router.post("/auth/token", tags=["Auth"])
-async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def token(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Endpoint to handle user login.
 
@@ -40,4 +40,4 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
             username= form_data.username,
             password= form_data.password
         )
-        return await auth_controller.login(login_DTO)
+        return await auth_controller.login(response, login_DTO)
