@@ -22,7 +22,7 @@ class Transcriber:
         self.model_size = model_size
         self.model_path = f"../static/speech2text/whisper-{model_size}"
         self.model = self.load_model()
-        self.allowed_languages = ["english", "spanish"]
+        self.allowed_languages = ["english", "spanish", "italian", "chinese"]
         
     def load_model(self):
         """
@@ -45,7 +45,7 @@ class Transcriber:
 
         Args:
             file_path (str): Path to the audio file.
-            language (str): Language of the audio ("english" or "spanish").
+            language (str): Language of the audio ("english", "spanish", "italian").
 
         Returns:
             str: Transcribed text.
@@ -79,7 +79,7 @@ class Transcriber:
         Args:
             file_data (bytes): Binary data of the audio file.
             audio_id (int): Identifier for the audio file.
-            language_id (int): Language ID (1 for English, 2 for Spanish).
+            language_id (int): Language ID (1 for English, 2 for Spanish, 3 for Italian).
 
         Returns:
             str: Transcribed text.
@@ -95,6 +95,10 @@ class Transcriber:
                 language = "english"
             elif language_id == 2:
                 language = "spanish"
+            elif language_id == 3:
+                language = "italian"
+            elif language_id == 4:
+                language = "chinese"
             else:
                 logger.error(f"Transcriber: Language ID '{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")
                 raise ValueError(f"Language ID '{language_id}' not supported. Supported languages are: {', '.join(self.allowed_languages)}")

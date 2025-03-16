@@ -73,10 +73,10 @@ class TranslationController:
             audio_id = transcription.audio_id
             
             # Translate the transcribed text
-            translated_text = await self.translator.translate_text(transcription.transcription_text, audio_id, add_translation_DTO.language_id)
+            translated_text = await self.translator.translate_text(transcription.transcription_text, audio_id, add_translation_DTO.language_id_from, add_translation_DTO.language_id_to)
             
             # Create the new translation
-            new_translation = self.translation_service.create_translation(audio_id, add_translation_DTO.transcription_id, add_translation_DTO.provider_id, add_translation_DTO.language_id, translated_text)
+            new_translation = self.translation_service.create_translation(audio_id, add_translation_DTO.transcription_id, add_translation_DTO.provider_id, add_translation_DTO.language_id_from, add_translation_DTO.language_id_to, translated_text)
             if new_translation is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

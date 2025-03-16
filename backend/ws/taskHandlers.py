@@ -65,7 +65,8 @@ async def handle_translation(config: dict):
     translation_dto = add_translationDTO(
         transcription_id=transcription_id, 
         provider_id=provider_id, 
-        language_id=to_language
+        language_id_from=from_language,
+        language_id_to=to_language
     )
     
     # Create the translation record

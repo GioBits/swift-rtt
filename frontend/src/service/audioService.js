@@ -62,6 +62,38 @@ const AudioService = {
       throw error;
     }
   },
+
+  /**
+   * Retrieves audio records by user ID.
+   * @param {number} userId - ID of the user.
+   * @returns {Promise<Object[]>} - Promise object representing the response.
+   */
+  getAudiosByUserId: async (userId) => {
+    const path = `/api/audio/user/${userId}`;
+
+    try {
+      const response = await apiService.get(path);
+      return response; // Return only the response data
+    } catch (error) {
+      console.log('Error fetching audios:', error);
+    }
+  },
+
+  /**
+   * Retrieves an audio record by ID.
+   * @param {number} audioId - ID of the audio record.
+   * @returns {Promise<Object>} - Promise object representing the response.
+   */
+  getAudioById: async (audioId) => {
+    const path = `/api/audio/${audioId}`;
+
+    try {
+      const response = await apiService.get(path);
+      return response; 
+    } catch (error) {
+      console.log('Error fetching audio:', error);
+    }
+  }
 };
 
 export default AudioService;
