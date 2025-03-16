@@ -34,7 +34,7 @@ const History = () => {
           date: FormatUtils.formatDateWithLeadingZeros(audio.created_at),
           time: FormatUtils.formatTimeWithLeadingZeros(audio.created_at),
         }));
-        setHistoryData(rows);
+        setHistoryData(rows.reverse());
       } catch (error) {
         console.error("Error obteniendo audios:", error);
       }

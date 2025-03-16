@@ -5,7 +5,8 @@ def populate_languages():
     
     languages = [
         {"code": "en", "name": "English"},
-        {"code": "es", "name": "Español"}
+        {"code": "es", "name": "Español"},
+        {"code": "it", "name": "Italiano"},
     ]
 
     existing_languages = language_service.get_all_languages()
