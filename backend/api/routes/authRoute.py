@@ -41,3 +41,16 @@ async def token(response: Response, form_data: OAuth2PasswordRequestForm = Depen
             password= form_data.password
         )
         return await auth_controller.login(response, login_DTO)
+
+@router.post("/auth/logout", tags=["Auth"])
+async def logout(response: Response):
+    """
+    Logs out the user by deleting the cookie.
+
+    Args:
+        response (Response): The response object to modify.
+
+    Returns:
+        Response: The response after logging out the user.
+    """
+    return await auth_controller.logout(response)
