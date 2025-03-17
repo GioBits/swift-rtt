@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useCallback } from 'react';
+import { useContext, useState, useMemo, useCallback } from 'react';
 import {
   Box,
   Select,
@@ -7,7 +7,10 @@ import {
   InputLabel,
   Button,
   Typography,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings'; // Ícono de engranaje
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Backdrop from '@mui/material/Backdrop';
@@ -58,14 +61,19 @@ const ModalProviders = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box className="w-[90%] m-auto flex">
-      <Button 
-      sx={{ height: '50px' }}
-      color='secondary'
-      variant="contained" onClick={handleOpen} fullWidth>
-        Seleccionar Modelos
-      </Button>
+    <Box className="w-[100%] m-auto flex">
+      {/* Botón de engranaje con tooltip */}
+      <Tooltip title="Configuración de Modelos" arrow>
+        <IconButton
+          color="secondary"
+          onClick={handleOpen}
+          sx={{ height: '40px', width: '40px' }}
+        >
+          <SettingsIcon /> {/* Ícono de engranaje */}
+        </IconButton>
+      </Tooltip>
 
+      {/* Modal para seleccionar modelos */}
       <Modal
         aria-labelledby="modal-providers-title"
         aria-describedby="modal-providers-description"

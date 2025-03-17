@@ -2,6 +2,7 @@ from fastapi import HTTPException, status
 from api.service.transcriptionService import TranscriptionService
 from api.service.audioService import AudioService
 from providers.serviceLoader import ServiceLoader
+from api.DTO.transcription.transcriptionRequestDTO import add_transcriptionDTO
 
 class TranscriptionController:
     def __init__(self):
@@ -41,7 +42,7 @@ class TranscriptionController:
                 detail="Internal Server Error"
             )
 
-    async def create_transcription(self, audio_id: int, provider_id: int):
+    async def create_transcription(self, add_transcription_DTO : add_transcriptionDTO):
         """
         Asynchronously creates a new transcription.
 
@@ -60,7 +61,7 @@ class TranscriptionController:
         """
         try:
             # Retrieve audio information
-            audio_info = self.audio_service.get_audio_by_id(audio_id)
+            audio_info = self.audio_service.get_audio_by_id(add_transcription_DTO.audio_id)
             if audio_info is None:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -71,9 +72,12 @@ class TranscriptionController:
             file_data = audio_info.audio_data
 
             # Transcribe the audio
-            transcription = await self.transcriber.transcription_handler(file_data, audio_id, language_id)
+            transcription = await self.transcriber.transcription_handler(file_data, add_transcription_DTO.audio_id, language_id)
 
-            new_transcription = self.transcription_service.create_transcription(audio_id, provider_id, language_id, transcription)
+            new_transcription = self.transcription_service.create_transcription(add_transcription_DTO.audio_id, 
+                                                                                add_transcription_DTO.provider_id,
+                                                                                language_id,
+                                                                                transcription)
 
             if new_transcription is None:
                 raise HTTPException(

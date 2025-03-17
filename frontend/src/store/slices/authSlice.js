@@ -1,18 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser } from "./authActions";
+import { fetchCurrentUser, loginUser } from "./authActions";
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    token: null,
     isAuthenticated: false,
     error: null,
   },
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
       state.isAuthenticated = false;
     },
   },
@@ -21,16 +19,26 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         console.log("✅ Login exitoso", action.payload);
         state.user = action.payload.user;
-        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        console.log("❌ Error en login:", action.payload);
+        console.log("❌ Error en login:", action.type);
         state.user = null;
-        state.token = null;
         state.isAuthenticated = false;
-        state.error = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        console.log("✅ Login exitoso fetch", action.payload);
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        console.log("❌ Error fetch", action.type);
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });

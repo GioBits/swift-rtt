@@ -3,6 +3,8 @@ from api.controller.transcriptionController import TranscriptionController
 from models.transcription_records import TranscriptionRecordSchema
 from typing import List
 from utils.auth import AuthUtils
+from api.DTO.transcription.transcriptionRequestDTO import add_transcriptionDTO
+
 auth = AuthUtils()
 router = APIRouter()
 transcription_controller = TranscriptionController()
@@ -12,8 +14,8 @@ async def get_transcriptions():
     return await transcription_controller.retrieve_all_transcriptions()
 
 @router.post("/transcriptions", response_model=TranscriptionRecordSchema, dependencies=[Depends(auth.validate_token)], tags=["Transcriptions"])
-async def add_transcription(audio_id: int, provider_id: int):
-    return await transcription_controller.create_transcription(audio_id, provider_id)
+async def add_transcription(add_transcription_DTO : add_transcriptionDTO = Depends()):
+    return await transcription_controller.create_transcription(add_transcription_DTO)
 
 @router.get("/transcriptions/{transcription_id}", response_model=TranscriptionRecordSchema, dependencies=[Depends(auth.validate_token)], tags=["Transcriptions"])
 async def get_transcription_by_id(transcription_id: int):

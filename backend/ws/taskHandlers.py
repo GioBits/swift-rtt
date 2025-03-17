@@ -3,6 +3,9 @@ from ws.queueSetup import send_message, add_audio_task
 from api.controller.transcriptionController import TranscriptionController
 from api.routes.translationRoute import translation_controller
 from api.controller.translatedAudioController import TranslatedAudioController
+from api.DTO.transcription.transcriptionRequestDTO import add_transcriptionDTO
+from api.DTO.translation.translationRequestDTO import add_translationDTO
+from api.DTO.translated_audio.translatedAudioDTO import add_translated_audioDTO
 
 transcription_controller = TranscriptionController()
 translated_audio_controller = TranslatedAudioController()
@@ -27,9 +30,14 @@ async def handle_transcription(config: dict):
     user_id = config.get("user_id")
     audio_id = config.get("record_id")
     provider_id = config["providers"]["transcription"]
+
+    transcription_dto = add_transcriptionDTO(
+        audio_id=audio_id, 
+        provider_id=provider_id
+    )
     
     # Create the transcription record
-    transcription_record = await transcription_controller.create_transcription(audio_id, provider_id)
+    transcription_record = await transcription_controller.create_transcription(transcription_dto)
     
     # Build the response
     response = {
@@ -53,13 +61,16 @@ async def handle_translation(config: dict):
     provider_id = config["providers"]["translation"]
     from_language = config["languages"]["from"]
     to_language = config["languages"]["to"]
+
+    translation_dto = add_translationDTO(
+        transcription_id=transcription_id, 
+        provider_id=provider_id, 
+        language_id_from=from_language,
+        language_id_to=to_language
+    )
     
     # Create the translation record
-    translation_record = await translation_controller.create_translation(
-        transcription_id,
-        provider_id, 
-        to_language
-    )
+    translation_record = await translation_controller.create_translation(translation_dto)
     
     # Build the response
     response = {
@@ -81,9 +92,14 @@ async def handle_audio_generation(config: dict):
     user_id = config.get("user_id")
     translation_id = config.get("record_id")
     provider_id = config["providers"]["audio_generation"]
+
+    translated_audio_dto = add_translated_audioDTO(
+        translation_id=translation_id, 
+        provider_id=provider_id
+    )
     
     # Create the translated audio record
-    translation_audio_record = await translated_audio_controller.create_translated_audio(translation_id, provider_id)
+    translation_audio_record = await translated_audio_controller.create_translated_audio(translated_audio_dto)
     
     # Build the response
     response = {

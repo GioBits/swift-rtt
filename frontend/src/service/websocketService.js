@@ -30,7 +30,6 @@ export default class WebSocketService {
     }
   
     onMessage(callback) {
-      console.log("M:", callback);
       this.messageCallbacks.push(callback);
     }
 

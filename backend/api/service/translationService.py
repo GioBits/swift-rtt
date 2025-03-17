@@ -27,7 +27,7 @@ class TranslationService:
         except Exception as e:
             return str(e)
 
-    def create_translation(self, audio_id: int, transcription_id: int, provider_id: int, language_id: int, translation_text: str):
+    def create_translation(self, audio_id: int, transcription_id: int, provider_id: int, source_language_id: int, target_language_id: int, translation_text: str):
         """
         Create a new translation entry in the database.
         Args:
@@ -44,7 +44,7 @@ class TranslationService:
                 audio_id=audio_id,
                 transcription_id=transcription_id,
                 provider_id=provider_id,
-                language_id=language_id,
+                language_id=target_language_id,
                 translation_text=translation_text
             )
             self.db.add(new_translation)

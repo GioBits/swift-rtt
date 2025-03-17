@@ -1,13 +1,10 @@
-from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.users import UserRecord, UsersSchema
-from utils.auth import AuthUtils
 import bcrypt
 
 class userService:
     def __init__(self):
         self.db = SessionLocal()
-        self.auth = AuthUtils()
 
     def __del__(self):
         self.db.close()

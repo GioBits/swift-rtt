@@ -3,6 +3,7 @@ import { logout } from "../store/slices/authSlice";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo_colibri.png";
 import PingComponent from "./PingComponent";
+import userService from "../service/userService";
 
 function NavbarComponent() {
   const dispatch = useDispatch();
@@ -11,12 +12,17 @@ function NavbarComponent() {
   const username = useSelector(state => state.auth.user.username);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    try {
+      userService.logout();  
+      dispatch(logout());          
+      navigate("/login");         
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
 
   return (
-    <div className="h-[60px] bg-[#011638] flex items-center px-6 shadow-md">
+    <div className="h-[60px] bg-blueMetal flex items-center px-6 shadow-md w-full">
       {/* Logo y título */}
       <div className="w-[30%] h-full border-r border-gray-500 flex items-center px-4">
         <img src={logo} alt="Logo" className="w-[70px] h-[40px]" />
@@ -56,7 +62,7 @@ function NavbarComponent() {
           <div className="flex space-x-4 m-auto mr-[0px]">
 
             <div className="text-md font-semibold text-white flex">
-              <span className="m-auto"> {username}</span>
+              <span className="m-auto">@{username}</span>
             </div>
 
             <button
