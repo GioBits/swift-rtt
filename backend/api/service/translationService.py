@@ -44,7 +44,7 @@ class TranslationService:
                 audio_id=audio_id,
                 transcription_id=transcription_id,
                 provider_id=provider_id,
-                language_id=source_language_id,
+                language_id=target_language_id,
                 translation_text=translation_text
             )
             self.db.add(new_translation)

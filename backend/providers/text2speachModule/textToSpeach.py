@@ -26,7 +26,8 @@ class Text2Speech:
             1: {"language": "english", "model": None, "model_name": "tts_models/en/ljspeech/tacotron2-DDC"},
             2: {"language": "spanish", "model": None, "model_name": "tts_models/es/css10/vits"},
             3: {"language": "italian", "model": None, "model_name": "tts_models/it/mai_male/vits"},
-            4: {"language": "japonese", "model": None, "model_name": "tts_models/ja/kokoro/tacotron2-DDC"}
+            4: {"language": "chino", "model": None, "model_name": "tts_models/zh-CN/baker/tacotron2-DDC-GST"},
+            # 4: {"language": "japonese", "model": None, "model_name": "tts_models/ja/kokoro/tacotron2-DDC"}
         }
 
         # Load the models for each language
@@ -106,7 +107,7 @@ class Text2Speech:
             IOError/OSError: If there is a problem writing the audio file to the memory buffer.
             Exception: Any other unexpected error that may occur during execution.
         """
-        logger.info(f"TextToSpeech: Initiating text-to-speech for audio_id: {audio_id}")
+        logger.info(f"TextToSpeech: Initiating text-to-speech for audio_id: {audio_id} {language_id}")
 
         loop = asyncio.get_running_loop()
         try:

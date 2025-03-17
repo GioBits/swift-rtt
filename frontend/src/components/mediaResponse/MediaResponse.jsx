@@ -57,17 +57,19 @@ const MediaResponse = () => {
     let task = wsResponseData.task;
     if (task === "transcribe") {
       await fetchTranscriptionByAudioId(audioId);
-      setCurrentStep(4);
+      if (currentStep == 3) setCurrentStep(4);
     }
 
     if (task === "translate") {
       await fetchTranslationByAudioId(audioId);
-      setCurrentStep(5);
+      if (currentStep == 4) setCurrentStep(5);
+      
     }
 
     if (task === "generate_audio") {
       await fetchTranslatedAudioByAudioId(audioId);
-      setCurrentStep(6);
+      if(currentStep == 5) setCurrentStep(6);
+      
       setIsUploading(false);
     }
   };
