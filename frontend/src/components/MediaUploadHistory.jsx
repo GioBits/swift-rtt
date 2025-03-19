@@ -8,38 +8,31 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableVirtuoso } from 'react-virtuoso';
 
-const MediaUploadHistory = ({ rows, onRowClick }) => {
-
-      const headers = ["ID", "Nombre", "Tamaño", "Idioma", "Fecha", "Hora"];
+const MediaUploadHistory = ({ rows, onRowClick, columns }) => {
       const fixedHeaderContent = () => (
             <TableRow className='bg-mintDark'>
-                  {headers.map((header, index) => (
-                        <TableCell key={index}><span className='text-white font-semibold'>{header}</span></TableCell>
+                  {columns.map((column, index) => (
+                        <TableCell key={index} style={{ width: column.width }}>
+                              <span className='text-white font-semibold'>{column.label}</span>
+                        </TableCell>
                   ))}
             </TableRow>
       );
 
       const rowContent = (index, row) => (
             <>
-                {[
-                    row.id, 
-                    row.name, 
-                    row.size, 
-                    row.language, 
-                    row.date, 
-                    row.time
-                ].map((cell, cellIndex) => (
-                    <TableCell
-                        key={cellIndex}
-                        className="row-hover-effect"
-                        onClick={() => onRowClick(row)}
-                    >
-                        {cell}
-                    </TableCell>
-                ))}
+                  {columns.map((column, cellIndex) => (
+                        <TableCell
+                              key={cellIndex}
+                              className="row-hover-effect"
+                              onClick={() => onRowClick(row)}
+                        >
+                              {column.render ? column.render(row[column.field]) : row[column.field]}
+                        </TableCell>
+                  ))}
             </>
-        );
-        
+      );
+
       const VirtuosoTableComponents = {
             Scroller: React.forwardRef((props, ref) => (
                   <TableContainer component={Paper} {...props} ref={ref} />
