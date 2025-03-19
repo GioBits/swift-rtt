@@ -2,12 +2,14 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, fun
 from sqlalchemy.orm import relationship
 from db.database import Base
 from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
 
 class ScoreRecord(Base):
     __tablename__ = 'scores'
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String(255), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     total_translations = Column(Integer, default=0)  # TU
     total_languages_used = Column(Integer, default=0)  # IU
     total_users_translations = Column(Integer, default=0)  # MT
@@ -20,7 +22,20 @@ class ScoreRecord(Base):
     # Relationships
     users = relationship("UserRecord", back_populates="scores")
 
-class ScoresSchema(BaseModel):
+class ScoreBase(BaseModel):
+    user_id: id
+    total_translations: int = 0
+    total_languages_used: int = 0
+    total_users_translations: int = 0
+    total_system_languages: int = 0
+    different_users_contacted: int = 0
+    total_system_users: int = 0
+    score: float = 0.0
+    last_updated: Optional[datetime] = None
 
+class ScoresSchema(ScoreBase):
+    id: int
+    user_id: int
+    score: float
     class Config:
         from_attributes = True
