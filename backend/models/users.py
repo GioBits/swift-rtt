@@ -17,7 +17,11 @@ class UserRecord(Base):
     is_activate = Column(Boolean, default=True, nullable=False)
 
     audio = relationship("AudioRecord", back_populates="user", cascade="all, delete-orphan")
+
     process_media_records = relationship("ProcessMediaRecord", back_populates="user")
+
+    scores = relationship("ScoreRecord", back_populates="users")
+
 class UsersBase(BaseModel):
     username: str
     first_name: str
