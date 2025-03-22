@@ -1,7 +1,7 @@
 """Create Process_media table
 
 Revision ID: 96da406450bd
-Revises: 3a58ab680a03
+Revises: 2e8350845ca0
 Create Date: 2025-03-19 16:35:21.269197
 
 """
@@ -13,7 +13,7 @@ from sqlalchemy.dialects.postgresql import ENUM
 
 # revision identifiers, used by Alembic.
 revision: str = '96da406450bd'
-down_revision: Union[str, None] = '3a58ab680a03'
+down_revision: Union[str, None] = '2e8350845ca0'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
