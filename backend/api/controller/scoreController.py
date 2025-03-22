@@ -26,3 +26,22 @@ class ScoreController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Internal Server Error"
             )
+        
+    async def get_score_by_user(user_id: int):
+        """
+        Controlador que maneja la lógica para obtener el score de un usuario por su ID.
+        """
+        try:
+            score = get_score_by_user_id(user_id)
+            if not score:
+                raise HTTPException(status_code=404, detail="Score no encontrado para el usuario")
+            return score
+        except HTTPException as e:
+            print(f"HTTPException captured: {e.detail}")
+            raise e
+        except Exception as e:  # Capture general exceptions
+            print(f"Error: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Internal Server Error"
+            )
