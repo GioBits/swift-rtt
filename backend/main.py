@@ -20,6 +20,7 @@ from api.routes.providerRoute import router as providerRouter
 from api.routes.userRoute import router as userRouter
 from api.routes.authRoute import router as auhtRouter
 from api.routes.scoreRoute import router as scoreRouter
+from api.routes.loginRecordRoute import router as loginRecordRouter
 
 from contextlib import asynccontextmanager
 
@@ -51,7 +52,8 @@ tags_metadata = [
     {"name": "Transcriptions", "description": "Operations related to transcriptions"},
     {"name": "Translated text", "description": "Operations related to translations"},
     {"name": "Translated Audios", "description": "Operations related to translated audio files"},
-    {"name": "Score", "description": "Operations related to score"},
+    {"name": "Scores", "description": "Operations related to scores"},
+    {"name": "Login Records", "description": "Operations related to login records"},
     {"name": "Utils", "description": "Utility endpoints"}
 ]
 
@@ -75,6 +77,7 @@ app.include_router(translationRouter, prefix=("/api"))
 app.include_router(translatedAudioRouter, prefix=("/api"))
 app.include_router(auhtRouter, prefix=("/api"))
 app.include_router(scoreRouter, prefix=("/api"))
+app.include_router(loginRecordRouter, prefix=("/api"))
 
 #Test endpoints
 app.include_router(utilsRouter, prefix=("/utils"))
