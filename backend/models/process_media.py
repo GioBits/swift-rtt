@@ -29,8 +29,8 @@ class ProcessMediaRecord(Base):
     transcription_provider = relationship("ProviderRecord", foreign_keys=[providers_transcription])
     translation_provider = relationship("ProviderRecord", foreign_keys=[providers_translation])
     generation_provider = relationship("ProviderRecord", foreign_keys=[providers_generation])
-    language_from = relationship("LanguageRecord", foreign_keys=[languages_from])
-    language_to = relationship("LanguageRecord", foreign_keys=[languages_to])
+    language_from = relationship("LanguageRecord", foreign_keys=[languages_from], overlaps="languages_to")
+    language_to = relationship("LanguageRecord", foreign_keys=[languages_to], overlaps="languages_from")
 
 class ProcessMediaSchema(BaseModel):
     audio_id: int
