@@ -19,3 +19,13 @@ class ScoreService:
             return [ScoresSchema.from_orm(score).user for score in score_top_user]
         except Exception as e:
             return str(e)
+        
+    def get_score_by_user_id(self, user_id: int) -> ScoreRecord:
+        """
+        Retorna el score asociado a un usuario por su ID.
+        """
+        try:
+            score_user = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
+            return score_user
+        except Exception as e:
+                return str(e)
