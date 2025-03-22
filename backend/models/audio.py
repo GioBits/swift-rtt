@@ -28,7 +28,7 @@ class AudioRecord(Base):
     translated_audio = relationship("TranslatedAudioRecord", back_populates="audio")
     
     user = relationship("UserRecord", back_populates="audio")
-   
+    process_media_records = relationship("ProcessMediaRecord", back_populates="audio")
 class AudioRecordBase(BaseModel):
     user_id: Optional[int] = None
     filename: Optional[str] = None
