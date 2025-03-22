@@ -23,9 +23,7 @@ class LoginRecord(Base):
     username = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     
-    # Relación con el usuario (si tu modelo de usuario se llama User)
-    user = relationship("User", back_populates="login_records")
-    
+    user = relationship("UserRecord", back_populates="login_records")
 
 # Esquemas Pydantic para la API
 class LoginRecordBase(BaseModel):
