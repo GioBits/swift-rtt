@@ -26,6 +26,6 @@ class ScoreService:
         """
         try:
             score_user = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
-            return score_user
+            return ScoresSchema.from_orm(score_user)
         except Exception as e:
                 return str(e)

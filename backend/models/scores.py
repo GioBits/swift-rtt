@@ -23,7 +23,7 @@ class ScoreRecord(Base):
     users = relationship("UserRecord", back_populates="scores")
 
 class ScoreBase(BaseModel):
-    user_id: id
+    user_id: int
     total_translations: int = 0
     total_languages_used: int = 0
     total_users_translations: int = 0
