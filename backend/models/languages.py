@@ -10,8 +10,6 @@ class LanguageRecord(Base):
     code = Column(String(10), unique=True, nullable=False)  # code of the language(e.g., 'en', 'es')
     name = Column(String(50), nullable=False)  # name of the language (e.g., 'English', 'Español')
     
-    process_media_from = relationship("ProcessMediaRecord", foreign_keys="[ProcessMediaRecord.languages_from]")
-    process_media_to = relationship("ProcessMediaRecord", foreign_keys="[ProcessMediaRecord.languages_to]")
 class LanguageSchema(BaseModel):
     id: int
     code: str
