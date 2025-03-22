@@ -10,7 +10,7 @@ import { TableVirtuoso } from 'react-virtuoso';
 
 const MediaUploadHistory = ({ rows, onRowClick, columns }) => {
       const fixedHeaderContent = () => (
-            <TableRow className='bg-mintDark'>
+            <TableRow className='bg-blueMetal'>
                   {columns.map((column, index) => (
                         <TableCell key={index} style={{ width: column.width }}>
                               <span className='text-white font-semibold'>{column.label}</span>
@@ -38,10 +38,10 @@ const MediaUploadHistory = ({ rows, onRowClick, columns }) => {
                   <TableContainer component={Paper} {...props} ref={ref} />
             )),
             Table: (props) => (
-                  <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }} />
+                  <Table {...props} sx={{ borderCollapse: 'separate', tableLayout: 'fixed', width: '100%' }} />
             ),
             TableHead: React.forwardRef((props, ref) => (
-                  <TableHead {...props} ref={ref} sx={{ position: 'sticky', top: 0, zIndex: 1, backgroundColor: 'white' }} />
+                  <TableHead {...props} ref={ref} sx={{ position: 'sticky', top: 0, zIndex: 1, backgroundColor: 'white', width: '100%' }} />
             )),
             TableRow,
             TableBody: React.forwardRef((props, ref) => (

@@ -9,19 +9,19 @@ const History = () => {
   const { historyData, state, onRowClick, closeModal } = useHistoryData();
 
   const columns = [
-    { label: 'ID', field: 'id', width: '100px' },
-    { label: 'Nombre', field: 'name', width: '200px' },
-    { label: 'Tamaño', field: 'size', width: '150px' },
-    { label: 'Idioma', field: 'language', width: '120px' },
-    { label: 'Fecha', field: 'date', width: '150px', render: (value) => new Date(value).toLocaleDateString() },
-    { label: 'Hora', field: 'time', width: '100px' },
+    { label: 'ID', field: 'id', width: '5%' },
+    { label: 'Nombre', field: 'name', width: '30%' },
+    { label: 'Tamaño', field: 'size', width: '15%' },
+    { label: 'Idioma', field: 'language', width: '15%' },
+    { label: 'Fecha', field: 'date', width: '15%' },
+    { label: 'Hora', field: 'time', width: '10%' },
   ];
 
   return (
     <div className="w-screen h-screen">
       <NavbarComponent />
-      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex flex-col mt-10 m-auto block">
-        <NavBarSearch />
+      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex flex-col mt-10 m-auto">
+        <NavBarSearch className="w-full md:w-[40%] lg:w-[30%]" />
         <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
       </div>
       {state.isModalOpen && state.selectedAudio && (

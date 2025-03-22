@@ -1,10 +1,10 @@
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
-const NavBarSearch = ({ searchQuery, onSearchChange }) => {
+const NavBarSearch = ({ searchQuery, onSearchChange, className }) => {
   return (
-    <div className="flex items-center gap-2 w-full">
-      <div className="relative rounded bg-white border-b bg-opacity-15 hover:bg-opacity-25 flex items-center w-[15vw]">
+    <div className={`flex items-center gap-2 w-full ${className}`}>
+      <div className="relative rounded bg-white border-b bg-opacity-15 hover:bg-opacity-25 flex items-center w-full">
         <div className="p-1 pointer-events-none flex items-center justify-center">
           <SearchIcon />
         </div>
