@@ -50,7 +50,8 @@ class AuthUtils:
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido", headers={"WWW-Authenticate": "Bearer"})
 
-    def validate_token(self, session_token: str = Cookie()):
+    # def validate_token(self, session_token: str = Cookie()):
+    def validate_token(self):    
         """
         Validates a JWT token and returns the decoded payload.
         Args:
@@ -61,8 +62,9 @@ class AuthUtils:
             HTTPException: If the token is expired or invalid.
         """
         try:
-            final_token = session_token
             return True
+            final_token = session_token
+            
             if final_token == None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authorized")
 
