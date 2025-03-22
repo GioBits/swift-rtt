@@ -18,6 +18,7 @@ class AudioRecord(Base):
     file_size = Column(Integer, nullable=True)  
     language_id = Column(Integer, ForeignKey('languages.id'))
     is_audio_valid = Column(Boolean, default=False)
+    validation_error = Column(String(255), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationship to the Language model
@@ -36,6 +37,8 @@ class AudioRecordBase(BaseModel):
     content_type: Optional[str] = None
     file_size: Optional[int] = None
     language_id: Optional[int] = None
+    is_audio_valid: Optional[bool] = None
+    validation_error: Optional[str] = None
     created_at: Optional[datetime] = None
 
 class AudioRecordSchema(AudioRecordBase):
