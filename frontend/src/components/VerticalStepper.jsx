@@ -23,11 +23,9 @@ const VerticalStepper = ({ currentStep }) => {
         <li key={step.id} className="mb-10 ms-6">
           {/* Icon */}
           <span
-            className={`absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 ${
-              step.id <= currentStep
-                ? step.id === 1
-                  ? "bg-cerulean dark:bg-cerulean"
-                  : `bg-${step.color}-200 dark:bg-${step.color}-900`
+            className={`absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 ring-4 ring-gray-100 dark:ring-gray-900 ${
+              step.id === 1
+                ? "bg-cerulean dark:bg-cerulean"
                 : "bg-gray-100 dark:bg-gray-700"
             }`}
           >
@@ -58,7 +56,7 @@ const VerticalStepper = ({ currentStep }) => {
 };
 
 VerticalStepper.propTypes = {
-  currentStep: PropTypes.number.isRequired,
+  currentStep: PropTypes.number.isRequired
 };
 
 export default VerticalStepper;
