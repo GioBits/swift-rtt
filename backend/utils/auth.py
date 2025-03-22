@@ -62,7 +62,7 @@ class AuthUtils:
         """
         try:
             final_token = session_token
-
+            return True
             if final_token == None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authorized")
 

@@ -46,6 +46,9 @@ from models.transcription_records import TranscriptionRecord
 from models.translation_records import TranslationRecord
 from models.translated_audios import TranslatedAudioRecord
 from models.users import UserRecord
+from models.scores import ScoreRecord
+from models.process_media import ProcessMediaRecord
+from models.login_records import LoginRecord
 
 # Crear las tablas en la base de datos (si no existen)
 def init_db():
