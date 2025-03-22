@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy.orm import relationship
 from db.database import Base
 from pydantic import BaseModel
 from enum import Enum as PyEnum
