@@ -4,7 +4,6 @@ import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
 import NavBarSearch from '../components/NavbarSearch';
-import FilterMenu from '../components/FilterMenu';
 
 const History = () => {
   const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange } = useHistoryData();
