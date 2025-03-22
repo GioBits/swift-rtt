@@ -34,6 +34,7 @@ export function useHistoryData() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const userId = useSelector(state => state.auth.user?.id);
   const [languages, setLanguages] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -102,5 +103,13 @@ export function useHistoryData() {
 
   const closeModal = () => dispatch({ type: 'CLOSE_MODAL' });
 
-  return { historyData: state.historyData, state, onRowClick, closeModal };
+  const onSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredHistoryData = state.historyData.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return { historyData: filteredHistoryData, state, onRowClick, closeModal, searchQuery, onSearchChange };
 }
