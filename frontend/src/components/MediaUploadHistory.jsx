@@ -50,8 +50,8 @@ const MediaUploadHistory = ({ rows, onRowClick, columns }) => {
       };
 
       return (
-            <div className='bg-white w-full p-5 rounded-lg shadow-lg shadow-blueMetal/50'>
-                  <Paper sx={{ height: '100%', width: '100%' }}>
+            <div className='bg-white w-full p-5 rounded-lg shadow-lg shadow-blueMetal/50 flex-grow'>
+                  <Paper sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                         <TableVirtuoso
                               data={rows}
                               components={VirtuosoTableComponents}
@@ -59,6 +59,7 @@ const MediaUploadHistory = ({ rows, onRowClick, columns }) => {
                               itemContent={rowContent}
                         />
                   </Paper>
+
             </div>
       );
 };

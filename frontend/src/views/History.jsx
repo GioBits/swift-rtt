@@ -3,6 +3,7 @@ import NavbarComponent from '../components/NavbarComponent';
 import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
+import NavBarSearch from '../components/NavbarSearch';
 
 const History = () => {
   const { historyData, state, onRowClick, closeModal } = useHistoryData();
@@ -19,7 +20,8 @@ const History = () => {
   return (
     <div className="w-screen h-screen">
       <NavbarComponent />
-      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex mt-10 m-auto block">
+      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 lg:flex flex-col mt-10 m-auto block">
+        <NavBarSearch />
         <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
       </div>
       {state.isModalOpen && state.selectedAudio && (
