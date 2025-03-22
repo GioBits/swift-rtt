@@ -28,6 +28,8 @@ class AudioController:
             "content_type": audio_record.content_type,
             "file_size": audio_record.file_size,
             "language_id": audio_record.language_id,
+            "is_audio_valid": audio_record.is_audio_valid,
+            "validation_error": audio_record.validation_error,
             "created_at": audio_record.created_at
         }
 
