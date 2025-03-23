@@ -57,9 +57,9 @@ class ScoreService:
             all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
             tu = all_traduction_by_user[1]
 
-            # 2. MT – Total translations in the system   #TODO CHANGE THIS
-            all_traduction = self.process_media_service.get_all_process_media_records()
-            mt = all_traduction[1]
+            # 2. MT – Total translations of the top user
+            all_traduction_of_top_user = self.process_media_service.get_process_media_records_of_top_user()
+            mt = len(all_traduction_of_top_user)
 
             # 3. IT – Total languages available in the system
             all_lenguage = self.language_service.get_all_languages()
