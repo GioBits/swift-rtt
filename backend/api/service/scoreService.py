@@ -43,7 +43,9 @@ class ScoreService:
 
         
         # 1. TU – Total de traducciones del sistema
-        tu = self.db.query(func.count(ProcessMediaRecord.id)).scalar() or 1
+        all_traduction = self.process_media_service.get_all_process_media_records()
+        tu = len(all_traduction[0])
+        
         '''
         # 2. MT – Máximo de traducciones hechas por un usuario
         mt = self.db.query(
