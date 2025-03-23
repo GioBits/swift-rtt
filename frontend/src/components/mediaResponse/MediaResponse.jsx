@@ -8,6 +8,7 @@ import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
 import Modal from "./ModalResponse";
 import toast from "react-hot-toast";
+import { StepperStep } from "../../constants/stepper";
 
 const MediaResponse = () => {
   const models = [];
@@ -57,18 +58,18 @@ const MediaResponse = () => {
     let task = wsResponseData.task;
     if (task === "transcribe") {
       await fetchTranscriptionByAudioId(audioId);
-      if (currentStep == 3) setCurrentStep(4);
+      if (currentStep === StepperStep.PROCESSING) setCurrentStep(StepperStep.TRANSCRIPTION);
     }
 
     if (task === "translate") {
       await fetchTranslationByAudioId(audioId);
-      if (currentStep == 4) setCurrentStep(5);
+      if (currentStep === StepperStep.TRANSCRIPTION) setCurrentStep(StepperStep.TRANSLATION);
       
     }
 
     if (task === "generate_audio") {
       await fetchTranslatedAudioByAudioId(audioId);
-      if(currentStep == 5) setCurrentStep(6);
+      if(currentStep === StepperStep.TRANSLATION) setCurrentStep(StepperStep.TEXT_TO_SPEECH);
       
       setIsUploading(false);
     }

@@ -6,6 +6,7 @@ import { providerService } from "../service/providerService";
 import WebSocketService from "../service/websocketService";
 import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
+import { StepperStep } from '../constants/stepper';
 
 export const MediaProvider = ({ children }) => {
   const [mediaUrl, setMediaUrl] = useState("");
@@ -19,7 +20,7 @@ export const MediaProvider = ({ children }) => {
   const wsServiceRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
   const userId = useSelector(state => state.auth.user.id);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(StepperStep.WELCOME);
 
   const [selectedLanguages, setSelectedLanguages] = useState({
     sourceLanguage: 2,
@@ -31,7 +32,7 @@ export const MediaProvider = ({ children }) => {
   })
 
   const resetStepper = () => {
-    setCurrentStep(1);
+    setCurrentStep(StepperStep.WELCOME);
   };
 
   useEffect(() => {
