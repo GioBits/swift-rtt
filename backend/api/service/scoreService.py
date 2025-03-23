@@ -96,3 +96,13 @@ class ScoreService:
         self.db.refresh(score)
         
 
+    def calculate_all_user_scores(self):
+        """
+        Calcula y actualiza el score de todos los usuarios en la tabla ScoreRecord.
+        """
+        # Obtener todos los scores
+        all_users = self.db.query(UserRecord).all()
+
+        for user in all_users:
+            id = user.id
+            self.update_user_score_data(id)
