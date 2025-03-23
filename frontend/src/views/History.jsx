@@ -11,12 +11,13 @@ const History = () => {
 
   const columns = [
     { label: 'ID', field: 'id', width: '5%' },
-    { label: 'Nombre', field: 'name', width: '30%' },
+    { label: 'Nombre', field: 'name', width: '15%' },
     { label: 'Tamaño', field: 'size', width: '15%' },
     { label: 'Idioma de Origen', field: 'languageFrom', width: '15%' },
     { label: 'Idioma de Destino', field: 'languageTo', width: '15%' },
     { label: 'Fecha', field: 'date', width: '15%' },
     { label: 'Hora', field: 'time', width: '10%' },
+    { label: 'Estado', field: 'status', width: '10%' },
   ];
 
   return (

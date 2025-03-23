@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
+import audioService from '../service/audioService';
 import { transcriptionService } from '../service/transcribeService';
 import { translationService } from '../service/translateService';
 import { translatedAudioService } from '../service/translatedAudioService';
@@ -83,9 +84,10 @@ export function useHistoryData() {
       if (!userId || Object.keys(languages).length === 0) return;
 
       try {
+        const audiosResponse = await audioService.getAudiosByUserId(userId);
         const response = await axios.get(`http://localhost:8000/api/process-media?page=1&size=10`);
-        const audiosResponse = response.data;
-        const rows = audiosResponse.items.map(audio => {
+        const processMediaResponse = response.data;
+        const rows = processMediaResponse.items.map(audio => {
           return {
             id: audio.id,
             name: FormatUtils.removeExtension(audio.audio_metadata.filename),
@@ -94,6 +96,7 @@ export function useHistoryData() {
             languageTo: languages[audio.languages_to] || "Desconocido",
             date: FormatUtils.formatDateWithLeadingZeros(audio.audio_metadata.created_at),
             time: FormatUtils.formatTimeWithLeadingZeros(audio.audio_metadata.created_at),
+            status: audio.status,
           };
         });
 
@@ -116,7 +119,7 @@ export function useHistoryData() {
         audioService.getAudioById(row.id),
         transcriptionService.getTranscriptionByAudioId(row.id),
         translationService.getTranslationByAudioId(row.id),
-        translatedAudioService.getTranslatedAudioByAudioId(row.id)
+        translatedAudioService.getTranslatedAudioByAudioId(row.id),
       ]);
 
       dispatch({
@@ -149,7 +152,6 @@ export function useHistoryData() {
     const matchesDate = !filters.date || itemISODate === filters.date;
     const matchesSize = formatFileSize(item.size) <= filters.size;
     const matchesSourceLanguage = filters.sourceLanguage === 'all' || item.languageFrom === filters.sourceLanguage;
-    console.log(item.languageTo, filters.destinationLanguage);
     const matchesDestinationLanguage = filters.destinationLanguage === 'all' || item.languageTo === filters.destinationLanguage;
     return matchesSearchQuery && matchesDate && matchesSize && matchesSourceLanguage && matchesDestinationLanguage;
   });
