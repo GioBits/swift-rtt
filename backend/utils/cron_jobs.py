@@ -23,7 +23,7 @@ async def process_pending_tasks():
     Procesa los scores.
     """
     logger.info("Procesando scores...")
-    score_service.calculate_all_user_scores()
+    #score_service.calculate_all_user_scores()
     logger.info("Scores procesados correctamente")
 
 async def cron_task():
