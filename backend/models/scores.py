@@ -37,5 +37,6 @@ class ScoresSchema(ScoreBase):
     id: int
     user_id: int
     score: float
+    username: Optional[str]
     class Config:
         from_attributes = True

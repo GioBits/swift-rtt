@@ -1,5 +1,4 @@
 import MediaUploadHistory from '../components/MediaUploadHistory';
-import NavbarComponent from '../components/NavbarComponent';
 import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
