@@ -1,6 +1,8 @@
 from fastapi import HTTPException, status
 from api.service.processMediaService import ProcessMediaService
 from api.DTO.audio.audioRequestDTO import process_mediaDTO, retrieve_audios_listDTO
+from api.service.audioService import AudioService
+from models.process_media import StatusType
 from ws.queueSetup import add_audio_task
 
 class ProcessMediaController:
@@ -12,6 +14,7 @@ class ProcessMediaController:
         Initializes the controller with a ProcessMediaService instance.
         """
         self.process_media_service = ProcessMediaService()
+        self.audio_service = AudioService()
 
     async def create_process_media(self, process_mediaDTO: process_mediaDTO) -> dict:
         """
@@ -21,31 +24,51 @@ class ProcessMediaController:
             process_mediaDTO: A DTO containing the user_id, audio_id, language IDs, and provider IDs.
             
         Returns:
-            dict: A message indicating the task was added to the queue.
+            dict: A message indicating the task was added to the queue or an error if validation failed.
         """
         try:
+            
+            # Validate the audio
+            audio = self.audio_service.get_audio_by_id(process_mediaDTO.audio_id)
+            is_valid = audio is not None and audio.is_audio_valid
+            
+            # Set the correct status
+            if is_valid:
+                status = StatusType.PROCESS
+            else:
+                status = StatusType.FAIL
+                error_message = "Audio not found" if audio is None else audio.validation_error or "Audio validation failed"
+            
+            # Create the record in the database with the correct status
+            process_mediaDTO.status = status
             result = self.process_media_service.create_process_media_record(process_mediaDTO)
-
-            # Create a configuration for the queue
-            config = {
-                "record_id": result.audio_id,
-                "process_media_id": result.id,
-                "user_id": result.user_id,
-                "providers": {
-                    "transcription": result.providers_transcription,
-                    "translation": result.providers_translation,
-                    "audio_generation": result.providers_generation
-                },
-                "languages": {
-                    "from": result.languages_from,
-                    "to": result.languages_to
+            
+            # If the audio is valid, add it to the task queue
+            if is_valid:
+                # Create a configuration for the queue
+                config = {
+                    "record_id": result.audio_id,
+                    "process_media_id": result.id,
+                    "user_id": result.user_id,
+                    "providers": {
+                        "transcription": result.providers_transcription,
+                        "translation": result.providers_translation,
+                        "audio_generation": result.providers_generation
+                    },
+                    "languages": {
+                        "from": result.languages_from,
+                        "to": result.languages_to
+                    }
                 }
-            }
 
-            # Add the task to the queue
-            await add_audio_task(config, "transcribe")
-
-            return {"message": "Process media created successfully", "process_media_id": result.id, "config": config}
+                # Add the task to the queue
+                await add_audio_task(config, "transcribe")
+                
+                return {"message": "Process media created successfully and added to queue", "process_media_id": result.id, "status": result.status.value, "config": config}
+            else:
+                # Do not add to the task queue if the audio is not valid
+                return {"message": "Process media created with FAIL status", "process_media_id": result.id, "status": result.status.value, "error": error_message}
+            
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

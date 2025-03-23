@@ -1,7 +1,8 @@
 from api.DTO.audio.audioRequestDTO import process_mediaDTO
 from db.database import SessionLocal
 from models.process_media import ProcessMediaRecord, ProcessMediaSchema, StatusType
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+from fastapi import HTTPException, status
 
 class ProcessMediaService:
     """
@@ -19,19 +20,12 @@ class ProcessMediaService:
         """
         self.db.close()
 
-    def create_process_media_record(self,process_mediaDTO: process_mediaDTO) -> ProcessMediaSchema:
+    def create_process_media_record(self, process_mediaDTO) -> ProcessMediaSchema:
         """
         Creates a new process media record (translation request).
         
         Args:
-            audio_id (int): ID of the audio to process.
-            user_id (int): ID of the user who requested the processing.
-            language_id_from (int): Source language ID.
-            language_id_to (int): Target language ID.
-            providers_transcription (int): ID of the transcription provider.
-            providers_translation (int): ID of the translation provider.
-            providers_generation (int): ID of the audio generation provider.
-            status (StatusType): Status of the process.
+            process_mediaDTO: DTO containing translation request details.
             
         Returns:
             ProcessMediaSchema: The created process media record.
@@ -46,7 +40,7 @@ class ProcessMediaService:
                 providers_generation=process_mediaDTO.providers_generation,
                 languages_from=process_mediaDTO.language_id_from,
                 languages_to=process_mediaDTO.language_id_to,
-                status=StatusType.PROCESS
+                status=process_mediaDTO.status
             )
             
             self.db.add(process_media)

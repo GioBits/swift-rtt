@@ -24,17 +24,16 @@ async def create_process_media(
     Create a new process media record (translation request) and add it to the processing queue.
     
     Args:
-        process_media (process_mediaDTO): A data transfer object containing:
-            - user_id (int): ID of the user who requested the processing.
-            - audio_id (int): ID of the audio to process.
-            - language_id_from (int): Source language ID.
-            - language_id_to (int): Target language ID.
-            - providers_transcription (int, optional): ID of the transcription provider. Default: 1.
-            - providers_translation (int, optional): ID of the translation provider. Default: 2.
-            - providers_generation (int, optional): ID of the audio generation provider. Default: 3.
+        user_id (int): ID of the user who requested the processing.
+        audio_id (int): ID of the audio to process.
+        language_id_from (int): Source language ID.
+        language_id_to (int): Target language ID.
+        providers_transcription (int, optional): ID of the transcription provider. Default: 1.
+        providers_translation (int, optional): ID of the translation provider. Default: 2.
+        providers_generation (int, optional): ID of the audio generation provider. Default: 3.
             
     Returns:
-        dict: A message indicating the task was added to the queue.
+        dict: A message indicating the task was added to the queue or an error if validation failed.
     """
     process_media = process_mediaDTO(
         user_id=user_id,
