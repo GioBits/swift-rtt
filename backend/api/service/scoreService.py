@@ -10,84 +10,88 @@ from sqlalchemy import func
 
 class ScoreService:
     def __init__(self):
+        """
+        Initializes the ScoreService with required services and database session.
+        """
         self.db = SessionLocal()
         self.user_service = userService()
         self.language_service = LanguageService()
-        self.process_media_service= ProcessMediaService()
+        self.process_media_service = ProcessMediaService()
         self.translation_service = TranslationService()
         self.login_record_service = LoginRecordService()
 
     def __del__(self):
+        """
+        Closes the database session when the service is destroyed.
+        """
         self.db.close()
 
     def get_top_scores(self, n: int):
         """
-        Consulta los N scores más altos.
+        Retrieves the top N scores in descending order.
         """
         try:
-            score_top_user =  self.db.query(ScoreRecord).order_by(ScoreRecord.score.desc()).limit(n).all()
+            score_top_user = self.db.query(ScoreRecord).order_by(ScoreRecord.score.desc()).limit(n).all()
             return [ScoresSchema.from_orm(score).user for score in score_top_user]
         except Exception as e:
             return str(e)
-        
+
     def get_score_by_user_id(self, user_id: int) -> ScoreRecord:
         """
-        Retorna el score asociado a un usuario por su ID.
+        Retrieves the score associated with a user by their ID.
         """
         try:
             score_user = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
             return ScoresSchema.from_orm(score_user)
         except Exception as e:
-                return str(e)
-        
+            return str(e)
+
     def update_user_score_data(self, user_id: int):
         """
-        Calcula y actualiza los datos necesarios del usuario para el cálculo del score.
+        Calculates and updates the necessary data for a user's score.
         """
-
-        
         try:
-            # 1. TU – Total de traducciones hechas por el usuario
+            # 1. TU – Total translations made by the user
             all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
             tu = len(all_traduction_by_user[0])
 
-            # 2. MT – Total de traducciones en el sistema
+            # 2. MT – Total translations in the system
             all_traduction = self.process_media_service.get_all_process_media_records()
             mt = len(all_traduction[0])
 
-            # 3. IT – Total de idiomas disponibles en el sistema
+            # 3. IT – Total languages available in the system
             all_lenguage = self.language_service.get_all_languages()
             it = len(all_lenguage)
 
-            # 4. IU – Idiomas distintos usados por el usuario
+            # 4. IU – Distinct languages used by the user
             languages_used = set()
             for audio in all_traduction_by_user[0]:
-                # Obtiene el lenguaje del audio
+                # Get the language of the audio
                 language_id = audio['language_id']
                 languages_used.add(language_id)
 
-                # Obtiene el lenguaje de la traducción de ese audio
+                # Get the language of the translation for that audio
                 translate_audio = self.language_service.get_language_by_id(audio['id'])
                 translate_audio_language = translate_audio['language_id']
                 languages_used.add(translate_audio_language)
 
             iu = len(languages_used)
 
-            # 5. LU – Cantidad de veces que ha ingresado ese usuario
+            # 5. LU – Number of times the user has logged in
             all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
             lu = len(all_login_by_user[0])
 
-            # 6. MU – Total de usuarios en el sistema
+            # 6. MU – Total users in the system
             all_login = self.login_record_service.get_login_records()
             mu = len(all_login)
 
-            # Obtener o crear registro ScoreRecord
+            # Get or create ScoreRecord entry
             score = self.get_score_by_user_id(user_id)
 
             if not score:
-                raise ValueError("Error al obtener el registro de ScoreRecord para el usuario.")
+                raise ValueError("Error retrieving the ScoreRecord entry for the user.")
 
-            # Actualizar los campos
+            # Update fields
             score.total_translations = tu
             score.total_users_translations = mt
             score.total_languages_used = iu
@@ -96,10 +100,10 @@ class ScoreService:
             score.total_system_users = mu
 
             new_score = round(
-            0.4 * (tu / mt) +
-            0.4 * (iu / it) +
-            0.2 * (lu / mu),
-            4  # redondear a 4 decimales
+                0.4 * (tu / mt) +
+                0.4 * (iu / it) +
+                0.2 * (lu / mu),
+                4  # round to 4 decimal places
             )
 
             score.score = new_score
@@ -107,20 +111,18 @@ class ScoreService:
             self.db.commit()
             self.db.refresh(score)
         except Exception as e:
-            self.db.rollback()
-            print(f"Error al actualizar los datos del score del usuario {user_id}: {e}")
-        
+            print(f"Error updating the score data for user {user_id}: {e}")
 
     def calculate_all_user_scores(self):
         """
-        Calcula y actualiza el score de todos los usuarios en la tabla ScoreRecord.
+        Calculates and updates the scores for all users in the ScoreRecord table.
         """
         try:
-            # Obtener todos los scores
+            # Retrieve all users
             all_users = self.user_service.get_all_users()
 
             for user in all_users:
                 id = user.id
                 self.update_user_score_data(id)
         except Exception as e:
-            print(f"Error al calcular los scores de todos los usuarios: {e}")
+            print(f"Error calculating scores for all users: {e}")
