@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const INITIAL_FILTERS = {
   date: '',
-  size: 10000,
+  size: 100,
   sourceLanguage: 'all',
   destinationLanguage: 'all',
 };
@@ -59,7 +59,7 @@ export function useHistoryData() {
   const [languages, setLanguages] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState(INITIAL_FILTERS);
-  const [maxSize, setMaxSize] = useState(10000);
+  const [maxSize, setMaxSize] = useState(100);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -149,7 +149,7 @@ export function useHistoryData() {
     const matchesDate = !filters.date || itemISODate === filters.date;
     const matchesSize = formatFileSize(item.size) <= filters.size;
     const matchesSourceLanguage = filters.sourceLanguage === 'all' || item.languageFrom === filters.sourceLanguage;
-    console.log(item.languageTo, filters.destinationLanguage);
+    // console.log(item.languageTo, filters.destinationLanguage);
     const matchesDestinationLanguage = filters.destinationLanguage === 'all' || item.languageTo === filters.destinationLanguage;
     return matchesSearchQuery && matchesDate && matchesSize && matchesSourceLanguage && matchesDestinationLanguage;
   });

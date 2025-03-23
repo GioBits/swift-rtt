@@ -19,9 +19,8 @@ const History = () => {
   ];
 
   return (
-    <div className="w-screen h-screen">
-      <NavbarComponent />
-      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex mt-10 m-auto">
+    <div>
+      <div className="w-[90vw] md:w-[90vw] lg:w-[90vw] h-[80vh] gap-6 flex mt-10 m-auto">
         <div className="">
           <NavBarSearch
             searchQuery={searchQuery}

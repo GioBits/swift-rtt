@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, FormControl, Slider, TextField, Select, MenuItem } from "@mui/material";
 
-export default function FilterMenu({ initialFilters, onFiltersChange, maxSize }) {
+export default function FilterMenu({ initialFilters, onFiltersChange, maxSize}) {
   const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
