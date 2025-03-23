@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const Ranking = () => {
   useEffect(() => {
-    document.title = 'Ranking'
+    document.title = 'Estadísticas'
   }, [])
 
   const userId = useSelector(state => state.auth.user?.id);

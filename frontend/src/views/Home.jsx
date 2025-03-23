@@ -6,7 +6,7 @@ import ProcessBar from '../components/ProcessBar';
 
 const Home = () => {
   useEffect(() => {
-    document.title = 'Media Upload'
+    document.title = 'Traducir'
   }, [])
 
   return (

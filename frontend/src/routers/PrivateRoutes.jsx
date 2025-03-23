@@ -9,7 +9,11 @@ const PrivateRoutes = () => {
         <div className="w-screen h-screen">
           <div className="flex flex-col w-full h-full">
             <NavbarComponent />
-            <Outlet />
+            <div className="w-full h-full flex">
+              <div className="flex m-auto">
+                <Outlet />
+              </div>
+            </div>
           </div>
         </div>
   ) : (
