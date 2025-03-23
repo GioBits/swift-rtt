@@ -11,10 +11,10 @@ const Ranking = () => {
   const userId = useSelector(state => state.auth.user?.id);
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="flex flex-col md:flex-row p-6 m-auto">
+    <div className="flex w-full h-[calc(100vh-60px)]">
+      <div className="flex flex-col md:flex-row p-6 m-auto w-full">
         {/* User Stats Section */}
-        <div className="w-full md:w-100">
+        <div className="w-full md:w-1/3 mb-6 md:mb-0">
           <UserStats userId={userId} />
         </div>
         
