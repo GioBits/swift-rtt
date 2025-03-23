@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 import os
 import uvicorn
 import asyncio
+import logging
 
 # Importar las routes
 from api.routes.audioRoute import router as audioRouter
@@ -23,8 +24,6 @@ from api.routes.scoreRoute import router as scoreRouter
 from api.routes.loginRecordRoute import router as loginRecordRouter
 from api.routes.processMediaRoute import router as processMediaRouter
 
-from contextlib import asynccontextmanager
-
 # Import the populate script
 from scripts.populate import populate as populate_tables
 
@@ -36,11 +35,20 @@ from ws.queueSetup import get_message_queue
 from ws.brokerDispatcher import start_background_process
 from ws.connectionManager import manager
 
+#Import cron job initializer
+from utils.cron_jobs import init_cron
+
 #Template html
 from utils.html_template import html
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
 
 # Tags for swagger documentation
 tags_metadata = [
@@ -61,7 +69,13 @@ tags_metadata = [
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Iniciar el procesamiento en segundo plano
     start_background_process()
+    
+    # Inicializar el cron job
+    init_cron()
+    
+    # Ceder el control
     yield
 
 app = FastAPI(
