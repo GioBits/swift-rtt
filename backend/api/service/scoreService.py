@@ -1,14 +1,17 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.scores import ScoreRecord, ScoresSchema
-from models.process_media import ProcessMediaRecord
-from models.languages import LanguageRecord
-from models.users import UserRecord
+from .processMediaService import ProcessMediaService
+from .languageService import LanguageService
+from .userService import userService
 from sqlalchemy import func
 
 class ScoreService:
     def __init__(self):
         self.db = SessionLocal()
+        self.user_service = userService()
+        self.language_service = LanguageService()
+        self.process_media_service= ProcessMediaService()
 
     def __del__(self):
         self.db.close()
@@ -38,10 +41,10 @@ class ScoreService:
         Calcula y actualiza los datos necesarios del usuario para el cálculo del score.
         """
 
-        '''
+        
         # 1. TU – Total de traducciones del sistema
         tu = self.db.query(func.count(ProcessMediaRecord.id)).scalar() or 1
-
+        '''
         # 2. MT – Máximo de traducciones hechas por un usuario
         mt = self.db.query(
             ProcessMediaRecord.user_id,
