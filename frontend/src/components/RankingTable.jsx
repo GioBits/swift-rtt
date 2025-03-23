@@ -46,7 +46,7 @@ const RankingTable = ({ limit = 6 }) => {
             </div>
             <div className="mt-6 text-center">
               <p className="font-semibold text-gray-700">{topThree[1]?.username}</p>
-              <p className="text-2xl font-bold text-gray-300">{topThree[1]?.score * 100}</p>
+              <p className="text-2xl font-bold text-gray-300">{(topThree[1]?.score * 100 || 0).toFixed(2)}</p>
             </div>
           </div>
 
@@ -66,7 +66,7 @@ const RankingTable = ({ limit = 6 }) => {
             </div>
             <div className="mt-6 text-center">
               <p className="font-semibold text-gray-700">{topThree[0]?.username}</p>
-              <p className="text-3xl font-bold text-yellow-400">{topThree[0]?.score * 100}</p>
+              <p className="text-3xl font-bold text-yellow-400">{(topThree[0]?.score * 100 || 0).toFixed(2)}</p>
             </div>
           </div>
 
@@ -86,7 +86,7 @@ const RankingTable = ({ limit = 6 }) => {
             </div>
             <div className="mt-6 text-center">
               <p className="font-semibold text-gray-700">{topThree[2]?.username}</p>
-              <p className="text-2xl font-bold text-amber-700">{topThree[2]?.score * 100}</p>
+              <p className="text-2xl font-bold text-amber-700">{(topThree[2]?.score * 100 || 0).toFixed(2)}</p>
             </div>
           </div>
         </div>
@@ -117,7 +117,8 @@ const RankingTable = ({ limit = 6 }) => {
                 {/* User Score */}
                 <div className="text-right text-lg">
                   <span className="font-bold text-green-500">
-                    {user.score * 100}
+                  {(user.score * 100).toFixed(2)}
+                    {/* {user.score * 100} */}
                   </span>
                   <span className="text-gray-500 ml-1">puntos</span>
                 </div>
