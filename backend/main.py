@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 import os
 import uvicorn
 import asyncio
+import logging
 
 # Importar las routes
 from api.routes.audioRoute import router as audioRouter
@@ -20,8 +21,8 @@ from api.routes.providerRoute import router as providerRouter
 from api.routes.userRoute import router as userRouter
 from api.routes.authRoute import router as auhtRouter
 from api.routes.scoreRoute import router as scoreRouter
-
-from contextlib import asynccontextmanager
+from api.routes.loginRecordRoute import router as loginRecordRouter
+from api.routes.processMediaRoute import router as processMediaRouter
 
 # Import the populate script
 from scripts.populate import populate as populate_tables
@@ -34,11 +35,20 @@ from ws.queueSetup import get_message_queue
 from ws.brokerDispatcher import start_background_process
 from ws.connectionManager import manager
 
+#Import cron job initializer
+from utils.cron_jobs import init_cron
+
 #Template html
 from utils.html_template import html
 
 # Cargar el archivo .env
 load_dotenv(dotenv_path='../.env')
+
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
 
 # Tags for swagger documentation
 tags_metadata = [
@@ -47,17 +57,25 @@ tags_metadata = [
     {"name": "Providers", "description": "Operations related to providers"},
     {"name": "Auth", "description": "Operations related login and sign-in"},
     {"name": "Users", "description": "Operations related to users"},
+    {"name": "Login Records", "description": "Operations related to login records"},
+    {"name": "Process Media", "description": "Operations related to processing media (translation requests)"},
     {"name": "Audio", "description": "Operations related to audio files"},
     {"name": "Transcriptions", "description": "Operations related to transcriptions"},
     {"name": "Translated text", "description": "Operations related to translations"},
     {"name": "Translated Audios", "description": "Operations related to translated audio files"},
-    {"name": "Score", "description": "Operations related to score"},
+    {"name": "Scores", "description": "Operations related to scores"},
     {"name": "Utils", "description": "Utility endpoints"}
 ]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Iniciar el procesamiento en segundo plano
     start_background_process()
+    
+    # Inicializar el cron job
+    init_cron()
+    
+    # Ceder el control
     yield
 
 app = FastAPI(
@@ -75,6 +93,8 @@ app.include_router(translationRouter, prefix=("/api"))
 app.include_router(translatedAudioRouter, prefix=("/api"))
 app.include_router(auhtRouter, prefix=("/api"))
 app.include_router(scoreRouter, prefix=("/api"))
+app.include_router(loginRecordRouter, prefix=("/api"))
+app.include_router(processMediaRouter, prefix=("/api"))
 
 #Test endpoints
 app.include_router(utilsRouter, prefix=("/utils"))
