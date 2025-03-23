@@ -7,7 +7,7 @@ import NavBarSearch from '../components/NavbarSearch';
 import FilterMenu from '../components/FilterMenu';
 
 const History = () => {
-  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange, initialFilters, onFiltersChange } = useHistoryData();
+  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange, initialFilters, onFiltersChange, maxSize } = useHistoryData();
 
   const columns = [
     { label: 'ID', field: 'id', width: '5%' },
@@ -30,6 +30,7 @@ const History = () => {
           <FilterMenu 
             initialFilters={initialFilters}
             onFiltersChange={onFiltersChange}
+            maxSize={maxSize}
           />
         </div>
         <div className='w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex m-auto'>

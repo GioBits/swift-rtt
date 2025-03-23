@@ -11,7 +11,7 @@ import { languageService } from "../service/languageService";
 // Definimos INITIAL_FILTERS fuera del hook para mantener su referencia constante
 const INITIAL_FILTERS = {
   date: '',
-  duration: 30,
+  // duration: 30,
   size: 10000,
   sourceLanguage: 'all',
   destinationLanguage: 'all',
@@ -64,6 +64,7 @@ export function useHistoryData() {
   const [languages, setLanguages] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const [maxSize, setMaxSize] = useState(10000);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -93,7 +94,7 @@ export function useHistoryData() {
             id: audio.id,
             name: FormatUtils.removeExtension(audio.filename),
             size:  FormatUtils.formatFileSize(audio.file_size),
-            duration: audio.duration, 
+            // duration: audio.duration, 
             language: languages[audio.language_id] || "Desconocido",
             date: FormatUtils.formatDateWithLeadingZeros(audio.created_at), // Formato DD/MM/YYYY
             time: FormatUtils.formatTimeWithLeadingZeros(audio.created_at),
@@ -101,6 +102,10 @@ export function useHistoryData() {
         });
 
         dispatch({ type: 'SET_HISTORY', payload: rows.reverse() });
+
+        // Update maxSize with the maximum size value from the fetched data
+        const maxSizeValue = Math.max(...rows.map(row => formatFileSize(row.size)));
+        setMaxSize(maxSizeValue);
       } catch (error) {
         console.error("Error obteniendo audios:", error);
       }
@@ -161,6 +166,7 @@ export function useHistoryData() {
     onSearchChange, 
     initialFilters: INITIAL_FILTERS, 
     filters, 
-    onFiltersChange 
+    onFiltersChange,
+    maxSize
   };
 }

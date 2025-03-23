@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, FormControl, Slider, TextField, Select, MenuItem } from "@mui/material";
 
-export default function FilterMenu({ initialFilters, onFiltersChange }) {
+export default function FilterMenu({ initialFilters, onFiltersChange, maxSize }) {
   const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function FilterMenu({ initialFilters, onFiltersChange }) {
         />
       </FormControl>
 
-      <FormControl>
+      {/* <FormControl>
         <label>Duración: {filters.duration} seg</label>
         <Slider
           value={filters.duration}
@@ -47,7 +47,7 @@ export default function FilterMenu({ initialFilters, onFiltersChange }) {
           valueLabelDisplay="auto"
           sx={{ width: "100%", mt: 1 }}
         />
-      </FormControl>
+      </FormControl> */}
 
       <FormControl>
         <label>Tamaño: {filters.size} KB</label>
@@ -55,7 +55,7 @@ export default function FilterMenu({ initialFilters, onFiltersChange }) {
           value={filters.size}
           onChange={handleSliderChange("size")}
           min={1}
-          max={10000}
+          max={maxSize}
           step={1}
           valueLabelDisplay="auto"
           sx={{ width: "100%", mt: 1 }}
