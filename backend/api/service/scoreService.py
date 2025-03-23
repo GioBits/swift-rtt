@@ -111,7 +111,7 @@ class ScoreService:
             mu = len(all_login_top_user)
 
             # Get or create ScoreRecord entry
-            score = self.get_score_by_user_id(user_id)
+            score = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
 
             new_score = round(
                 0.4 * (tu / mt) +
