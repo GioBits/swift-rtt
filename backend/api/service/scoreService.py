@@ -26,13 +26,13 @@ class ScoreService:
         """
         self.db.close()
 
-    def get_top_scores(self, n: int):
+    def get_top_scores(self, n: int = 10):
         """
         Retrieves the top N scores in descending order.
         """
         try:
             score_top_user = self.db.query(ScoreRecord).order_by(ScoreRecord.score.desc()).limit(n).all()
-            return [ScoresSchema.from_orm(score).user for score in score_top_user]
+            return [ScoresSchema.from_orm(score) for score in score_top_user]
         except Exception as e:
             return str(e)
 
@@ -42,7 +42,9 @@ class ScoreService:
         """
         try:
             score_user = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
-            return ScoresSchema.from_orm(score_user)
+            if not score_user:
+                return None
+            return score_user
         except Exception as e:
             return str(e)
 
@@ -53,11 +55,11 @@ class ScoreService:
         try:
             # 1. TU – Total translations made by the user
             all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
-            tu = len(all_traduction_by_user[0])
+            tu = all_traduction_by_user[1]
 
-            # 2. MT – Total translations in the system
+            # 2. MT – Total translations in the system   #TODO CHANGE THIS
             all_traduction = self.process_media_service.get_all_process_media_records()
-            mt = len(all_traduction[0])
+            mt = all_traduction[1]
 
             # 3. IT – Total languages available in the system
             all_lenguage = self.language_service.get_all_languages()
@@ -67,37 +69,23 @@ class ScoreService:
             languages_used = set()
             for audio in all_traduction_by_user[0]:
                 # Get the language of the audio
-                language_id = audio['language_id']
-                languages_used.add(language_id)
-
-                # Get the language of the translation for that audio
-                translate_audio = self.language_service.get_language_by_id(audio['id'])
-                translate_audio_language = translate_audio['language_id']
-                languages_used.add(translate_audio_language)
+                if(audio['languages_from'] is not languages_used):
+                    languages_used.add(audio['languages_from'])
+                if(audio['languages_to'] is not languages_used):
+                    languages_used.add(audio['languages_to'])
 
             iu = len(languages_used)
 
             # 5. LU – Number of times the user has logged in
             all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
-            lu = len(all_login_by_user[0])
+            lu = len(all_login_by_user)
 
-            # 6. MU – Total users in the system
+            # 6. MU – Total users in the system  #TODO CHANGE THIS
             all_login = self.login_record_service.get_login_records()
             mu = len(all_login)
 
             # Get or create ScoreRecord entry
             score = self.get_score_by_user_id(user_id)
-
-            if not score:
-                raise ValueError("Error retrieving the ScoreRecord entry for the user.")
-
-            # Update fields
-            score.total_translations = tu
-            score.total_users_translations = mt
-            score.total_languages_used = iu
-            score.total_system_languages = it
-            score.different_users_contacted = lu
-            score.total_system_users = mu
 
             new_score = round(
                 0.4 * (tu / mt) +
@@ -106,8 +94,28 @@ class ScoreService:
                 4  # round to 4 decimal places
             )
 
-            score.score = new_score
-
+            if not score:
+                score = ScoreRecord(
+                    user_id = user_id,
+                    total_translations = tu,
+                    total_users_translations = mt,
+                    total_languages_used = iu,
+                    total_system_languages = it,
+                    different_users_contacted = lu,
+                    total_system_users = mu,
+                    score = new_score
+                )
+                self.db.add(score)
+            else:
+                # Update fields
+                score.total_translations = tu
+                score.total_users_translations = mt
+                score.total_languages_used = iu
+                score.total_system_languages = it
+                score.different_users_contacted = lu
+                score.total_system_users = mu
+                score.score = new_score
+            
             self.db.commit()
             self.db.refresh(score)
         except Exception as e:

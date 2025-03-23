@@ -89,7 +89,7 @@ class userService:
         except Exception as e:
             return str(e)
         
-    def get_all_user(self):
+    def get_all_users(self):
         """
         Retrieve all user records from the database.
         Returns:
