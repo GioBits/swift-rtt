@@ -26,13 +26,13 @@ class ScoreService:
         """
         self.db.close()
 
-    def get_top_scores(self, n: int):
+    def get_top_scores(self, n: int = 10):
         """
         Retrieves the top N scores in descending order.
         """
         try:
             score_top_user = self.db.query(ScoreRecord).order_by(ScoreRecord.score.desc()).limit(n).all()
-            return [ScoresSchema.from_orm(score).user for score in score_top_user]
+            return [ScoresSchema.from_orm(score) for score in score_top_user]
         except Exception as e:
             return str(e)
 

@@ -16,13 +16,10 @@ const UserStats = ({ userId }) => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Use mock data for user ID 1
-        if (userId === 1) {
-          setStats(mockUserStats);
-        } else {
-          const userStats = await StatsService.getUserStats(userId);
-          setStats(userStats);
-        }
+        
+        const userStats = await StatsService.getUserStats(userId);
+        setStats(userStats);
+      
       } catch (error) {
         console.error('Error fetching user stats:', error);
       } finally {
@@ -71,7 +68,7 @@ const UserStats = ({ userId }) => {
                 Puntuación Total
               </p>
               <p className="text-xl font-bold text-cerulean">
-                {stats?.score?.score || 0}
+                {stats?.score?.score * 100 || 0}
               </p>
             </div>
           </div>
