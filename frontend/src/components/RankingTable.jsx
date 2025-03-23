@@ -45,7 +45,7 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[1]?.user_id}</p>
+              <p className="font-semibold text-gray-700">{topThree[1]?.username}</p>
               <p className="text-2xl font-bold text-gray-300">{topThree[1]?.score * 100}</p>
             </div>
           </div>
@@ -65,7 +65,7 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[0]?.user_id}</p>
+              <p className="font-semibold text-gray-700">{topThree[0]?.username}</p>
               <p className="text-3xl font-bold text-yellow-400">{topThree[0]?.score * 100}</p>
             </div>
           </div>
@@ -85,7 +85,7 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[2]?.user_id}</p>
+              <p className="font-semibold text-gray-700">{topThree[2]?.username}</p>
               <p className="text-2xl font-bold text-amber-700">{topThree[2]?.score * 100}</p>
             </div>
           </div>
@@ -108,7 +108,7 @@ const RankingTable = ({ limit = 6 }) => {
                   {index + 4}
                 </div>
                 <div className="flex items-center text-lg ml-4">
-                  <h3 className="text-lg w-40 font-semibold text-gray-700">{user.user_id}</h3>
+                  <h3 className="text-lg w-40 font-semibold text-gray-700">{user.username}</h3>
                   <p className="text-gray-500 w-50">
                     Traducciones: {user.total_translations}
                   </p>
