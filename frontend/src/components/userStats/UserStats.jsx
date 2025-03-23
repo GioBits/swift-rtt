@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import StatsService from '../../service/statsService';
 
-const mockUserStats = {
-  score: { score: 100.0 },
-  totalAudios: 150,
-  totalLogins: 45,
-  lastLogin: "2024-03-20T15:30:00"
-};
-
 const UserStats = ({ userId }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,13 +33,14 @@ const UserStats = ({ userId }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Nunca';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    const date = new Date(dateString + 'Z');
+    return date.toLocaleDateString([], {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     });
   };
 
