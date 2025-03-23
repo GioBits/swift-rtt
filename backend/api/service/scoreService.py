@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.scores import ScoreRecord, ScoresSchema
+from models.users import UserRecord
 from .processMediaService import ProcessMediaService
 from .languageService import LanguageService
 from .userService import userService
@@ -31,8 +32,32 @@ class ScoreService:
         Retrieves the top N scores in descending order.
         """
         try:
-            score_top_user = self.db.query(ScoreRecord).order_by(ScoreRecord.score.desc()).limit(n).all()
-            return [ScoresSchema.from_orm(score) for score in score_top_user]
+
+            # Query to get the top N scores and the associated usernames
+            score_top_user = (
+                self.db.query(ScoreRecord, UserRecord.username)
+                .join(UserRecord, ScoreRecord.user_id == UserRecord.id)
+                .order_by(ScoreRecord.score.desc())
+                .limit(n)
+                .all()
+            )
+
+            return [
+                {
+                    "id": score.id,
+                    "user_id": score.user_id,
+                    "score": score.score,
+                    "total_translations": score.total_translations,
+                    "total_users_translations": score.total_users_translations,
+                    "total_languages_used": score.total_languages_used,
+                    "total_system_languages": score.total_system_languages,
+                    "different_users_contacted": score.different_users_contacted,
+                    "total_system_users": score.total_system_users,
+                    "username": username
+                }
+                for score, username in score_top_user
+            ]
+
         except Exception as e:
             return str(e)
 
@@ -44,7 +69,8 @@ class ScoreService:
             score_user = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
             if not score_user:
                 return None
-            return score_user
+            score_user.username = ""
+            return ScoresSchema.model_validate(score_user)
         except Exception as e:
             return str(e)
 

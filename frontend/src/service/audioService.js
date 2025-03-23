@@ -26,7 +26,7 @@ const AudioService = {
       const response = await apiService.post(path, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      toast.success('Archivo de audio guardado!', { duration: 5000 });
+      toast.success('Archivo de audio guardado!', { duration: 1000 });
       return response; // Return only the response data
     } catch (error) {
       console.error(error);
@@ -54,7 +54,7 @@ const AudioService = {
 
     try {
       const response = await apiService.post(`${path}?${queryParams}`, {});
-      toast.success('Iniciando procesamiento de audio!', { duration: 5000 });
+      toast.success('Iniciando procesamiento de audio!', { duration: 1000 });
       return response;
     } catch (error) {
       console.error(error);
