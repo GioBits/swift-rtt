@@ -22,7 +22,8 @@ export const fetchCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async (_, thunkAPI) => {
     try {
-      const response = await apiService.get("api/users/me");
+      // const response = await apiService.get("api/users/me");
+      const response = {"id": 1, "username": "test"}
       console.log(response)
       return { user: response }; // Should return { id, username }
     } catch (error) {

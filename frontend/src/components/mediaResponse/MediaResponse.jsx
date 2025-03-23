@@ -34,13 +34,13 @@ const MediaResponse = () => {
     const handleResponse = async () => {
       if (mediaSelected) {
         setMediaUrl(base64ToUrl(mediaSelected.data));
-        setTranscription("");
-        setTranslate("");
+        // setTranscription("");
+        // setTranslate("");
         setMediaTranslation("");
       }
     };
     handleResponse();
-  }, [mediaSelected]);
+  }, [mediaSelected, setMediaUrl]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -50,6 +50,28 @@ const MediaResponse = () => {
     };
     handleResponse();
   }, [wsResponse]);
+
+  // Load from localStorage
+  useEffect(() => {
+    const savedTranscription = localStorage.getItem('transcription');
+    const savedTranslation = localStorage.getItem('translate');
+    if (savedTranscription){
+      setTranscription(savedTranscription);
+    }
+    if (savedTranslation){
+      setTranslate(savedTranslation);
+    }
+  }, [setTranscription, setTranslate]);
+  
+  // Save to localStorage
+  useEffect(() => {
+    if(transcription) {
+      localStorage.setItem('transcription', transcription);
+    }
+    if(translate) {
+      localStorage.setItem('translation', translate);
+    }
+  }, [transcription, translate]);
 
   const handleWsResponse = async (wsResponse) => {
     let wsResponseData = JSON.parse(wsResponse);
