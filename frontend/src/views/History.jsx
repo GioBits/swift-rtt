@@ -14,8 +14,7 @@ const History = () => {
   const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange, initialFilters, onFiltersChange, maxSize } = useHistoryData();
 
   const columns = [
-    { label: 'ID', field: 'id', width: '5%' },
-    { label: 'Nombre', field: 'name', width: '15%' },
+    { label: 'Nombre', field: 'name', width: '20%' },
     { label: 'Tamaño', field: 'size', width: '15%' },
     { label: 'Idioma de Origen', field: 'languageFrom', width: '15%' },
     { label: 'Idioma de Destino', field: 'languageTo', width: '15%' },

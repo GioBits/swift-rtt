@@ -7,7 +7,7 @@ import { translatedAudioService } from '../service/translatedAudioService';
 import { b64toBlob } from '../utils/audioUtils';
 import FormatUtils from '../utils/FormatUtils';
 import { languageService } from "../service/languageService";
-import axios from 'axios'; 
+import processMediaService from '../service/processMediaService';
 
 const INITIAL_FILTERS = {
   date: '',
@@ -69,11 +69,12 @@ export function useHistoryData() {
 
       try {
         const audiosResponse = await audioService.getAudiosByUserId(userId);
-        const response = await axios.get(`http://localhost:8000/api/process-media?page=1&size=10`);
+        const response = await processMediaService.getProcessMediaByUserAll(userId);
+        console.log('response1', response);
         const processMediaResponse = response.data;
         const rows = processMediaResponse.items.map(audio => {
           return {
-            id: audio.id,
+            id: audio.audio_id,
             name: FormatUtils.removeExtension(audio.audio_metadata.filename),
             size: FormatUtils.formatFileSize(audio.audio_metadata.file_size),
             languageFrom: languages[audio.audio_metadata.language_id] || "Desconocido",
