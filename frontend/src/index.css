@@ -51,7 +51,7 @@
          hover:bg-blueMetal/80 active:bg-blueMetal;
 }
 
-tr:hover {
+tbody tr:hover {
   cursor: pointer;
   background-color: #dadada;
 }
