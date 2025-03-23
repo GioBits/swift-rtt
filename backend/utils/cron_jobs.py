@@ -3,6 +3,7 @@ import logging
 import os
 from models.process_media import StatusType
 from api.service.processMediaService import ProcessMediaService
+from api.service.scoreService import ScoreService
 from ws.queueSetup import add_audio_task
 
 # Configurar logger para este módulo
@@ -10,15 +11,19 @@ logger = logging.getLogger(__name__)
 
 # Configuración del cron
 CRON_ENABLED = os.getenv("CRON_ENABLED", "True").lower() in ["true", "1", "t", "y", "yes"]
-CRON_FREQUENCY_SECONDS = int(os.getenv("CRON_FREQUENCY_SECONDS", 120))  # Por defecto, cada 2 minutos
-PROCESS_BATCH_SIZE = int(os.getenv("PROCESS_BATCH_SIZE", 10))  # Número de tareas a procesar por ciclo
+CRON_FREQUENCY_SECONDS = int(os.getenv("CRON_FREQUENCY_SECONDS", 120))
+
+# Servicios
+score_service = ScoreService()
+
 
 async def process_pending_tasks():
     """
     Procesa los scores.
     """
     logger.info("Procesando scores...")
-    # AQUI VA LO DE SCORE
+    score_service.calculate_all_user_scores()
+    logger.info("Scores procesados correctamente")
 
 async def cron_task():
     """

@@ -1,94 +1,28 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PropTypes from 'prop-types';
-
-const mockData = [
-  {
-    id: 1,
-    user_id: 101,
-    username: "John Doe",
-    total_translations: 50,
-    total_languages_used: 5,
-    total_users_translations: 20,
-    total_system_languages: 10,
-    different_users_contacted: 15,
-    total_system_users: 100,
-    score: 85.5,
-    last_updated: "2023-10-01T12:34:56"
-  },
-  {
-    id: 2,
-    user_id: 102,
-    username: "Jane Smith",
-    total_translations: 30,
-    total_languages_used: 3,
-    total_users_translations: 10,
-    total_system_languages: 8,
-    different_users_contacted: 8,
-    total_system_users: 100,
-    score: 72.0,
-    last_updated: "2023-10-01T14:20:10"
-  },
-  {
-    id: 3,
-    user_id: 103,
-    username: "Mike Johnson",
-    total_translations: 120,
-    total_languages_used: 8,
-    total_users_translations: 50,
-    total_system_languages: 12,
-    different_users_contacted: 25,
-    total_system_users: 100,
-    score: 95.0,
-    last_updated: "2023-10-02T09:15:30"
-  },
-  {
-    id: 4,
-    user_id: 104,
-    username: "Abel Zavaleta",
-    total_translations: 120,
-    total_languages_used: 8,
-    total_users_translations: 50,
-    total_system_languages: 12,
-    different_users_contacted: 25,
-    total_system_users: 100,
-    score: 95.0,
-    last_updated: "2023-10-02T09:15:30"
-  },
-  {
-    id: 5,
-    user_id: 105,
-    username: "Jesús Prieto",
-    total_translations: 90,
-    total_languages_used: 8,
-    total_users_translations: 50,
-    total_system_languages: 12,
-    different_users_contacted: 25,
-    total_system_users: 100,
-    score: 95.0,
-    last_updated: "2023-10-02T09:15:30"
-  },
-  {
-    id: 6,
-    user_id: 106,
-    username: "Sergio Carrillo",
-    total_translations: 150,
-    total_languages_used: 8,
-    total_users_translations: 50,
-    total_system_languages: 12,
-    different_users_contacted: 25,
-    total_system_users: 100,
-    score: 100.0,
-    last_updated: "2023-10-02T09:15:30"
-  }
-];
+import StatsService from '../service/statsService';
+import { useState, useEffect } from 'react';
 
 const RankingTable = ({ limit = 6 }) => {
-  // Sort users by score in descending order
-  const sortedUsers = [...mockData].sort((a, b) => b.score - a.score);
-  // Get top 3 users for podium
-  const topThree = sortedUsers.slice(0, 3);
-  // Get remaining users for the table
-  const remainingUsers = sortedUsers.slice(3, limit);
+
+  const [sortedUsers, setSortedUsers] = useState([]);
+  const [topThree, setTopThree] = useState([]);
+  const [remainingUsers, setRemainingUsers] = useState([]);
+  
+  useEffect(() => {
+    const fetchTopScores = async () => {
+      const topScores = await StatsService.getTopScores(limit);
+      setSortedUsers(topScores);
+      console.log(topScores);
+      // Get top 3 users for podium
+      setTopThree(topScores.slice(0, 3));
+      // Get remaining users for the table
+      setRemainingUsers(topScores.slice(3, limit));
+    };
+    fetchTopScores();
+  }, [limit]);
+
+  
 
   return (
     <div className="w-full h-full">
@@ -111,8 +45,8 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[1]?.username}</p>
-              <p className="text-2xl font-bold text-gray-300">{topThree[1]?.score}</p>
+              <p className="font-semibold text-gray-700">{topThree[1]?.user_id}</p>
+              <p className="text-2xl font-bold text-gray-300">{topThree[1]?.score * 100}</p>
             </div>
           </div>
 
@@ -131,8 +65,8 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[0]?.username}</p>
-              <p className="text-3xl font-bold text-yellow-400">{topThree[0]?.score}</p>
+              <p className="font-semibold text-gray-700">{topThree[0]?.user_id}</p>
+              <p className="text-3xl font-bold text-yellow-400">{topThree[0]?.score * 100}</p>
             </div>
           </div>
 
@@ -151,8 +85,8 @@ const RankingTable = ({ limit = 6 }) => {
               </div>
             </div>
             <div className="mt-6 text-center">
-              <p className="font-semibold text-gray-700">{topThree[2]?.username}</p>
-              <p className="text-2xl font-bold text-amber-700">{topThree[2]?.score}</p>
+              <p className="font-semibold text-gray-700">{topThree[2]?.user_id}</p>
+              <p className="text-2xl font-bold text-amber-700">{topThree[2]?.score * 100}</p>
             </div>
           </div>
         </div>
@@ -174,7 +108,7 @@ const RankingTable = ({ limit = 6 }) => {
                   {index + 4}
                 </div>
                 <div className="flex items-center text-lg ml-4">
-                  <h3 className="text-lg w-50 font-semibold text-gray-700">{user.username}</h3>
+                  <h3 className="text-lg w-40 font-semibold text-gray-700">{user.user_id}</h3>
                   <p className="text-gray-500 w-50">
                     Traducciones: {user.total_translations}
                   </p>
@@ -183,7 +117,7 @@ const RankingTable = ({ limit = 6 }) => {
                 {/* User Score */}
                 <div className="text-right text-lg">
                   <span className="font-bold text-green-500">
-                    {user.score}
+                    {user.score * 100}
                   </span>
                   <span className="text-gray-500 ml-1">puntos</span>
                 </div>
