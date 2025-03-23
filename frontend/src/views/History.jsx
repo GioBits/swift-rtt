@@ -4,9 +4,10 @@ import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
 import NavBarSearch from '../components/NavbarSearch';
+import FilterMenu from '../components/FilterMenu';
 
 const History = () => {
-  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange } = useHistoryData();
+  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange, initialFilters, onFiltersChange } = useHistoryData();
 
   const columns = [
     { label: 'ID', field: 'id', width: '5%' },
@@ -20,13 +21,20 @@ const History = () => {
   return (
     <div className="w-screen h-screen">
       <NavbarComponent />
-      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex flex-col mt-10 m-auto">
-        <NavBarSearch 
-          className="w-full md:w-[40%] lg:w-[30%]" 
-          searchQuery={searchQuery} 
-          onSearchChange={onSearchChange} 
-        />
-        <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
+      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex mt-10 m-auto">
+        <div className="">
+          <NavBarSearch
+            searchQuery={searchQuery}
+            onSearchChange={onSearchChange}
+          />
+          <FilterMenu 
+            initialFilters={initialFilters}
+            onFiltersChange={onFiltersChange}
+          />
+        </div>
+        <div className='w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex m-auto'>
+          <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
+        </div>
       </div>
       {state.isModalOpen && state.selectedAudio && (
         <Modal isOpen={state.isModalOpen} onClose={closeModal}>
