@@ -43,7 +43,7 @@ export function useHistoryData() {
   const userId = useSelector(state => state.auth.user?.id);
   const [languages, setLanguages] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const [filters, setFilters] = useState(null);
   const [maxSize, setMaxSize] = useState(100);
 
   useEffect(() => {
@@ -94,6 +94,7 @@ export function useHistoryData() {
         dispatch({ type: 'SET_HISTORY', payload: rows.reverse() });
 
         const maxSizeValue = Math.max(...rows.map(row => FormatUtils.formatFileSizeRemove(row.size)));
+        setFilters({...INITIAL_FILTERS, size: maxSizeValue});
         setMaxSize(maxSizeValue);
       } catch (error) {
         console.error("Error obteniendo audios:", error);
@@ -154,7 +155,7 @@ export function useHistoryData() {
     closeModal, 
     searchQuery, 
     onSearchChange, 
-    initialFilters: INITIAL_FILTERS, 
+    initialFilters: filters || INITIAL_FILTERS, 
     filters, 
     onFiltersChange,
     maxSize

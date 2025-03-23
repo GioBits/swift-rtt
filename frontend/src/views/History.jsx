@@ -25,7 +25,7 @@ const History = () => {
 
   return (
     <div>
-      <div className="w-[90vw] md:w-[90vw] lg:w-[90vw] h-[80vh] gap-6 flex mt-10 m-auto">
+      <div className="w-[90vw] md:w-[90vw] lg:w-[90vw] h-[80vh] gap-6 block lg:flex mt-10 m-auto">
         <div className="">
           <NavBarSearch
             searchQuery={searchQuery}
@@ -37,7 +37,7 @@ const History = () => {
             maxSize={maxSize}
           />
         </div>
-        <div className='w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex m-auto'>
+        <div className='w-[90vw] lg:w-[60vw] h-[80vh] gap-6  mt-[20px] lg:mt-0 flex m-auto'>
           <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
         </div>
       </div>
