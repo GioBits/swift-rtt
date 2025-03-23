@@ -1,7 +1,7 @@
 from db.database import SessionLocal
 from models.login_records import LoginRecord, LoginRecordBase
-from typing import Optional, List
-
+from typing import Optional, List, Dict
+from sqlalchemy import func
 class LoginRecordService:
     """
     Service for managing user login records.
@@ -83,3 +83,38 @@ class LoginRecordService:
         except Exception as e:
             print(f"Error getting login records for user {user_id}: {str(e)}")
             raise 
+
+
+    def get_login_of_top_user(self) -> List[Dict]:
+        """
+        Retrieves all login records of the user with the most logins.
+
+        Returns:
+            List[Dict]: List of login records of the most active user.
+        """
+        try:
+            # 1. Get the user with the most logins
+            top_login_user = self.db.query(
+                LoginRecord.user_id,
+                func.count(LoginRecord.id).label("count")
+            ).group_by(LoginRecord.user_id)\
+            .order_by(func.count(LoginRecord.id).desc())\
+            .first()
+
+            if not top_login_user:
+                return []
+
+            top_user_id = top_login_user.user_id
+
+            # 2. Get all logins of that user
+            login_records = self.db.query(LoginRecord)\
+                                .filter(LoginRecord.user_id == top_user_id)\
+                                .order_by(LoginRecord.created_at.desc())\
+                                .all()
+
+            # 3. Convert to a list of dictionaries using LoginRecordBase
+            return [LoginRecordBase.from_orm(record).dict() for record in login_records]
+
+        except Exception as e:
+            print(f"❌ Error retrieving logins of the most active user: {str(e)}")
+            raise
