@@ -9,7 +9,7 @@ const PrivateRoutes = () => {
         <div className="w-screen h-screen">
           <div className="flex flex-col w-full h-full">
             <NavbarComponent />
-            <div className="w-full h-full flex">
+            <div className="w-full h-full flex justify-between">
               <div className="flex m-auto">
                 <Outlet />
               </div>

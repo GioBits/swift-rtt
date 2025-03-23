@@ -38,18 +38,18 @@ const NavbarComponent = () => {
   };
 
   return (
-    <nav className="h-[60px] bg-blueMetal flex items-center px-6 shadow-md w-full relative justify-center">
+    <nav className="h-[60px] bg-blueMetal flex items-center px-6 shadow-md w-full justify-center z-20">
       {/* Logo y titulo */}
-      <div className="absolute w-full sm:relative sm:w-[30%] h-full sm:border-r border-gray-500 flex items-center px-4 justify-center sm:justify-start">
+      <div className="absolute w-full lg:relative lg:w-[30%] h-full lg:border-r border-gray-500 flex items-center px-4 justify-center lg:justify-start">
         <img src={logo} alt="Logo" className="w-[70px] h-[40px]" />
-        <span className="text-2xl font-semibold text-white ml-3 hidden sm:block">
+        <span className="text-2xl font-semibold text-white ml-3 lg:block">
           SwiftVoice
         </span>
       </div>
 
       {/* Menu principal */}
       <div className="w-[70%] flex justify-between items-center px-4">
-        <div className="hidden sm:flex space-x-8">
+        <div className="hidden lg:flex space-x-8">
           {menuItems.map(({ label, path }) => (
             <button
               key={path}
@@ -66,7 +66,7 @@ const NavbarComponent = () => {
         </div>
 
         {/* Informacion del usuario y logout */}
-        <div className="hidden sm:flex space-x-4 items-center">
+        <div className="hidden lg:flex space-x-4 items-center">
           <span className="text-md font-semibold text-white">@{username}</span>
           <button
             onClick={handleLogout}
@@ -78,7 +78,7 @@ const NavbarComponent = () => {
         </div>
 
         {/* Boton de menu movil */}
-        <div className="absolute right-6 sm:hidden">
+        <div className="absolute right-6 lg:hidden">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="text-white text-2xl"
@@ -90,7 +90,7 @@ const NavbarComponent = () => {
 
       {/* Menu desplegable en movil */}
       <Collapse in={menuOpen} timeout="auto" unmountOnExit>
-        <div className="absolute top-[60px] left-0 w-full bg-blueMetal shadow-md sm:hidden">
+        <div className="absolute top-[60px] left-0 w-full bg-blueMetal shadow-md lg:hidden">
           {menuItems.map(({ label, path }) => (
             <button
               key={path}
