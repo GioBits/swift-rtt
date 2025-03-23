@@ -56,6 +56,18 @@ function NavbarComponent() {
           >
             Historial
           </button>
+
+          <button
+            onClick={() => navigate("/estadisticas")}
+            className={`relative text-lg font-semibold text-white px-2 py-1 transition-all 
+              hover:text-gray-300 ${
+                location.pathname === "/estadisticas"
+                  ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
+                  : ""
+              }`}
+          >
+            Estadísticas
+          </button>
         </div>
 
         <div className="w-1/2 flex">
