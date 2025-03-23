@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from db.database import SessionLocal
 from models.audio import AudioRecord, AudioRecordSchema
+from typing import Optional
 
 class AudioService:
     def __init__(self):
@@ -39,7 +40,7 @@ class AudioService:
         except Exception as e:
             return str(e)
 
-    def create_audio(self, user_id: int, filename: str, audio_data: bytes, content_type: str, file_size: int, language_id: int):
+    def create_audio(self, user_id: int, filename: str, audio_data: bytes, content_type: str, file_size: int, language_id: int, is_audio_valid: bool = False, validation_error: Optional[str] = None):
         """
         Create a new audio entry in the database.
         Args:
@@ -49,6 +50,8 @@ class AudioService:
             content_type (str): The content type of the audio file.
             file_size (int): The file size in bytes.
             language_id (int): The ID of the language.
+            is_audio_valid (bool): Whether the audio file is valid according to the validation.
+            validation_error (Optional[str]): Error message if the audio is invalid.
         Returns:
             AudioRecordSchema: The newly created audio object if successful.
         """
@@ -59,7 +62,9 @@ class AudioService:
                 audio_data=audio_data,
                 content_type=content_type,
                 file_size=file_size,
-                language_id=language_id
+                language_id=language_id,
+                is_audio_valid=is_audio_valid,
+                validation_error=validation_error
             )
             self.db.add(new_audio)
             self.db.commit()

@@ -16,9 +16,6 @@ class ProviderRecord(Base):
     name = Column(String(50), unique=True, nullable=False)
     type = Column(Enum(ProviderType), nullable=False)
 
-    process_media_transcriptions = relationship("ProcessMediaRecord", foreign_keys="[ProcessMediaRecord.providers_transcription]")
-    process_media_translations = relationship("ProcessMediaRecord", foreign_keys="[ProcessMediaRecord.providers_translation]")
-    process_media_generations = relationship("ProcessMediaRecord", foreign_keys="[ProcessMediaRecord.providers_generation]")
 class ProviderSchema(BaseModel):
     id: int
     name: str
