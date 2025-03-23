@@ -5,6 +5,7 @@ from .processMediaService import ProcessMediaService
 from .languageService import LanguageService
 from .userService import userService
 from .translationService import TranslationService
+from .loginRecordService import LoginRecordService
 from sqlalchemy import func
 
 class ScoreService:
@@ -14,7 +15,7 @@ class ScoreService:
         self.language_service = LanguageService()
         self.process_media_service= ProcessMediaService()
         self.translation_service = TranslationService()
-
+        self.login_record_service = LoginRecordService()
     def __del__(self):
         self.db.close()
 
@@ -64,18 +65,21 @@ class ScoreService:
             # Obtiene el lenguaje del audio
             language_id = audio['language_id']
             languages_used.add(language_id)
-            
+
             # Obtiene el lenguaje de la traducción de ese audio
             translate_audio = self.language_service.get_language_by_id(audio['id'])
             translate_audio_language = translate_audio['language_id']
             languages_used.add(translate_audio_language)
 
         iu = len(languages_used)
-        '''
+
+        
         # 5. LU – Usuarios distintos con los que interactuó
         # Este punto depende de cómo esté tu lógica de interacción. Si no tienes tabla de interacciones, puedes asumir 0 o simular.
-        lu = 0  # Placeholder hasta que haya un sistema de interacción
-
+        all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
+        lu = len(all_login_by_user[0])
+        
+        '''
         # 6. MU – Total de usuarios en el sistema
         mu = self.db.query(func.count(UserRecord.id)).scalar() or 1
         '''
