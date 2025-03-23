@@ -50,11 +50,13 @@ class ScoreService:
         # 2. MT – Total de traducciones en el sistema
         all_traduction = self.process_media_service.get_all_process_media_records()
         mt = len(all_traduction[0])
-        '''
-        # 3. IU – Idiomas distintos usados por el usuario
-        iu = self.db.query(func.count(func.distinct(ProcessMediaRecord.languages_from))).filter(ProcessMediaRecord.user_id == user_id).scalar() or 0
 
-        # 4. IT – Total de idiomas disponibles en el sistema
+        # 3. IT – Total de idiomas disponibles en el sistema
+        all_lenguage = self.language_service.get_all_languages()
+        it = len(all_lenguage)
+        
+        '''
+        # 4. IU – Idiomas distintos usados por el usuario
         it = self.db.query(func.count(LanguageRecord.id)).scalar() or 1
 
         # 5. LU – Usuarios distintos con los que interactuó
