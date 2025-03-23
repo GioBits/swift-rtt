@@ -11,7 +11,7 @@ import axios from 'axios';
 
 const INITIAL_FILTERS = {
   date: '',
-  size: 10000,
+  size: 100,
   sourceLanguage: 'all',
   destinationLanguage: 'all',
 };
@@ -44,7 +44,7 @@ export function useHistoryData() {
   const [languages, setLanguages] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState(INITIAL_FILTERS);
-  const [maxSize, setMaxSize] = useState(10000);
+  const [maxSize, setMaxSize] = useState(100);
 
   useEffect(() => {
     const fetchLanguages = async () => {
