@@ -1,9 +1,10 @@
 from api.DTO.audio.audioRequestDTO import process_mediaDTO
 from db.database import SessionLocal
 from models.process_media import ProcessMediaRecord, ProcessMediaSchema, StatusType
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict
 from fastapi import HTTPException, status
 import logging
+from api.service.audioService import AudioService
 
 # Configurar logger para este módulo
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ class ProcessMediaService:
         Initializes the service with a database session.
         """
         self.db = SessionLocal()
+        self.audio_service = AudioService()
 
     def __del__(self):
         """
@@ -94,7 +96,7 @@ class ProcessMediaService:
             self.db.rollback()
             logger.error(f"Error updating process media status: {str(e)}")
 
-    def get_all_process_media_records(self, page: int = 1, size: int = 10) -> Tuple[List[ProcessMediaSchema], int, int]:
+    def get_all_process_media_records(self, page: int = 1, size: int = 10) -> Tuple[List[Dict], int, int]:
         """
         Gets all process media records with pagination.
         
@@ -103,8 +105,8 @@ class ProcessMediaService:
             size (int): Number of items per page.
             
         Returns:
-            Tuple[List[ProcessMediaSchema], int, int]: A tuple containing:
-                - List of process media records
+            Tuple[List[Dict], int, int]: A tuple containing:
+                - List of process media records with audio metadata
                 - Total number of items
                 - Total number of pages
         """
@@ -123,13 +125,35 @@ class ProcessMediaService:
             # Calculate the total number of pages
             total_pages = (total_items + size - 1) // size if size > 0 else 0
             
-            return [ProcessMediaSchema.from_orm(record) for record in records], total_items, total_pages
+            # Get the audio metadata for each record
+            result_with_audio = []
+            for record in records:
+                process_media_dict = ProcessMediaSchema.from_orm(record).dict()
+                
+                # Get the audio metadata
+                audio_metadata = self.audio_service.get_audio_by_id(record.audio_id)
+                if audio_metadata and not isinstance(audio_metadata, str):
+                    # Filtrar audio_data para no enviarlo en la respuesta
+                    audio_metadata_dict = {
+                        "id": audio_metadata.id,
+                        "filename": audio_metadata.filename,
+                        "content_type": audio_metadata.content_type,
+                        "file_size": audio_metadata.file_size,
+                        "language_id": audio_metadata.language_id,
+                        "is_audio_valid": audio_metadata.is_audio_valid,
+                        "created_at": audio_metadata.created_at
+                    }
+                    process_media_dict["audio_metadata"] = audio_metadata_dict
+                
+                result_with_audio.append(process_media_dict)
+            
+            return result_with_audio, total_items, total_pages
         
         except Exception as e:
             print(f"Error getting process media records: {str(e)}")
             raise
 
-    def get_process_media_records_by_user_id(self, user_id: int, page: int = 1, size: int = 10) -> Tuple[List[ProcessMediaSchema], int, int]:
+    def get_process_media_records_by_user_id(self, user_id: int, page: int = 1, size: int = 10) -> Tuple[List[Dict], int, int]:
         """
         Gets all process media records for a specific user with pagination.
         
@@ -139,8 +163,8 @@ class ProcessMediaService:
             size (int): Number of items per page.
             
         Returns:
-            Tuple[List[ProcessMediaSchema], int, int]: A tuple containing:
-                - List of process media records
+            Tuple[List[Dict], int, int]: A tuple containing:
+                - List of process media records with audio metadata
                 - Total number of items
                 - Total number of pages
         """
@@ -163,7 +187,29 @@ class ProcessMediaService:
             # Calculate the total number of pages
             total_pages = (total_items + size - 1) // size if size > 0 else 0
             
-            return [ProcessMediaSchema.from_orm(record) for record in records], total_items, total_pages
+            # Get the audio metadata for each record
+            result_with_audio = []
+            for record in records:
+                process_media_dict = ProcessMediaSchema.from_orm(record).dict()
+                
+                # Get the audio metadata
+                audio_metadata = self.audio_service.get_audio_by_id(record.audio_id)
+                if audio_metadata and not isinstance(audio_metadata, str):
+                    # Filtrar audio_data para no enviarlo en la respuesta
+                    audio_metadata_dict = {
+                        "id": audio_metadata.id,
+                        "filename": audio_metadata.filename,
+                        "content_type": audio_metadata.content_type,
+                        "file_size": audio_metadata.file_size,
+                        "language_id": audio_metadata.language_id,
+                        "is_audio_valid": audio_metadata.is_audio_valid,
+                        "created_at": audio_metadata.created_at
+                    }
+                    process_media_dict["audio_metadata"] = audio_metadata_dict
+                
+                result_with_audio.append(process_media_dict)
+            
+            return result_with_audio, total_items, total_pages
         
         except Exception as e:
             print(f"Error getting process media records for user {user_id}: {str(e)}")
