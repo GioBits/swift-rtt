@@ -63,6 +63,12 @@ export function useHistoryData() {
     fetchLanguages();
   }, []);
 
+  const statusEmojis = {
+    "done": "✅",
+    "fail": "❌",
+    "process": "⏳",
+  };
+
   useEffect(() => {
     const fetchAudiosByUserId = async () => {
       if (!userId || Object.keys(languages).length === 0) return;
@@ -80,7 +86,7 @@ export function useHistoryData() {
             languageTo: languages[audio.languages_to] || "Desconocido",
             date: FormatUtils.formatDateWithLeadingZeros(audio.audio_metadata.created_at),
             time: FormatUtils.formatTimeWithLeadingZeros(audio.audio_metadata.created_at),
-            status: audio.status,
+            status: statusEmojis[audio.status],
           };
         });
 
