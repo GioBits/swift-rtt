@@ -45,6 +45,8 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       userId
     );
 
+    localStorage.setItem('responseAudioID', response.id.toString() )
+
     // Update the selected audio in the context
     setMediaSelected({
       data: response.audio_data,

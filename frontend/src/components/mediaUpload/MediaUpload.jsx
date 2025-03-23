@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import RecordAudio from './RecordAudio';
 import Dropzone from './Dropzone';
 import Confirm from './Confirm';
@@ -7,6 +7,7 @@ import { MediaContext } from '../../contexts/MediaContext';
 import MediaUploadSelector from './MediaUploadSelector';
 import NewAudioButton from './NewAudioButton';
 import MediaResponse from '../mediaResponse/MediaResponse';
+import { b64toBlob } from '../../utils/audioUtils';
  
 const MediaUpload = () => {
 
@@ -19,6 +20,17 @@ const MediaUpload = () => {
   const [isClicked, setIsClicked] = useState(true); // State to track if a button is clicked
   const [fileToUpload, setFileToUpload] = useState(null); // State to store the file to upload
 
+  useEffect(() => {
+    if (mediaSelected?.data){
+      
+      const blob = b64toBlob(mediaSelected.data, 'audio/mp3');
+      
+      if (blob){
+        const file = new File ([blob], 'audio.mp3', {type: 'audio/mp3'});
+        setFileToUpload(file);
+      }
+    }
+  }, [mediaSelected]);
 
   // Handle button click to switch between Dropzone and RecordAudio
   const handleButtonClick = (selected) => {
