@@ -4,32 +4,42 @@ import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
 import NavBarSearch from '../components/NavbarSearch';
+import FilterMenu from '../components/FilterMenu';
 
 const History = () => {
   useEffect(() => {
     document.title = 'Historial'
   }, [])
 
-  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange } = useHistoryData();
+  const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange, initialFilters, onFiltersChange, maxSize } = useHistoryData();
 
   const columns = [
-    { label: 'ID', field: 'id', width: '5%' },
-    { label: 'Nombre', field: 'name', width: '30%' },
+    { label: 'Nombre', field: 'name', width: '20%' },
     { label: 'Tamaño', field: 'size', width: '15%' },
-    { label: 'Idioma', field: 'language', width: '15%' },
+    { label: 'Idioma de Origen', field: 'languageFrom', width: '15%' },
+    { label: 'Idioma de Destino', field: 'languageTo', width: '15%' },
     { label: 'Fecha', field: 'date', width: '15%' },
     { label: 'Hora', field: 'time', width: '10%' },
+    { label: 'Estado', field: 'status', width: '10%' },
   ];
 
   return (
-    <div className="">
-      <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex flex-col mt-10 m-auto">
-        <NavBarSearch 
-          className="w-full md:w-[40%] lg:w-[30%]" 
-          searchQuery={searchQuery} 
-          onSearchChange={onSearchChange} 
-        />
-        <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
+    <div>
+      <div className="w-[90vw] md:w-[90vw] lg:w-[90vw] h-[80vh] gap-6 flex mt-10 m-auto">
+        <div className="">
+          <NavBarSearch
+            searchQuery={searchQuery}
+            onSearchChange={onSearchChange}
+          />
+          <FilterMenu 
+            initialFilters={initialFilters}
+            onFiltersChange={onFiltersChange}
+            maxSize={maxSize}
+          />
+        </div>
+        <div className='w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex m-auto'>
+          <MediaUploadHistory rows={historyData} onRowClick={onRowClick} columns={columns} />
+        </div>
       </div>
       {state.isModalOpen && state.selectedAudio && (
         <Modal isOpen={state.isModalOpen} onClose={closeModal}>
