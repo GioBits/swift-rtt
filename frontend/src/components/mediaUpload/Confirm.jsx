@@ -3,6 +3,7 @@ import { useContext } from "react";
 import PropTypes from "prop-types";
 import AudioService from '../../service/audioService';
 import { MediaContext } from '../../contexts/MediaContext';
+import { StepperStep } from "../../constants/stepper";
 
 const Confirm = ({ file, audioId, handleNewAudio }) => {
   const {
@@ -23,7 +24,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       return;
     }
 
-    resetStepper(2);
+    resetStepper(StepperStep.UPLOAD);
     try {
       if (audioId) {
         await processMedia();
@@ -44,13 +45,15 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       userId
     );
 
+    localStorage.setItem('responseAudioID', response.id.toString() )
+
     // Update the selected audio in the context
     setMediaSelected({
       data: response.audio_data,
       id: response.id.toString()
     });
 
-    setCurrentStep(2);
+    setCurrentStep(StepperStep.UPLOAD);
     setIsUploading(false);
     console.log("Audio uploaded"); // Log the processing response
   };
@@ -67,7 +70,7 @@ const Confirm = ({ file, audioId, handleNewAudio }) => {
       selectedLanguages
     );
 
-    setCurrentStep(3);
+    setCurrentStep(StepperStep.PROCESSING);
     console.log("Audio processing", processResponse); // Log the processing response
   };
 

@@ -8,6 +8,7 @@ import { translatedAudioService } from "../../service/translatedAudioService";
 import { b64toBlob } from "../../utils/audioUtils";
 import Modal from "./ModalResponse";
 import toast from "react-hot-toast";
+import { StepperStep } from "../../constants/stepper";
 
 const MediaResponse = () => {
   const models = [];
@@ -34,13 +35,13 @@ const MediaResponse = () => {
     const handleResponse = async () => {
       if (mediaSelected) {
         setMediaUrl(base64ToUrl(mediaSelected.data));
-        setTranscription("");
-        setTranslate("");
+        // setTranscription("");
+        // setTranslate("");
         setMediaTranslation("");
       }
     };
     handleResponse();
-  }, [mediaSelected]);
+  }, [mediaSelected, setMediaUrl]);
 
   useEffect(() => {
     const handleResponse = async () => {
@@ -51,24 +52,46 @@ const MediaResponse = () => {
     handleResponse();
   }, [wsResponse]);
 
+  // Load from localStorage
+  useEffect(() => {
+    const savedTranscription = localStorage.getItem('transcription');
+    const savedTranslation = localStorage.getItem('translate');
+    if (savedTranscription){
+      setTranscription(savedTranscription);
+    }
+    if (savedTranslation){
+      setTranslate(savedTranslation);
+    }
+  }, [setTranscription, setTranslate]);
+  
+  // Save to localStorage
+  useEffect(() => {
+    if(transcription) {
+      localStorage.setItem('transcription', transcription);
+    }
+    if(translate) {
+      localStorage.setItem('translation', translate);
+    }
+  }, [transcription, translate]);
+
   const handleWsResponse = async (wsResponse) => {
     let wsResponseData = JSON.parse(wsResponse);
     let audioId = wsResponseData.audio_id;
     let task = wsResponseData.task;
     if (task === "transcribe") {
       await fetchTranscriptionByAudioId(audioId);
-      if (currentStep == 3) setCurrentStep(4);
+      if (currentStep === StepperStep.PROCESSING) setCurrentStep(StepperStep.TRANSCRIPTION);
     }
 
     if (task === "translate") {
       await fetchTranslationByAudioId(audioId);
-      if (currentStep == 4) setCurrentStep(5);
+      if (currentStep === StepperStep.TRANSCRIPTION) setCurrentStep(StepperStep.TRANSLATION);
       
     }
 
     if (task === "generate_audio") {
       await fetchTranslatedAudioByAudioId(audioId);
-      if(currentStep == 5) setCurrentStep(6);
+      if(currentStep === StepperStep.TRANSLATION) setCurrentStep(StepperStep.TEXT_TO_SPEECH);
       
       setIsUploading(false);
     }
@@ -81,7 +104,7 @@ const MediaResponse = () => {
     const transcriptionText = transcriptionResponse.transcription;
     setTranscription(transcriptionText);
     setIsModalOpen(true);
-    toast.success('Transcripción completada!', { duration: 5000 });
+    toast.success('Transcripción completada!', { duration: 1000 });
   };
 
   const fetchTranslationByAudioId = async (audioId) => {
@@ -90,7 +113,7 @@ const MediaResponse = () => {
     const translationResponse = await translationService.getTranslationByAudioId(audioId);
     const translationText = translationResponse.translation;
     setTranslate(translationText);
-    toast.success('Traducción completada!', { duration: 5000 });
+    toast.success('Traducción completada!', { duration: 1000 });
   };
 
   const fetchTranslatedAudioByAudioId = async (audioId) => {
@@ -99,7 +122,7 @@ const MediaResponse = () => {
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
       setMediaTranslation(base64ToUrl(translatedAudio.audioData));
-      toast.success('Audio traducido completado!', { duration: 5000 });
+      toast.success('Audio traducido completado!', { duration: 1000 });
     } catch (error) {
       console.error("Error fetching translated audio:", error);
     }

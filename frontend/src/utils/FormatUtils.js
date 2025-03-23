@@ -14,7 +14,7 @@ class FormatUtils {
       }
 
       static formatTimeWithLeadingZeros(dateStr) {
-            const utcDate = new Date(dateStr + 'Z'); 
+            const utcDate = new Date(dateStr + 'Z');
             return utcDate.toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -26,6 +26,22 @@ class FormatUtils {
       static removeExtension(filename) {
             return filename.replace(/\.[^/.]+$/, '');
       }
+
+      static convertToISO = (dateStr) => {
+            const parts = dateStr.split('/');
+            if (parts.length !== 3) return dateStr;
+            const [day, month, year] = parts;
+            const dd = day.padStart(2, '0');
+            const mm = month.padStart(2, '0');
+            return `${year}-${mm}-${dd}`;
+      };
+
+      static formatFileSizeRemove = (size) => {
+            const [value, unit] = size.split(' ');
+            if (unit === 'KB') return parseInt(value);
+            if (unit === 'MB') return parseInt(value) * 1024;
+            return 0;
+      };
 }
 
 export default FormatUtils;

@@ -1,10 +1,11 @@
 from db.database import SessionLocal
 from models.users import UserRecord, UsersSchema
-import bcrypt
+from utils.auth import AuthUtils
 
 class userService:
     def __init__(self):
         self.db = SessionLocal()
+        self.auth = AuthUtils()
 
     def __del__(self):
         self.db.close()
@@ -85,5 +86,17 @@ class userService:
             if user is None:
                 return None
             return user
+        except Exception as e:
+            return str(e)
+        
+    def get_all_users(self):
+        """
+        Retrieve all user records from the database.
+        Returns:
+            list: A list of UserSchema objects representing all users in the database.
+        """
+        try:
+            users = self.db.query(UserRecord).all()
+            return [UsersSchema.from_orm(user) for user in users]
         except Exception as e:
             return str(e)
