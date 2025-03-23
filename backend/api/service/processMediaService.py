@@ -220,17 +220,12 @@ class ProcessMediaService:
         """
         Gets all process media records for the user with the most entries.
 
-        Args:
-            size (int): Number of items per page (used to calculate total_pages).
-
         Returns:
-            Tuple[List[Dict], int, int]: A tuple containing:
+            List[Dict]: A tuple containing:
                 - List of process media records with audio metadata
-                - Total number of items for top user
-                - Total number of pages
         """
         try:
-            # 1. Obtener el usuario con más registros
+            # 1. Get the user with the most records
             top_user = self.db.query(
                 ProcessMediaRecord.user_id,
                 func.count(ProcessMediaRecord.id).label("count")
@@ -243,19 +238,18 @@ class ProcessMediaService:
 
             top_user_id = top_user.user_id
 
-            # 2. Obtener todos los process_media de ese usuario
+            # 2. Get all process_media records for that user
             records = self.db.query(ProcessMediaRecord)\
                         .filter(ProcessMediaRecord.user_id == top_user_id)\
                         .order_by(ProcessMediaRecord.id.desc())\
                         .all()
 
-
-            # 3. Obtener metadatos de audio por cada registro
+            # 3. Get audio metadata for each record
             result_with_audio = []
             for record in records:
                 process_media_dict = ProcessMediaSchema.from_orm(record).dict()
 
-                # Obtener metadatos del audio asociado
+                # Get metadata of the associated audio
                 audio_metadata = self.audio_service.get_audio_by_id(record.audio_id)
                 if audio_metadata and not isinstance(audio_metadata, str):
                     audio_metadata_dict = {

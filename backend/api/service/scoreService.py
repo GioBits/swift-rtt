@@ -80,7 +80,7 @@ class ScoreService:
             all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
             lu = len(all_login_by_user)
 
-            # 6. MU – Total users in the system  #TODO CHANGE THIS
+            # 6. MU – Total login of the top users
             all_login = self.login_record_service.get_login_records()
             mu = len(all_login)
 
