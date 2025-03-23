@@ -88,3 +88,15 @@ class userService:
             return user
         except Exception as e:
             return str(e)
+        
+    def get_all_user(self):
+        """
+        Retrieve all user records from the database.
+        Returns:
+            list: A list of UserSchema objects representing all users in the database.
+        """
+        try:
+            users = self.db.query(UserRecord).all()
+            return [UsersSchema.from_orm(user) for user in users]
+        except Exception as e:
+            return str(e)

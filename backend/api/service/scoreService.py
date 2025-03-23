@@ -16,6 +16,7 @@ class ScoreService:
         self.process_media_service= ProcessMediaService()
         self.translation_service = TranslationService()
         self.login_record_service = LoginRecordService()
+
     def __del__(self):
         self.db.close()
 
@@ -74,27 +75,19 @@ class ScoreService:
         iu = len(languages_used)
 
         
-        # 5. LU – Usuarios distintos con los que interactuó
-        # Este punto depende de cómo esté tu lógica de interacción. Si no tienes tabla de interacciones, puedes asumir 0 o simular.
+        # 5. LU – Cantidad de veces que ha ingresado ese usuario
         all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
         lu = len(all_login_by_user[0])
-        
-        '''
+
         # 6. MU – Total de usuarios en el sistema
-        mu = self.db.query(func.count(UserRecord.id)).scalar() or 1
-        '''
+        all_login = self.login_record_service.get_login_records()
+        mu = len(all_login)
+
         # Obtener o crear registro ScoreRecord
-        score = self.db.query(ScoreRecord).filter(ScoreRecord.user_id == user_id).first()
+        score = self.get_score_by_user_id(user_id)
+
         if not score:
-            score = ScoreRecord(user_id=user_id)
-            self.db.add(score)
-        
-        tu = 456 
-        mt = 465 
-        iu = 47431 
-        it = 465123
-        lu = 64946 
-        mu = 4546 
+            print("error")
 
         # Actualizar los campos
         score.total_translations = tu
@@ -122,7 +115,7 @@ class ScoreService:
         Calcula y actualiza el score de todos los usuarios en la tabla ScoreRecord.
         """
         # Obtener todos los scores
-        all_users = self.db.query(UserRecord).all()
+        all_users = self.user_service.get_all_users()
 
         for user in all_users:
             id = user.id
