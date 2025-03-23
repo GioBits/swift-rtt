@@ -28,6 +28,8 @@ class AudioController:
             "content_type": audio_record.content_type,
             "file_size": audio_record.file_size,
             "language_id": audio_record.language_id,
+            "is_audio_valid": audio_record.is_audio_valid,
+            "validation_error": audio_record.validation_error,
             "created_at": audio_record.created_at
         }
 
@@ -49,23 +51,23 @@ class AudioController:
             AudioRecordSchema: Record of the audio stored in the database.
         """
         try:
-            file_data = await validate_upload(create_audio_DTO.file)
+            # Validate the upload - now returns a tuple (file_data, is_valid, error_message)
+            file_data, is_valid, error_message = await validate_upload(create_audio_DTO.file)
 
-            # Call the service layer to create the audio
+            # Call the service layer to create the audio, with is_audio_valid set according to validation
             audio_record = self.audio_service.create_audio(
                 user_id=create_audio_DTO.user_id,
                 filename=create_audio_DTO.file.filename,
                 audio_data=file_data,
                 content_type=create_audio_DTO.file.content_type,
                 file_size=len(file_data),
-                language_id=create_audio_DTO.language_id_from
+                language_id=create_audio_DTO.language_id_from,
+                is_audio_valid=is_valid,
+                validation_error=error_message
             )
 
             return self.parse_audio_response(audio_record, True)
 
-        except ValueError as e:
-            print(f"Validation error: {str(e)}")
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
         except HTTPException as e:
             print(f"HTTPException captured: {e.detail}")
             raise e

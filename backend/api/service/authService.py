@@ -2,6 +2,7 @@ from db.database import SessionLocal
 from sqlalchemy.orm import Session
 from utils.auth import AuthUtils
 from api.service.userService import userService
+from api.service.loginRecordService import LoginRecordService
 from fastapi import Response, Request
 from api.DTO.auth.loginRequestDTO import loginDTO
 class AuthService:
@@ -19,6 +20,7 @@ class AuthService:
         self.auth_utils = AuthUtils()
         self.db = SessionLocal()
         self.user_service = userService()
+        self.login_record_service = LoginRecordService()
 
     def __del__(self):
         
@@ -50,6 +52,12 @@ class AuthService:
         verify_password = self.auth_utils.verify_password(password, user.password_hash)
         if  not verify_password:
             raise Exception("Invalid password")
+
+        # Registrar login exitoso
+        self.login_record_service.create_login_record(
+            username=username,
+            user_id=user.id
+        )
 
         access_token = self.auth_utils.sign_token({"username": user.username, "id": user.id})
         if response: 

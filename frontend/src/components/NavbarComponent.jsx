@@ -13,9 +13,9 @@ function NavbarComponent() {
 
   const handleLogout = () => {
     try {
-      userService.logout();  
-      dispatch(logout());          
-      navigate("/login");         
+      userService.logout();
+      dispatch(logout());
+      navigate("/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
@@ -36,10 +36,9 @@ function NavbarComponent() {
           <button
             onClick={() => navigate("/media-upload")}
             className={`relative text-lg font-semibold text-white px-2 py-1 transition-all 
-              hover:text-gray-300 ${
-                location.pathname === "/media-upload"
-                  ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
-                  : ""
+              hover:text-gray-300 ${location.pathname === "/media-upload"
+                ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
+                : ""
               }`}
           >
             Traducir
@@ -48,25 +47,12 @@ function NavbarComponent() {
           <button
             onClick={() => navigate("/history")}
             className={`relative text-lg font-semibold text-white px-2 py-1 transition-all 
-              hover:text-gray-300 ${
-                location.pathname === "/history"
-                  ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
-                  : ""
+              hover:text-gray-300 ${location.pathname === "/history"
+                ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
+                : ""
               }`}
           >
             Historial
-          </button>
-
-          <button
-            onClick={() => navigate("/estadisticas")}
-            className={`relative text-lg font-semibold text-white px-2 py-1 transition-all 
-              hover:text-gray-300 ${
-                location.pathname === "/estadisticas"
-                  ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[3px] after:bg-white after:rounded-md"
-                  : ""
-              }`}
-          >
-            Estadísticas
           </button>
         </div>
 
