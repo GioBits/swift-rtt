@@ -53,11 +53,7 @@ const UserService = {
       await apiService.post(path);
       document.cookie = "session_token=; secure=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
-      // const userData = await apiService.get("api/users/me");
-      const userData = {
-        "id": 1,
-        "username": "test"
-      }
+      const userData = await apiService.get("api/users/me");
       
       toast.success('Inicio de sesión exitoso!', { duration: 1000 });
       return userData;
