@@ -62,7 +62,7 @@ const UserStats = ({ userId }) => {
                 Puntuación Total
               </p>
               <p className="text-xl font-bold text-cerulean">
-                {stats?.score?.score * 100 || 0}
+              {(stats?.score?.score * 100 || 0).toFixed(2)}
               </p>
             </div>
           </div>
