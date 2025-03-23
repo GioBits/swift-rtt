@@ -42,18 +42,15 @@ class ScoreService:
         """
 
         
-        # 1. TU – Total de traducciones del sistema
-        all_traduction = self.process_media_service.get_all_process_media_records()
-        tu = len(all_traduction[0])
-        
-        '''
-        # 2. MT – Máximo de traducciones hechas por un usuario
-        mt = self.db.query(
-            ProcessMediaRecord.user_id,
-            func.count(ProcessMediaRecord.id).label("count")
-        ).group_by(ProcessMediaRecord.user_id).order_by(func.count(ProcessMediaRecord.id).desc()).first()
-        mt = mt.count if mt else 1
+        # 1. TU – Total de traducciones hechas por el usuari
+        all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
+        tu = len(all_traduction_by_user[0])
 
+        
+        # 2. MT – Total de traducciones en el sistema
+        all_traduction = self.process_media_service.get_all_process_media_records()
+        mt = len(all_traduction[0])
+        '''
         # 3. IU – Idiomas distintos usados por el usuario
         iu = self.db.query(func.count(func.distinct(ProcessMediaRecord.languages_from))).filter(ProcessMediaRecord.user_id == user_id).scalar() or 0
 
