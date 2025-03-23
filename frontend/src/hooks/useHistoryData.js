@@ -38,22 +38,6 @@ function reducer(state, action) {
   }
 }
 
-const convertToISO = (dateStr) => {
-  const parts = dateStr.split('/');
-  if (parts.length !== 3) return dateStr;
-  const [day, month, year] = parts;
-  const dd = day.padStart(2, '0');
-  const mm = month.padStart(2, '0');
-  return `${year}-${mm}-${dd}`;
-};
-
-const formatFileSize = (size) => {
-  const [value, unit] = size.split(' ');
-  if (unit === 'KB') return parseInt(value);
-  if (unit === 'MB') return parseInt(value) * 1024;
-  return 0;
-};
-
 export function useHistoryData() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const userId = useSelector(state => state.auth.user?.id);
@@ -102,7 +86,7 @@ export function useHistoryData() {
 
         dispatch({ type: 'SET_HISTORY', payload: rows.reverse() });
 
-        const maxSizeValue = Math.max(...rows.map(row => formatFileSize(row.size)));
+        const maxSizeValue = Math.max(...rows.map(row => FormatUtils.formatFileSizeRemove(row.size)));
         setMaxSize(maxSizeValue);
       } catch (error) {
         console.error("Error obteniendo audios:", error);
@@ -148,9 +132,9 @@ export function useHistoryData() {
 
   const filteredHistoryData = state.historyData.filter(item => {
     const matchesSearchQuery = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const itemISODate = convertToISO(item.date);
+    const itemISODate = FormatUtils.convertToISO(item.date);
     const matchesDate = !filters.date || itemISODate === filters.date;
-    const matchesSize = formatFileSize(item.size) <= filters.size;
+    const matchesSize = FormatUtils.formatFileSizeRemove(item.size) <= filters.size;
     const matchesSourceLanguage = filters.sourceLanguage === 'all' || item.languageFrom === filters.sourceLanguage;
     const matchesDestinationLanguage = filters.destinationLanguage === 'all' || item.languageTo === filters.destinationLanguage;
     return matchesSearchQuery && matchesDate && matchesSize && matchesSourceLanguage && matchesDestinationLanguage;
