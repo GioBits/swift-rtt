@@ -3,6 +3,10 @@ from db.database import SessionLocal
 from models.process_media import ProcessMediaRecord, ProcessMediaSchema, StatusType
 from typing import List, Tuple, Optional
 from fastapi import HTTPException, status
+import logging
+
+# Configurar logger para este módulo
+logger = logging.getLogger(__name__)
 
 class ProcessMediaService:
     """
@@ -51,8 +55,44 @@ class ProcessMediaService:
             return ProcessMediaSchema.from_orm(process_media)
         except Exception as e:
             self.db.rollback()
-            print(f"Error creating process media record: {str(e)}")
-            raise
+            logger.error(f"Error creating process media record: {str(e)}")
+
+    def update_process_media_status(self, process_media_id: int, status: StatusType = StatusType.DONE) -> ProcessMediaSchema:
+        """
+        Updates the status of a process media record.
+        
+        Args:
+            process_media_id (int): ID of the process media record to update.
+            status (StatusType): The new status to set (default: StatusType.DONE).
+            
+        Returns:
+            ProcessMediaSchema: The updated process media record.
+            
+        Raises:
+            Exception: If the record is not found or can't be updated.
+        """
+        try:
+            # Get the process media record
+            process_media = self.db.query(ProcessMediaRecord).filter(
+                ProcessMediaRecord.id == process_media_id
+            ).first()
+            
+            if not process_media:
+                logger.warning(f"Process media record with ID {process_media_id} not found")
+                raise Exception(f"Process media record with ID {process_media_id} not found")
+            
+            # Update the status
+            process_media.status = status
+            self.db.commit()
+            self.db.refresh(process_media)
+            
+            logger.info(f"Updated process media record {process_media_id} status to {status.value}")
+            
+            # Convert to schema and return
+            return ProcessMediaSchema.from_orm(process_media)
+        except Exception as e:
+            self.db.rollback()
+            logger.error(f"Error updating process media status: {str(e)}")
 
     def get_all_process_media_records(self, page: int = 1, size: int = 10) -> Tuple[List[ProcessMediaSchema], int, int]:
         """

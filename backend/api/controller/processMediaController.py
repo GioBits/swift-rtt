@@ -48,6 +48,7 @@ class ProcessMediaController:
                 # Create a configuration for the queue
                 config = {
                     "record_id": result.audio_id,
+                    "audio_id": result.audio_id,
                     "process_media_id": result.id,
                     "user_id": result.user_id,
                     "providers": {
@@ -74,7 +75,31 @@ class ProcessMediaController:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Error creating process media: {str(e)}"
             )
-
+    
+    def update_process_media_status(self, process_media_id: int, status: StatusType = StatusType.DONE) -> dict:
+        """
+        Updates the status of a process media record.
+        
+        Args:
+            process_media_id (int): ID of the process media record to update.
+            status (StatusType, optional): The new status to set. Defaults to StatusType.DONE.
+            
+        Returns:
+            dict: A message indicating the status was updated successfully.
+        """
+        try:
+            updated_record = self.process_media_service.update_process_media_status(process_media_id, status)
+            return {
+                "message": f"Process media status updated successfully to {status.value}",
+                "process_media_id": updated_record.id,
+                "status": updated_record.status.value
+            }
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error updating process media status: {str(e)}"
+            )
+        
     def get_all_process_media_records(self, retrieve_audios_listDTO: retrieve_audios_listDTO) -> dict:
         """
         Gets all process media records with pagination.
