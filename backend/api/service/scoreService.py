@@ -46,77 +46,81 @@ class ScoreService:
         """
 
         
-        # 1. TU – Total de traducciones hechas por el usuari
-        all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
-        tu = len(all_traduction_by_user[0])
+        try:
+            # 1. TU – Total de traducciones hechas por el usuario
+            all_traduction_by_user = self.process_media_service.get_process_media_records_by_user_id(user_id)
+            tu = len(all_traduction_by_user[0])
 
-        
-        # 2. MT – Total de traducciones en el sistema
-        all_traduction = self.process_media_service.get_all_process_media_records()
-        mt = len(all_traduction[0])
+            # 2. MT – Total de traducciones en el sistema
+            all_traduction = self.process_media_service.get_all_process_media_records()
+            mt = len(all_traduction[0])
 
-        # 3. IT – Total de idiomas disponibles en el sistema
-        all_lenguage = self.language_service.get_all_languages()
-        it = len(all_lenguage)
+            # 3. IT – Total de idiomas disponibles en el sistema
+            all_lenguage = self.language_service.get_all_languages()
+            it = len(all_lenguage)
 
-        
-        # 4. IU – Idiomas distintos usados por el usuario
-        languages_used = {}
-        for audio in all_traduction_by_user[0]:
-            # Obtiene el lenguaje del audio
-            language_id = audio['language_id']
-            languages_used.add(language_id)
+            # 4. IU – Idiomas distintos usados por el usuario
+            languages_used = set()
+            for audio in all_traduction_by_user[0]:
+                # Obtiene el lenguaje del audio
+                language_id = audio['language_id']
+                languages_used.add(language_id)
 
-            # Obtiene el lenguaje de la traducción de ese audio
-            translate_audio = self.language_service.get_language_by_id(audio['id'])
-            translate_audio_language = translate_audio['language_id']
-            languages_used.add(translate_audio_language)
+                # Obtiene el lenguaje de la traducción de ese audio
+                translate_audio = self.language_service.get_language_by_id(audio['id'])
+                translate_audio_language = translate_audio['language_id']
+                languages_used.add(translate_audio_language)
 
-        iu = len(languages_used)
+            iu = len(languages_used)
 
-        
-        # 5. LU – Cantidad de veces que ha ingresado ese usuario
-        all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
-        lu = len(all_login_by_user[0])
+            # 5. LU – Cantidad de veces que ha ingresado ese usuario
+            all_login_by_user = self.login_record_service.get_login_records_by_user_id(user_id)
+            lu = len(all_login_by_user[0])
 
-        # 6. MU – Total de usuarios en el sistema
-        all_login = self.login_record_service.get_login_records()
-        mu = len(all_login)
+            # 6. MU – Total de usuarios en el sistema
+            all_login = self.login_record_service.get_login_records()
+            mu = len(all_login)
 
-        # Obtener o crear registro ScoreRecord
-        score = self.get_score_by_user_id(user_id)
+            # Obtener o crear registro ScoreRecord
+            score = self.get_score_by_user_id(user_id)
 
-        if not score:
-            print("error")
+            if not score:
+                raise ValueError("Error al obtener el registro de ScoreRecord para el usuario.")
 
-        # Actualizar los campos
-        score.total_translations = tu
-        score.total_users_translations = mt
-        score.total_languages_used = iu
-        score.total_system_languages = it
-        score.different_users_contacted = lu
-        score.total_system_users = mu
-        
-        new_score = round(
+            # Actualizar los campos
+            score.total_translations = tu
+            score.total_users_translations = mt
+            score.total_languages_used = iu
+            score.total_system_languages = it
+            score.different_users_contacted = lu
+            score.total_system_users = mu
+
+            new_score = round(
             0.4 * (tu / mt) +
             0.4 * (iu / it) +
             0.2 * (lu / mu),
             4  # redondear a 4 decimales
-        )
-        
-        score.score = new_score
+            )
 
-        self.db.commit()
-        self.db.refresh(score)
+            score.score = new_score
+
+            self.db.commit()
+            self.db.refresh(score)
+        except Exception as e:
+            self.db.rollback()
+            print(f"Error al actualizar los datos del score del usuario {user_id}: {e}")
         
 
     def calculate_all_user_scores(self):
         """
         Calcula y actualiza el score de todos los usuarios en la tabla ScoreRecord.
         """
-        # Obtener todos los scores
-        all_users = self.user_service.get_all_users()
+        try:
+            # Obtener todos los scores
+            all_users = self.user_service.get_all_users()
 
-        for user in all_users:
-            id = user.id
-            self.update_user_score_data(id)
+            for user in all_users:
+                id = user.id
+                self.update_user_score_data(id)
+        except Exception as e:
+            print(f"Error al calcular los scores de todos los usuarios: {e}")
