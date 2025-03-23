@@ -82,7 +82,7 @@ const MediaResponse = () => {
     const transcriptionText = transcriptionResponse.transcription;
     setTranscription(transcriptionText);
     setIsModalOpen(true);
-    toast.success('Transcripción completada!', { duration: 5000 });
+    toast.success('Transcripción completada!', { duration: 1000 });
   };
 
   const fetchTranslationByAudioId = async (audioId) => {
@@ -91,7 +91,7 @@ const MediaResponse = () => {
     const translationResponse = await translationService.getTranslationByAudioId(audioId);
     const translationText = translationResponse.translation;
     setTranslate(translationText);
-    toast.success('Traducción completada!', { duration: 5000 });
+    toast.success('Traducción completada!', { duration: 1000 });
   };
 
   const fetchTranslatedAudioByAudioId = async (audioId) => {
@@ -100,7 +100,7 @@ const MediaResponse = () => {
     try {
       const translatedAudio = await translatedAudioService.getTranslatedAudioByAudioId(audioId);
       setMediaTranslation(base64ToUrl(translatedAudio.audioData));
-      toast.success('Audio traducido completado!', { duration: 5000 });
+      toast.success('Audio traducido completado!', { duration: 1000 });
     } catch (error) {
       console.error("Error fetching translated audio:", error);
     }
