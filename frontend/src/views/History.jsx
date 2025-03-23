@@ -1,5 +1,4 @@
 import MediaUploadHistory from '../components/MediaUploadHistory';
-import NavbarComponent from '../components/NavbarComponent';
 import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
 import MediaContent from "../components/mediaResponse/MediaContent";
@@ -18,8 +17,7 @@ const History = () => {
   ];
 
   return (
-    <div className="w-screen h-screen">
-      <NavbarComponent />
+    <div className="">
       <div className="w-[90vw] md:w-[70vw] lg:w-[60vw] h-[80vh] gap-6 flex flex-col mt-10 m-auto">
         <NavBarSearch 
           className="w-full md:w-[40%] lg:w-[30%]" 
