@@ -22,21 +22,6 @@ async def create_audio( create_audio_DTO : create_audioDTO = Depends() ):
     """
     return await audio_controller.create_audio(create_audio_DTO)
 
-@router.post("/process-media", dependencies=[Depends(auth.validate_token)], tags=["Audio"])
-async def process_media( processDTO: process_mediaDTO = Depends() ):
-    """
-    Asynchronously processes audio media by converting it from one language to another.
-
-    Args:
-        audio_id (int): The ID of the audio to be processed.
-        language_id_from (int): The ID of the source language.
-        language_id_to (int): The ID of the target language.
-
-    Returns:
-        The response from the audio processing controller.
-    """
-    return await audio_controller.process_media(processDTO)
-
 # Endpoint "/audio", recupera una lista de archivos de la base de datos
 @router.get("/audio", response_model=AudioListResponseSchema, dependencies=[Depends(auth.validate_token)], tags=["Audio"])
 async def retrieve_audios_list(retrieve_audios_list_DTO : retrieve_audios_listDTO = Depends()):

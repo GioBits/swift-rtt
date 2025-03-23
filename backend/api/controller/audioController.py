@@ -75,42 +75,6 @@ class AudioController:
             print(f"Error: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
 
-    async def process_media(self, process_media_DTO : process_mediaDTO):
-        """
-        Controller function to handle the processing of an media file.
-
-        Args:
-            audio_record_id (int): The ID of the audio record.
-            language_id_from (int): The source language ID.
-            language_id_to (int): The target language ID.
-
-        Returns:
-            dict: A dictionary containing the processing task configuration.
-        """
-        try:
-            # Add the audio processing task to the queue
-            config = {
-                "record_id": process_media_DTO.audio_id,
-                "user_id": process_media_DTO.user_id,
-                "providers": {
-                    "transcription": 1,
-                    "translation": 2,
-                    "audio_generation": 3
-                },
-                "languages": {
-                    "from": process_media_DTO.language_id_from,
-                    "to": process_media_DTO.language_id_to
-                }
-            }
-
-            await add_audio_task(config, "transcribe")
-
-            return {"message": "Audio processing task added to the queue", "config": config}
-
-        except Exception as e:
-            print(f"Error: {str(e)}")
-            raise HTTPException(status_code=500, detail=str(e))
-
     async def retrieve_all_audios(self, retrieve_audios_list_DTO : retrieve_audios_listDTO):
         """
         Asynchronously retrieves all audios with pagination.
