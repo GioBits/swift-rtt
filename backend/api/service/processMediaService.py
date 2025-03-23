@@ -3,6 +3,7 @@ from db.database import SessionLocal
 from models.process_media import ProcessMediaRecord, ProcessMediaSchema, StatusType
 from typing import List, Tuple, Optional, Dict
 from fastapi import HTTPException, status
+from sqlalchemy import func
 import logging
 from api.service.audioService import AudioService
 
@@ -214,3 +215,58 @@ class ProcessMediaService:
         except Exception as e:
             print(f"Error getting process media records for user {user_id}: {str(e)}")
             raise 
+
+    def get_process_media_records_of_top_user(self) -> List[Dict]:
+        """
+        Gets all process media records for the user with the most entries.
+
+        Returns:
+            List[Dict]: A tuple containing:
+                - List of process media records with audio metadata
+        """
+        try:
+            # 1. Get the user with the most records
+            top_user = self.db.query(
+                ProcessMediaRecord.user_id,
+                func.count(ProcessMediaRecord.id).label("count")
+            ).group_by(ProcessMediaRecord.user_id)\
+            .order_by(func.count(ProcessMediaRecord.id).desc())\
+            .first()
+
+            if not top_user:
+                return []
+
+            top_user_id = top_user.user_id
+
+            # 2. Get all process_media records for that user
+            records = self.db.query(ProcessMediaRecord)\
+                        .filter(ProcessMediaRecord.user_id == top_user_id)\
+                        .order_by(ProcessMediaRecord.id.desc())\
+                        .all()
+
+            # 3. Get audio metadata for each record
+            result_with_audio = []
+            for record in records:
+                process_media_dict = ProcessMediaSchema.from_orm(record).dict()
+
+                # Get metadata of the associated audio
+                audio_metadata = self.audio_service.get_audio_by_id(record.audio_id)
+                if audio_metadata and not isinstance(audio_metadata, str):
+                    audio_metadata_dict = {
+                        "id": audio_metadata.id,
+                        "filename": audio_metadata.filename,
+                        "content_type": audio_metadata.content_type,
+                        "file_size": audio_metadata.file_size,
+                        "language_id": audio_metadata.language_id,
+                        "is_audio_valid": audio_metadata.is_audio_valid,
+                        "created_at": audio_metadata.created_at,
+                    }
+                    process_media_dict["audio_metadata"] = audio_metadata_dict
+
+                result_with_audio.append(process_media_dict)
+
+            return result_with_audio
+
+        except Exception as e:
+            print(f"❌ Error getting top user's process media records: {str(e)}")
+            raise
