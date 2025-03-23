@@ -24,7 +24,7 @@ DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 try:
     # Crear el motor de la base de datos
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=30, pool_timeout=60,)
     # Probar la conexión
     with engine.connect() as connection:
         print("Conexión a la base de datos exitosa")

@@ -33,6 +33,7 @@ class ProcessMediaRecord(Base):
     language_to = relationship("LanguageRecord", foreign_keys=[languages_to], overlaps="languages_from")
 
 class ProcessMediaSchema(BaseModel):
+    id: int
     audio_id: int
     user_id: int
     providers_transcription: Optional[int] = None
