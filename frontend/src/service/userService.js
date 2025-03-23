@@ -23,11 +23,11 @@ const UserService = {
     
     try {
       const response = await apiService.post(path);
-      toast.success('Usuario creado exitosamente!', { duration: 5000 });
+      toast.success('Usuario creado exitosamente!', { duration: 1000 });
       return response;
     } catch (error) {
       console.error(error);
-      toast.error('Error al crear el usuario.', { duration: 5000 });
+      toast.error('Error al crear el usuario.', { duration: 1000 });
       throw error;
     }
   },
@@ -59,12 +59,12 @@ const UserService = {
         "username": "test"
       }
       
-      toast.success('Inicio de sesión exitoso!', { duration: 5000 });
+      toast.success('Inicio de sesión exitoso!', { duration: 1000 });
       return userData;
 
     } catch (error) {
       console.log(error);
-      toast.error('Error al iniciar sesión.', { duration: 5000 });
+      toast.error('Error al iniciar sesión.', { duration: 1000 });
       throw error;
     }
   },
