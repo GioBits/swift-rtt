@@ -1,8 +1,12 @@
+import { useEffect } from 'react'
 import RankingTable from "../components/RankingTable";
 import UserStats from "../components/userStats/UserStats";
 import { useSelector } from "react-redux";
 
 const Ranking = () => {
+  useEffect(() => {
+    document.title = 'Ranking'
+  }, [])
 
   const userId = useSelector(state => state.auth.user?.id);
 

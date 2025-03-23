@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import MediaUploadHistory from '../components/MediaUploadHistory';
 import { useHistoryData } from '../hooks/useHistoryData';
 import Modal from "../components/mediaResponse/ModalResponse";
@@ -5,6 +6,10 @@ import MediaContent from "../components/mediaResponse/MediaContent";
 import NavBarSearch from '../components/NavbarSearch';
 
 const History = () => {
+  useEffect(() => {
+    document.title = 'Historial'
+  }, [])
+
   const { historyData, state, onRowClick, closeModal, searchQuery, onSearchChange } = useHistoryData();
 
   const columns = [
