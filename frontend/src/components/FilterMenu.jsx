@@ -36,19 +36,6 @@ export default function FilterMenu({ initialFilters, onFiltersChange, maxSize })
         />
       </FormControl>
 
-      {/* <FormControl>
-        <label>Duración: {filters.duration} seg</label>
-        <Slider
-          value={filters.duration}
-          onChange={handleSliderChange("duration")}
-          min={10}
-          max={30}
-          step={1}
-          valueLabelDisplay="auto"
-          sx={{ width: "100%", mt: 1 }}
-        />
-      </FormControl> */}
-
       <FormControl>
         <label>Tamaño: {filters.size} KB</label>
         <Slider
@@ -76,7 +63,7 @@ export default function FilterMenu({ initialFilters, onFiltersChange, maxSize })
           <MenuItem value="English">Inglés</MenuItem>
           <MenuItem value="Español">Español</MenuItem>
           <MenuItem value="Italiano">Italiano </MenuItem>
-          <MenuItem value="Chino">Chino </MenuItem>
+          <MenuItem value="Chino Simple">Chino Simple</MenuItem>
         </Select>
       </FormControl>
 
@@ -91,10 +78,10 @@ export default function FilterMenu({ initialFilters, onFiltersChange, maxSize })
           sx={{ height: '40px' }}
         >
           <MenuItem value="all">All</MenuItem>
-          <MenuItem value="en">Inglés</MenuItem>
-          <MenuItem value="es">Español</MenuItem>
-          <MenuItem value="fr">Francés</MenuItem>
-          <MenuItem value="zh">Chino</MenuItem>
+          <MenuItem value="English">Inglés</MenuItem>
+          <MenuItem value="Español">Español</MenuItem>
+          <MenuItem value="Italiano">Italiano</MenuItem>
+          <MenuItem value="Chino Simple">Chino Simple</MenuItem>
         </Select>
       </FormControl>
     </Box>

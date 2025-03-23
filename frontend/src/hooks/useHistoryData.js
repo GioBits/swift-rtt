@@ -1,17 +1,15 @@
 import { useEffect, useReducer, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import audioService from '../service/audioService';
 import { transcriptionService } from '../service/transcribeService';
 import { translationService } from '../service/translateService';
 import { translatedAudioService } from '../service/translatedAudioService';
 import { b64toBlob } from '../utils/audioUtils';
 import FormatUtils from '../utils/FormatUtils';
 import { languageService } from "../service/languageService";
+import axios from 'axios'; 
 
-// Definimos INITIAL_FILTERS fuera del hook para mantener su referencia constante
 const INITIAL_FILTERS = {
   date: '',
-  // duration: 30,
   size: 10000,
   sourceLanguage: 'all',
   destinationLanguage: 'all',
@@ -39,18 +37,15 @@ function reducer(state, action) {
   }
 }
 
-// Función para convertir fecha de "DD/MM/YYYY" a "YYYY-MM-DD"
 const convertToISO = (dateStr) => {
   const parts = dateStr.split('/');
   if (parts.length !== 3) return dateStr;
   const [day, month, year] = parts;
-  // Asegurarse de que el día y mes tengan dos dígitos
   const dd = day.padStart(2, '0');
   const mm = month.padStart(2, '0');
   return `${year}-${mm}-${dd}`;
 };
 
-// Funcion inversa de formatFileSize para devolver un int en KB recibiendo un string que dice "X KB" o "X MB"
 const formatFileSize = (size) => {
   const [value, unit] = size.split(' ');
   if (unit === 'KB') return parseInt(value);
@@ -88,22 +83,22 @@ export function useHistoryData() {
       if (!userId || Object.keys(languages).length === 0) return;
 
       try {
-        const audiosResponse = await audioService.getAudiosByUserId(userId);
-        const rows = audiosResponse.map(audio => {
+        const response = await axios.get(`http://localhost:8000/api/process-media?page=1&size=10`);
+        const audiosResponse = response.data;
+        const rows = audiosResponse.items.map(audio => {
           return {
             id: audio.id,
-            name: FormatUtils.removeExtension(audio.filename),
-            size:  FormatUtils.formatFileSize(audio.file_size),
-            // duration: audio.duration, 
-            language: languages[audio.language_id] || "Desconocido",
-            date: FormatUtils.formatDateWithLeadingZeros(audio.created_at), // Formato DD/MM/YYYY
-            time: FormatUtils.formatTimeWithLeadingZeros(audio.created_at),
+            name: FormatUtils.removeExtension(audio.audio_metadata.filename),
+            size: FormatUtils.formatFileSize(audio.audio_metadata.file_size),
+            languageFrom: languages[audio.audio_metadata.language_id] || "Desconocido",
+            languageTo: languages[audio.languages_to] || "Desconocido",
+            date: FormatUtils.formatDateWithLeadingZeros(audio.audio_metadata.created_at),
+            time: FormatUtils.formatTimeWithLeadingZeros(audio.audio_metadata.created_at),
           };
         });
 
         dispatch({ type: 'SET_HISTORY', payload: rows.reverse() });
 
-        // Update maxSize with the maximum size value from the fetched data
         const maxSizeValue = Math.max(...rows.map(row => formatFileSize(row.size)));
         setMaxSize(maxSizeValue);
       } catch (error) {
@@ -153,8 +148,10 @@ export function useHistoryData() {
     const itemISODate = convertToISO(item.date);
     const matchesDate = !filters.date || itemISODate === filters.date;
     const matchesSize = formatFileSize(item.size) <= filters.size;
-    const matchesSourceLanguage = filters.sourceLanguage === 'all' || item.language === filters.sourceLanguage;
-    return matchesSearchQuery && matchesDate && matchesSize && matchesSourceLanguage;
+    const matchesSourceLanguage = filters.sourceLanguage === 'all' || item.languageFrom === filters.sourceLanguage;
+    console.log(item.languageTo, filters.destinationLanguage);
+    const matchesDestinationLanguage = filters.destinationLanguage === 'all' || item.languageTo === filters.destinationLanguage;
+    return matchesSearchQuery && matchesDate && matchesSize && matchesSourceLanguage && matchesDestinationLanguage;
   });
 
   return { 
