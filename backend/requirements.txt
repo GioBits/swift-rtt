@@ -23,10 +23,10 @@ sentencepiece==0.2.0
 
 # PyTorch para CPU (Python 3.12)
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.3.0
-torchaudio==2.3.0
-torchvision==0.18.0
-transformers==4.46.2 #Before 4.48.2
+#torch==2.3.0
+#torchaudio==2.3.0
+#torchvision==0.18.0
+#transformers==4.46.2 #Before 4.48.2
 
 # Uso de pytest 
 httpx==0.23.0
