@@ -12,6 +12,7 @@ import Collapse from "@mui/material/Collapse";
 const menuItems = [
   { label: "Traducir", path: "/media-upload" },
   { label: "Historial", path: "/history" },
+  {label: "Estadísticas", path: "/ranking"},
 ];
 
 const NavbarComponent = () => {

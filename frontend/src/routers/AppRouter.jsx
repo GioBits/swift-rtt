@@ -4,7 +4,7 @@ import PublicRoutes from "./PublicRoutes";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import History from "../views/History";
-// import Register from '../views/Register';
+import Ranking from "../views/Ranking";
 
 const AppRouter = () => {
   return (
@@ -21,6 +21,7 @@ const AppRouter = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/media-upload" element={<Home />} />
           <Route path="/history" element={<History />} />
+          <Route path="/ranking" element={<Ranking />} />
           <Route path="*" element={<Navigate to="/media-upload" replace />} />
         </Route>
       </Routes>
